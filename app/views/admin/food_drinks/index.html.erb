@@ -1,0 +1,40 @@
+<h1>Quản lý Món ăn & Thức uống</h1>
+
+<%= link_to "Thêm mới", new_admin_food_drink_path, class: "btn btn-success mb-3" %>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Tên</th>
+            <th>Giá</th>
+            <th>Category</th>
+            <th>Ảnh</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% @food_drinks.each_with_index do |food_drink, index| %>
+        <tr>
+            <td><%= index + 1 %></td>
+            <td><%= food_drink.name %></td>
+            <td><%= number_to_currency(food_drink.price, unit: "₫") %></td>
+            <td><%= food_drink.category %></td>
+            <td>
+                <% if food_drink.image.attached? %>
+                <%= image_tag food_drink.image.variant(resize_to_limit: [100, 100]), alt: food_drink.name %>
+                <% else %>
+                Không có ảnh
+                <% end %>
+            </td>
+            <td>
+                <%= link_to "Sửa", edit_admin_food_drink_path(food_drink), class: "btn btn-warning btn-sm" %>
+                <%= button_to "Xóa", admin_food_drink_path(food_drink),
+                                    method: :delete,
+                                    data: { confirm: "Bạn có chắc chắn muốn xoá?" },
+                                    class: "btn btn-danger btn-sm" %>
+            </td>
+        </tr>
+        <% end %>
+    </tbody>
+</table>

@@ -1,0 +1,12 @@
+<h1>Thêm món mới</h1>
+
+<%= form_with model: @food_drink, local: true do |f| %>
+<p><%= f.label :name %><br><%= f.text_field :name %></p>
+<p><%= f.label :description %><br><%= f.text_area :description %></p>
+<p><%= f.label :category %><br>
+    <%= f.select :category, ["Food", "Drink"], prompt: "Chọn loại" %>
+</p>
+<p><%= f.label :price %><br><%= f.number_field :price, step: 0.01 %></p>
+<p><%= f.label :image %><br><%= f.file_field :image %></p>
+<%= f.submit "Lưu" %>
+<% end %>

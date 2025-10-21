@@ -1,0 +1,16 @@
+<h1>Trang quản trị</h1>
+
+<p>Chào <%= current_user.name || current_user.email %>!</p>
+<p>Bạn đang đăng nhập với quyền: <strong><%= current_user.role %></strong></p>
+
+<hr>
+
+<ul>
+    <li><%= link_to "Quản lý món ăn", admin_food_drinks_path(category: "Food") %></li>
+    <li><%= link_to "Quản lý đồ uống", admin_food_drinks_path(category: "Drink") %></li>
+    <li><%= link_to "Quản lý người dùng", "#" %></li>
+</ul>
+
+<div class="mt-3">
+    <%= link_to "Xem tất cả món ăn & thức uống", admin_food_drinks_path, class: "btn btn-primary" %>
+</div>

@@ -1,14 +1,19 @@
-<h1>Welcome to Foods & Drinks App</h1>
+<div class="p-5 mb-4 bg-light rounded-3 text-center">
+    <h1>Welcome to Foods & Drinks App</h1>
+    <% if user_signed_in? %>
+    <p class="lead">Hello, <%= current_user.name %>!</p>
+    <%= link_to "Edit Profile", edit_user_registration_path, class: "btn btn-primary me-2" %>
+    <%= link_to "Log out", destroy_user_session_path, data: { turbo_method: :delete, turbo_confirm: "Bạn chắc chắn muốn đăng xuất?" }, class: "btn btn-outline-danger" %>
+    <% else %>
+    <p class="lead">This is the home page for the Foods & Drinks application.</p>
+    <%= link_to "Sign up now!", new_user_registration_path, class: "btn btn-primary" %>
+    <% end %>
+</div>
 
-<% if user_signed_in? %>
-<p>Hello, <%= current_user.name %>!</p>
-<%= link_to "Edit Profile", edit_user_registration_path %> |
-<%= link_to "Log out",
-            destroy_user_session_path,
-            data: { turbo_method: :delete, turbo_confirm: "Bạn chắc chắn muốn đăng xuất?" },
-            class: "btn btn-outline-danger" %>
-
-<% else %>
-<%= link_to "Sign up", new_user_registration_path %> |
-<%= link_to "Log in", new_user_session_path %>
-<% end %>
+<div class="text-center my-4">
+    <%
+=begin%>
+    <%= image_tag "rails-logo.png", alt: "Rails Logo", width: 150 %>
+    <%
+=end%>
+</div>

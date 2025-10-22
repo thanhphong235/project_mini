@@ -1,33 +1,27 @@
-<h1>Danh sách món ăn & thức uống</h1>
+<h1>Danh sách Món ăn & Thức uống</h1>
 
-<div style="margin-bottom: 20px;">
-    <%= form_with url: food_drinks_path, method: :get, local: true do |f| %>
-    <%= f.label :search, "Tìm kiếm:" %>
-    <%= f.text_field :search, value: params[:search], placeholder: "Nhập tên món..." %>
-    <%= f.submit "Tìm", class: "btn btn-primary" %>
+<div class="mb-3">
+    <%= link_to "Tất cả", food_drinks_path, class: "btn btn-secondary me-2" %>
+    <% Category.all.each do |cat| %>
+    <%= link_to cat.name, food_drinks_path(category_id: cat.id), class: "btn btn-primary me-2" %>
     <% end %>
 </div>
 
-<div style="margin-bottom: 20px;">
-    <strong>Lọc theo loại:</strong>
-    <%= link_to "Tất cả", food_drinks_path, class: "btn btn-secondary" %>
-    <% @categories.each do |cat| %>
-    <%= link_to cat, food_drinks_path(category: cat), class: "btn btn-info" %>
-    <% end %>
-</div>
-
-<hr>
-
-<div class="food-list">
-    <% @food_drinks.each do |item| %>
-    <div class="food-item" style="border: 1px solid #ccc; margin-bottom: 15px; padding: 10px;">
-        <h3><%= link_to item.name, food_drink_path(item) %></h3>
-        <p><%= item.description %></p>
-        <p><strong>Loại:</strong> <%= item.category %></p>
-        <p><strong>Giá:</strong> <%= number_to_currency(item.price, unit: "₫", delimiter: ".", format: "%n %u") %></p>
-        <% if item.image.attached? %>
-        <%= image_tag item.image, width: 200 %>
-        <% end %>
+<div class="row">
+    <% @food_drinks.each do |fd| %>
+    <div class="col-md-3 mb-3">
+        <div class="card">
+            <% if fd.image.attached? %>
+            <%= image_tag fd.image, class: "card-img-top", style: "height:150px; object-fit:cover;" %>
+            <% end %>
+            <div class="card-body">
+                <h5 class="card-title"><%= fd.name %></h5>
+                <p class="card-text">Giá: <%= number_to_currency(fd.price, unit: "₫") %></p>
+                <%= link_to "Xem chi tiết", food_drink_path(fd), class: "btn btn-primary btn-sm" %>
+                <%= link_to "Thêm giỏ hàng", food_drink_path(fd), class: "btn btn-primary btn-sm" %>
+                <%= link_to "Mua", food_drink_path(fd), class: "btn btn-primary btn-sm" %>
+            </div>
+        </div>
     </div>
     <% end %>
 </div>

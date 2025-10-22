@@ -4,7 +4,11 @@ class Admin::FoodDrinksController < ApplicationController
   before_action :set_food_drink, only: [:edit, :update, :destroy]
 
   def index
-    @food_drinks = params[:category].present? ? FoodDrink.where(category: params[:category]) : FoodDrink.all
+    if params[:category_id].present?
+      @food_drinks = FoodDrink.where(category_id: params[:category_id])
+    else
+      @food_drinks = FoodDrink.all
+    end
   end
 
   def new
@@ -21,7 +25,6 @@ class Admin::FoodDrinksController < ApplicationController
   end
 
   def edit
-    # @food_drink đã được set bởi set_food_drink
   end
 
   def update
@@ -44,12 +47,10 @@ class Admin::FoodDrinksController < ApplicationController
   end
 
   def food_drink_params
-    params.require(:food_drink).permit(:name, :price, :category, :description, :image)
+    params.require(:food_drink).permit(:name, :price, :description, :image, :category_id)
   end
 
   def require_admin
-    unless current_user&.admin?
-      redirect_to root_path, alert: "Bạn không có quyền truy cập trang này."
-    end
+    redirect_to root_path, alert: "Bạn không có quyền truy cập trang này." unless current_user&.admin?
   end
 end

@@ -1,17 +1,18 @@
 class FoodDrinksController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
   before_action :require_admin, only: [:new, :create, :edit, :update, :destroy]
+  before_action :set_food_drink, only: [:show, :edit, :update, :destroy]
 
   def index
-    @categories = FoodDrink.distinct.pluck(:category) # lấy danh sách loại
-    @food_drinks = FoodDrink.all
+    @categories = Category.all
+    @food_drinks = FoodDrink.includes(:category).all
 
-    # Lọc theo category (VD: "Food", "Drink")
-    if params[:category].present?
-      @food_drinks = @food_drinks.where(category: params[:category])
+    # Lọc theo category_id
+    if params[:category_id].present?
+      @food_drinks = @food_drinks.where(category_id: params[:category_id])
     end
 
-    # Lọc theo từ khóa tìm kiếm (nếu có)
+    # Lọc theo từ khóa tìm kiếm
     if params[:search].present?
       keyword = "%#{params[:search]}%"
       @food_drinks = @food_drinks.where("name LIKE ? OR description LIKE ?", keyword, keyword)
@@ -19,7 +20,6 @@ class FoodDrinksController < ApplicationController
   end
 
   def show
-    @food_drink = FoodDrink.find(params[:id])
   end
 
   def new
@@ -36,11 +36,9 @@ class FoodDrinksController < ApplicationController
   end
 
   def edit
-    @food_drink = FoodDrink.find(params[:id])
   end
 
   def update
-    @food_drink = FoodDrink.find(params[:id])
     if @food_drink.update(food_drink_params)
       redirect_to @food_drink, notice: "Cập nhật thành công!"
     else
@@ -49,15 +47,19 @@ class FoodDrinksController < ApplicationController
   end
 
   def destroy
-    @food_drink = FoodDrink.find(params[:id])
     @food_drink.destroy
     redirect_to food_drinks_path, notice: "Đã xoá món ăn/thức uống."
   end
 
   private
 
+  def set_food_drink
+    @food_drink = FoodDrink.find(params[:id])
+  end
+
   def food_drink_params
-    params.require(:food_drink).permit(:name, :description, :category, :price, :image)
+    # Lưu ý: dùng category_id thay vì category string
+    params.require(:food_drink).permit(:name, :description, :price, :image, :category_id)
   end
 
   def require_admin

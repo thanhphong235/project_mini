@@ -1,31 +1,29 @@
-<h1>Thêm Món ăn/Thức uống mới</h1>
-
 <%= form_with(model: [:admin, @food_drink], local: true) do |f| %>
-<div class="form-group">
+<div class="mb-3">
     <%= f.label :name, "Tên" %>
     <%= f.text_field :name, class: "form-control" %>
 </div>
 
-<div class="form-group">
+<div class="mb-3">
     <%= f.label :price, "Giá" %>
     <%= f.number_field :price, class: "form-control" %>
 </div>
 
-<div class="form-group">
-    <%= f.label :category, "Category" %>
-    <%= f.select :category, ["Food", "Drink"], prompt: "Chọn loại" %>
+<div class="mb-3">
+    <%= f.label :category_id, "Category" %>
+    <%= f.collection_select :category_id, Category.all, :id, :name, prompt: "Chọn loại", class: "form-select" %>
 </div>
 
-<div class="form-group">
+<div class="mb-3">
     <%= f.label :description, "Mô tả" %>
     <%= f.text_area :description, class: "form-control" %>
 </div>
 
-<div class="form-group">
+<div class="mb-3">
     <%= f.label :image, "Ảnh" %>
     <%= f.file_field :image, class: "form-control" %>
 </div>
 
-<%= f.submit "Tạo mới", class: "btn btn-primary" %>
+<%= f.submit "Lưu", class: "btn btn-primary me-2" %>
 <%= link_to "Hủy", admin_food_drinks_path, class: "btn btn-secondary" %>
 <% end %>

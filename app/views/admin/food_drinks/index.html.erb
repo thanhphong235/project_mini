@@ -1,6 +1,16 @@
 <h1>Quản lý Món ăn & Thức uống</h1>
 
-<%= link_to "Thêm mới", new_admin_food_drink_path, class: "btn btn-success mb-3" %>
+<div class="mb-3">
+    <%= link_to "Quay lại", admin_dashboard_path, class: "btn btn-secondary" %>
+    <%= link_to "Tất cả", admin_food_drinks_path, class: "btn btn-secondary me-2" %>
+    <% Category.all.each do |category| %>
+    <%= link_to category.name, admin_food_drinks_path(category_id: category.id), class: "btn btn-primary me-2" %>
+    <% end %>
+</div>
+
+<div class="mb-3">
+    <%= link_to "Thêm mới", new_admin_food_drink_path, class: "btn btn-success me-2" %>
+</div>
 
 <table class="table table-striped">
     <thead>
@@ -9,30 +19,29 @@
             <th>Tên</th>
             <th>Giá</th>
             <th>Category</th>
+            <th>Mô tả</th>
             <th>Ảnh</th>
             <th>Hành động</th>
         </tr>
     </thead>
     <tbody>
-        <% @food_drinks.each_with_index do |food_drink, index| %>
+        <% @food_drinks.each_with_index do |fd, index| %>
         <tr>
             <td><%= index + 1 %></td>
-            <td><%= food_drink.name %></td>
-            <td><%= number_to_currency(food_drink.price, unit: "₫") %></td>
-            <td><%= food_drink.category %></td>
+            <td><%= fd.name %></td>
+            <td><%= number_to_currency(fd.price, unit: "₫") %></td>
+            <td><%= fd.category&.name || "Chưa phân loại" %></td>
+            <td><%= truncate(fd.description, length: 50) %></td>
             <td>
-                <% if food_drink.image.attached? %>
-                <%= image_tag food_drink.image.variant(resize_to_limit: [100, 100]), alt: food_drink.name %>
+                <% if fd.image.attached? %>
+                <%= image_tag fd.image, width: 100, height: 100, alt: fd.name %>
                 <% else %>
                 Không có ảnh
                 <% end %>
             </td>
             <td>
-                <%= link_to "Sửa", edit_admin_food_drink_path(food_drink), class: "btn btn-warning btn-sm" %>
-                <%= button_to "Xóa", admin_food_drink_path(food_drink),
-                                    method: :delete,
-                                    data: { confirm: "Bạn có chắc chắn muốn xoá?" },
-                                    class: "btn btn-danger btn-sm" %>
+                <%= link_to "Sửa", edit_admin_food_drink_path(fd), class: "btn btn-warning btn-sm me-1" %>
+                <%= button_to "Xóa", admin_food_drink_path(fd), method: :delete, data: { confirm: "Bạn có chắc chắn muốn xoá?" }, class: "btn btn-danger btn-sm" %>
             </td>
         </tr>
         <% end %>

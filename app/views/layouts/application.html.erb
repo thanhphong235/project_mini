@@ -1,16 +1,71 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>FoodsDrinksApp</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+<head>
+    <title>Foods & Drinks App</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-  </head>
+</head>
 
-  <body>
-    <%= yield %>
-  </body>
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- Header / Navbar -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <%= link_to "Foods & Drinks App", root_path, class: "navbar-brand" %>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+
+                        <% if user_signed_in? %>
+                        <li>
+                            <%= link_to "dashboard", admin_dashboard_path, class: "nav-link" %>
+                        </li>
+                        <li class="nav-item">
+                            <%= link_to "Log out", destroy_user_session_path, data: { turbo_method: :delete, turbo_confirm: "Bạn chắc chắn muốn đăng xuất?" }, class: "nav-link text-danger" %>
+                        </li>
+                        <% else %>
+                        <%
+=begin%>
+                        <li class="nav-item">
+                            <%= link_to "Sign up", new_user_registration_path, class: "nav-link" %>
+                        </li>
+                        <%
+=end%>
+                        <li class="nav-item">
+                            <%= link_to "Log in", new_user_session_path, class: "nav-link" %>
+                        </li>
+                        <% end %>
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow-1">
+        <div class="container mt-4">
+            <%= yield %>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="text">
+            <p>food and drink</p>
+
+        </div>
+    </footer>
+
+</body>
+
 </html>

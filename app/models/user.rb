@@ -4,6 +4,8 @@ class User < ApplicationRecord
 
   ROLES = %w[user admin]
 
+  before_create :set_default_role
+
   def admin?
     role == "admin"
   end
@@ -12,11 +14,13 @@ class User < ApplicationRecord
     role == "user"
   end
 
-  before_create :set_default_role
-
   private
 
   def set_default_role
     self.role ||= "user"
   end
+
+  # Quan hệ với cart
+  has_many :cart_items
+  has_many :food_drinks, through: :cart_items
 end

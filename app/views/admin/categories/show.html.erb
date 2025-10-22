@@ -1,0 +1,18 @@
+<h2>Chi tiết Danh mục</h2>
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow-sm p-3">
+            <p><strong>Tên danh mục:</strong> <%= @category.name %></p>
+            <p><strong>Ngày tạo:</strong> <%= @category.created_at.strftime("%d/%m/%Y %H:%M") %></p>
+            <p><strong>Ngày cập nhật:</strong> <%= @category.updated_at.strftime("%d/%m/%Y %H:%M") %></p>
+
+            <div class="d-flex justify-content-between mt-3">
+                <%= link_to "Quay lại", admin_categories_path, class: "btn btn-outline-secondary" %>
+                <%= link_to "Xóa", admin_category_path(@category), method: :delete,
+                    data: { turbo_confirm: "Bạn có chắc chắn muốn xóa danh mục này?" },
+                    class: "btn btn-outline-danger" %>
+            </div>
+        </div>
+    </div>
+</div>

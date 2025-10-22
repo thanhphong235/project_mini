@@ -1,0 +1,10 @@
+<%= form_with(model: [:admin, @category], local: true) do |f| %>
+<div class="mb-3">
+    <%= f.label :name, "Tên danh mục", class: "form-label" %>
+    <%= f.text_field :name, class: "form-control", placeholder: "Nhập tên danh mục" %>
+</div>
+
+<div class="d-grid">
+    <%= f.submit class: "btn btn-primary" %>
+</div>
+<% end %>

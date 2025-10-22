@@ -26,26 +26,37 @@
                     <ul class="navbar-nav ms-auto">
 
                         <% if user_signed_in? %>
-                        <li>
-                            <%= link_to "dashboard", admin_dashboard_path, class: "nav-link" %>
-                        </li>
+                        <!-- Dashboard (admin) -->
+                        <% if current_user.admin? %>
                         <li class="nav-item">
-                            <%= link_to "Log out", destroy_user_session_path, data: { turbo_method: :delete, turbo_confirm: "Bạn chắc chắn muốn đăng xuất?" }, class: "nav-link text-danger" %>
+                            <%= link_to "Dashboard", admin_dashboard_path, class: "nav-link" %>
                         </li>
+                        <% end %>
+
+                        <!-- Profile (user) -->
+                        <li class="nav-item">
+                            <%= link_to "Profile", edit_user_registration_path, class: "nav-link" %>
+                        </li>
+
+                        <!-- Log out -->
+                        <li class="nav-item">
+                            <%= link_to "Log out", destroy_user_session_path,
+                  data: { turbo_method: :delete, turbo_confirm: "Bạn chắc chắn muốn đăng xuất?" },
+                  class: "nav-link text-danger" %>
+                        </li>
+
                         <% else %>
-                        <%
-=begin%>
-                        <li class="nav-item">
-                            <%= link_to "Sign up", new_user_registration_path, class: "nav-link" %>
-                        </li>
-                        <%
-=end%>
+                        <!-- Log in / Sign up -->
                         <li class="nav-item">
                             <%= link_to "Log in", new_user_session_path, class: "nav-link" %>
+                        </li>
+                        <li class="nav-item">
+                            <%= link_to "Sign up", new_user_registration_path, class: "nav-link" %>
                         </li>
                         <% end %>
 
                     </ul>
+
                 </div>
             </div>
         </nav>

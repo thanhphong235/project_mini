@@ -23,4 +23,6 @@ class User < ApplicationRecord
   # Quan hệ với cart
   has_many :cart_items
   has_many :food_drinks, through: :cart_items
+  has_many :orders, dependent: :destroy
+
 end

@@ -1,0 +1,42 @@
+<!-- app/views/admin/orders/show.html.erb -->
+<h2>Chi tiết Đơn hàng</h2>
+
+<div class="card shadow-sm p-3 mb-3">
+    <p><strong>Người đặt:</strong> <%= @order.user.name || @order.user.email %></p>
+    <p><strong>Tổng tiền:</strong> <%= number_to_currency(@order.total_price, unit: "₫") %></p>
+    <p><strong>Trạng thái:</strong> <%= @order.status_human %></p>
+    <p><strong>Ngày đặt:</strong> <%= @order.created_at.strftime("%d/%m/%Y %H:%M") %></p>
+
+    <hr>
+
+    <h5>Sản phẩm trong đơn:</h5>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Tên sản phẩm</th>
+                <th>Số lượng</th>
+                <th>Giá</th>
+                <th>Thành tiền</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @order.order_items.each_with_index do |item, index| %>
+            <tr>
+                <td><%= index + 1 %></td>
+                <td><%= item.food_drink.name %></td>
+                <td><%= item.quantity %></td>
+                <td><%= number_to_currency(item.price, unit: "₫") %></td>
+                <td><%= number_to_currency(item.quantity * item.price, unit: "₫") %></td>
+            </tr>
+            <% end %>
+        </tbody>
+    </table>
+
+    <div class="mt-3 d-flex justify-content-between">
+        <%= link_to "Quay lại", admin_orders_path, class: "btn btn-outline-secondary" %>
+        <%= button_to "Xóa đơn hàng", admin_order_path(@order), method: :delete,
+          data: { turbo_confirm: "Bạn có chắc chắn muốn xóa đơn hàng này?" },
+          class: "btn btn-outline-danger" %>
+    </div>
+</div>

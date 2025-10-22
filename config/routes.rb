@@ -17,7 +17,7 @@ Rails.application.routes.draw do
     resources :food_drinks
 
     # Quản lý đơn hàng
-    resources :orders
+    resources :orders, only: [:index, :show, :destroy]
   end
 
   # Food & Drinks routes cho người dùng bình thường

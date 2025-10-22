@@ -1,0 +1,60 @@
+<% provide(:title, "Edit Profile") %>
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6 col-lg-5">
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">Edit Profile</h2>
+
+                <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+                <%= devise_error_messages! %>
+
+                <!-- Name -->
+                <div class="mb-3">
+                    <%= f.label :name, class: "form-label" %>
+                    <%= f.text_field :name, class: "form-control", placeholder: "Enter your name" %>
+                </div>
+
+                <!-- Email -->
+                <div class="mb-3">
+                    <%= f.label :email, class: "form-label" %>
+                    <%= f.email_field :email, class: "form-control", placeholder: "Enter your email" %>
+                </div>
+
+                <!-- Current password (required to save changes) -->
+                <div class="mb-3">
+                    <%= f.label :current_password, "Current password", class: "form-label" %>
+                    <%= f.password_field :current_password, class: "form-control", placeholder: "Enter current password" %>
+                </div>
+
+                <!-- Password -->
+                <div class="mb-3">
+                    <%= f.label :password, "New password", class: "form-label" %>
+                    <%= f.password_field :password, class: "form-control", placeholder: "Enter new password" %>
+                </div>
+
+                <!-- Password confirmation -->
+                <div class="mb-3">
+                    <%= f.label :password_confirmation, class: "form-label" %>
+                    <%= f.password_field :password_confirmation, class: "form-control", placeholder: "Confirm new password" %>
+                </div>
+
+                <!-- Submit button -->
+                <div class="d-grid">
+                    <%= f.submit "Update Profile", class: "btn btn-primary" %>
+                </div>
+
+                <% end %>
+
+                <hr>
+
+                <p class="text-center mb-0">
+                    <%= link_to "Back to Home", root_path %>
+                </p>
+
+            </div>
+        </div>
+
+    </div>
+</div>

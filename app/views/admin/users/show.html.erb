@@ -1,0 +1,37 @@
+<h1>Chi tiết Người dùng</h1>
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6 col-lg-5">
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h3 class="card-title text-center mb-4"><%= @user.name.present? ? @user.name : @user.email %></h3>
+
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item">
+                        <strong>Email:</strong> <%= @user.email %>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Role:</strong> <%= @user.role %>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Ngày tạo:</strong> <%= @user.created_at.strftime("%d/%m/%Y %H:%M") %>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Ngày cập nhật:</strong> <%= @user.updated_at.strftime("%d/%m/%Y %H:%M") %>
+                    </li>
+                </ul>
+
+                <div class="d-flex justify-content-between">
+                    <%= link_to "Quay lại", admin_users_path, class: "btn btn-outline-secondary" %>
+                    <%= link_to "Xóa người dùng", admin_user_path(@user),
+                      method: :delete,
+                      data: { turbo_confirm: "Bạn có chắc chắn muốn xóa người dùng này?" },
+                      class: "btn btn-outline-danger" %>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>

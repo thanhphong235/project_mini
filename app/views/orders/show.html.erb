@@ -1,0 +1,33 @@
+<h2>Chi tiết đơn hàng #<%= @order.id %></h2>
+
+<p><strong>Ngày đặt:</strong> <%= @order.created_at.strftime("%d/%m/%Y %H:%M") %></p>
+<p><strong>Trạng thái:</strong> <%= @order.status %></p>
+
+<table class="table table-striped mt-3">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Món ăn / Thức uống</th>
+            <th>Số lượng</th>
+            <th>Giá</th>
+            <th>Thành tiền</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% @order.order_items.each_with_index do |item, index| %>
+        <tr>
+            <td><%= index + 1 %></td>
+            <td><%= item.food_drink.name %></td>
+            <td><%= item.quantity %></td>
+            <td><%= number_to_currency(item.price, unit: "₫") %></td>
+            <td><%= number_to_currency(item.quantity * item.price, unit: "₫") %></td>
+        </tr>
+        <% end %>
+        <tr>
+            <td colspan="4" class="text-end"><strong>Tổng cộng:</strong></td>
+            <td><%= number_to_currency(@order.total_price, unit: "₫") %></td>
+        </tr>
+    </tbody>
+</table>
+
+<%= link_to "Quay lại lịch sử đơn hàng", orders_path, class: "btn btn-secondary" %>

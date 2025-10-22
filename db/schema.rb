@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_10_22_070315) do
+ActiveRecord::Schema[7.1].define(version: 2025_10_22_095453) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -42,6 +42,16 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_22_070315) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "cart_items", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "food_drink_id", null: false
+    t.integer "quantity", default: 1
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["food_drink_id"], name: "index_cart_items_on_food_drink_id"
+    t.index ["user_id"], name: "index_cart_items_on_user_id"
+  end
+
   create_table "categories", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -71,11 +81,22 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_22_070315) do
 
   create_table "orders", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.string "status"
     t.decimal "total_price"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "status", default: 0
     t.index ["user_id"], name: "index_orders_on_user_id"
+  end
+
+  create_table "ratings", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "food_drink_id", null: false
+    t.integer "score"
+    t.text "comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["food_drink_id"], name: "index_ratings_on_food_drink_id"
+    t.index ["user_id"], name: "index_ratings_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -94,8 +115,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_22_070315) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "cart_items", "food_drinks"
+  add_foreign_key "cart_items", "users"
   add_foreign_key "food_drinks", "categories"
   add_foreign_key "order_items", "food_drinks"
   add_foreign_key "order_items", "orders"
   add_foreign_key "orders", "users"
+  add_foreign_key "ratings", "food_drinks"
+  add_foreign_key "ratings", "users"
 end

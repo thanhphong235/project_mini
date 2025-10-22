@@ -1,0 +1,51 @@
+<h2> <%= link_to "Quay lại", food_drinks_path, class: "btn btn-secondary" %> Giỏ hàng của bạn</h2>
+
+<% if @cart_items.any? %>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Sản phẩm</th>
+            <th>Giá</th>
+            <th>Số lượng</th>
+            <th>Thành tiền</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% @cart_items.each_with_index do |item, index| %>
+        <tr id="cart_item_<%= item.id %>">
+            <td><%= index + 1 %></td>
+            <td><%= item.food_drink.name %></td>
+            <td><%= number_to_currency(item.food_drink.price, unit: "₫") %></td>
+            <td>
+                <%= form_with(model: item, url: cart_item_path(item), method: :patch, local: true) do |f| %>
+                <%= f.number_field :quantity, value: item.quantity, min: 1, class: "form-control w-25 d-inline" %>
+                <%= f.submit "Cập nhật", class: "btn btn-sm btn-outline-primary" %>
+                <% end %>
+            </td>
+            <td><%= number_to_currency(item.quantity * item.food_drink.price, unit: "₫") %></td>
+            <td>
+                <%= link_to "Xóa",
+            cart_item_path(item),
+            data: { turbo_method: :delete, turbo_confirm: "Bạn có chắc chắn muốn xóa sản phẩm này?" },
+            class: "btn btn-sm btn-outline-danger" %>
+
+            </td>
+        </tr>
+        <% end %>
+        <tr>
+            <td colspan="4" class="text-end"><strong>Tổng cộng:</strong></td>
+            <td colspan="2"><%= number_to_currency(@total_price, unit: "₫") %></td>
+        </tr>
+    </tbody>
+</table>
+<% if @cart_items.any? %>
+<div class="text-end mt-3">
+    <%= button_to "Đặt hàng", orders_path, method: :post, class: "btn btn-success btn-lg" %>
+</div>
+<% end %>
+
+<% else %>
+<p>Giỏ hàng của bạn đang trống.</p>
+<% end %>

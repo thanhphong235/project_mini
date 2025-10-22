@@ -12,6 +12,7 @@ gem "bootstrap", "~> 5.3"
 gem "jquery-rails"
 gem "ransack" # filter sản phẩm
 gem "sassc-rails"
+# gem "bootstrap-icons-rails" #icon gio hang
 
 
 

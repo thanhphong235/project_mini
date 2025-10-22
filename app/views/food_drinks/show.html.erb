@@ -1,0 +1,67 @@
+<div class="card shadow-sm p-3 mb-3">
+    <h2><%= @food_drink.name %></h2>
+
+    <% if @food_drink.image.attached? %>
+    <%= image_tag @food_drink.image, class: "img-fluid mb-3" %>
+    <% else %>
+    <%
+=begin%>
+    <%= image_tag "placeholder.png", class: "img-fluid mb-3" %>
+    <%
+=end%>
+    <% end %>
+
+    <p><strong>Giá:</strong> <%= number_to_currency(@food_drink.price, unit: "₫") %></p>
+    <p><strong>Danh mục:</strong> <%= @food_drink.category&.name || "Không có" %></p>
+    <p><strong>Mô tả:</strong> <%= @food_drink.description.presence || "Chưa có mô tả" %></p>
+
+    <div class="mb-3">
+        <%= button_to "Thêm vào giỏ", cart_items_path, 
+                method: :post, 
+                params: { food_drink_id: @food_drink.id }, 
+                class: "btn btn-sm btn-outline-success",
+                form: { data: { turbo: true } } %>
+
+
+
+        <%= link_to "Quay lại", food_drinks_path, class: "btn btn-secondary" %>
+    </div>
+
+    <hr>
+
+    <!-- Rating -->
+    <h5>Đánh giá sản phẩm</h5>
+    <% if @food_drink.ratings.any? %>
+    <% @food_drink.ratings.each do |r| %>
+    <p><strong><%= r.user&.name || "Người dùng đã xóa" %>:</strong> <%= r.score %> / 5</p>
+    <p><%= r.comment %></p>
+    <hr>
+    <% end %>
+    <% else %>
+    <p>Chưa có đánh giá nào.</p>
+    <% end %>
+
+    <% if user_signed_in? %>
+    <h5>Đánh giá của bạn</h5>
+    <%= form_with(model: [@food_drink, @rating], local: true) do |f| %>
+    <div class="mb-2">
+        <%= f.label :score, "Điểm (1-5)" %>
+        <%= f.number_field :score, in: 1..5, value: 5, class: "form-control w-25" %>
+    </div>
+    <div class="mb-2">
+        <%= f.label :comment, "Bình luận" %>
+        <%= f.text_area :comment, class: "form-control", rows: 3 %>
+    </div>
+    <%= f.submit "Gửi đánh giá", class: "btn btn-primary" %>
+    <% end %>
+    <% else %>
+    <p><%= link_to "Đăng nhập", new_user_session_path %> để đánh giá sản phẩm.</p>
+    <% end %>
+
+    <hr>
+
+    <!-- Share social network -->
+    <h5>Chia sẻ</h5>
+    <a href="https://www.facebook.com/sharer/sharer.php?u=<%= request.original_url %>" target="_blank" class="btn btn-sm btn-primary me-1">Facebook</a>
+    <a href="https://twitter.com/intent/tweet?url=<%= request.original_url %>" target="_blank" class="btn btn-sm btn-info me-1">Twitter</a>
+</div>

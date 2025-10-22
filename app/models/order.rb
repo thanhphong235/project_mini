@@ -1,15 +1,26 @@
-# app/models/order.rb
 class Order < ApplicationRecord
   belongs_to :user
   has_many :order_items, dependent: :destroy
 
-  # Trạng thái tiếng Việt
+  enum status: {
+    pending: 0,       # Đang chờ xử lý
+    confirmed: 1,     # Đã xác nhận
+    delivering: 2,    # Đang giao
+    completed: 3,     # Hoàn tất
+    cancelled: 4      # Đã hủy
+  }
+
+  def self.status_human_for(key)
+    {
+      "pending" => "Đang chờ xử lý",
+      "confirmed" => "Đã xác nhận",
+      "delivering" => "Đang giao",
+      "completed" => "Hoàn tất",
+      "cancelled" => "Đã hủy"
+    }[key]
+  end
+
   def status_human
-    case status
-    when "pending" then "Đang chờ"
-    when "completed" then "Hoàn thành"
-    when "cancelled" then "Đã hủy"
-    else status
-    end
+    self.class.status_human_for(status)
   end
 end

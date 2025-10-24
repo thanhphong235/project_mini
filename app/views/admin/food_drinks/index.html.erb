@@ -13,13 +13,14 @@
     <%= link_to "Thêm mới", new_admin_food_drink_path, class: "btn btn-success me-2" %>
 </div>
 
-<table class="table table-striped">
+<table class="table table-striped align-middle">
     <thead>
         <tr>
             <th>#</th>
             <th>Tên</th>
             <th>Giá</th>
             <th>Category</th>
+            <th>Số lượng</th>
             <th>Mô tả</th>
             <th>Ảnh</th>
             <th>Hành động</th>
@@ -27,30 +28,42 @@
     </thead>
     <tbody>
         <% @food_drinks.each_with_index do |fd, index| %>
-        <tr>
+        <tr id="food_drink_<%= fd.id %>">
             <td><%= index + 1 %></td>
             <td><%= fd.name %></td>
             <td><%= number_to_currency(fd.price, unit: "₫") %></td>
             <td><%= fd.category&.name || "Chưa phân loại" %></td>
+
+            <!-- Cập nhật số lượng inline -->
+            <td>
+                <%= form_with model: [:admin, fd], method: :patch, local: true do |f| %>
+                <div class="d-flex">
+                    <%= f.number_field :stock, value: fd.stock, class: "form-control form-control-sm me-1", min: 0 %>
+                    <%= f.submit "Cập nhật", class: "btn btn-sm btn-primary" %>
+                </div>
+                <% end %>
+            </td>
+
+
+
             <td><%= truncate(fd.description, length: 50) %></td>
+
             <td>
                 <% if fd.image.attached? %>
-                <%= image_tag fd.image, width: 100, height: 100, alt: fd.name %>
+                <%= image_tag fd.image, width: 80, height: 80, alt: fd.name %>
                 <% else %>
                 Không có ảnh
                 <% end %>
             </td>
+
             <td>
                 <%= link_to "Sửa", edit_admin_food_drink_path(fd), class: "btn btn-warning btn-sm me-1" %>
-
-                <%# Link xóa Turbo-safe với confirm + cảnh báo order_items %>
                 <%= link_to "Xóa", admin_food_drink_path(fd),
-                        data: { turbo_method: :delete,
-                                turbo_confirm: fd.order_items.any? ?
-                                                "⚠️ Món ăn này đang có đơn hàng. Bạn chắc chắn muốn xoá?" :
-                                                "Bạn có chắc chắn muốn xoá món ăn/thức uống này?" },
-                        class: "btn btn-danger btn-sm" %>
-
+                method: :delete,
+                data: { turbo_confirm: fd.order_items.any? ? 
+                                        "⚠️ Món ăn này đang có đơn hàng. Bạn chắc chắn muốn xoá?" : 
+                                        "Bạn có chắc chắn muốn xoá món ăn/thức uống này?" },
+                class: "btn btn-danger btn-sm" %>
             </td>
         </tr>
         <% end %>

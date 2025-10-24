@@ -1,20 +1,18 @@
-<%= turbo_stream.replace dom_id(@cart_item) do %>
-  <%= render partial: "cart_items/cart_item_row",
-             locals: { item: @cart_item, index: current_user.cart_items.order(:id).pluck(:id).index(@cart_item.id) } %>
+<%= turbo_stream.replace "food_drink_#{@cart_item.food_drink.id}_stock" do %>
+  <%= @cart_item.food_drink.stock > 0 ? @cart_item.food_drink.stock : "Hết hàng" %>
 <% end %>
 
-<%= turbo_stream.replace "cart-summary" do %>
-  <div id="cart-summary" class="text-end mt-3 fade-in">
-    <% if @cart_items.any? %>
-      <p class="fs-5">
-        <strong>Tổng cộng:</strong>
-        <span class="fw-bold text-success"><%= number_to_currency(@total_price, unit: "₫") %></span>
-      </p>
-      <%= button_to "Đặt hàng", orders_path, method: :post, class: "btn btn-success btn-lg shadow-sm" %>
-    <% else %>
-      <p>Giỏ hàng của bạn đang trống.</p>
-    <% end %>
-  </div>
+<%= turbo_stream.replace "food_drink_#{@cart_item.food_drink.id}_button" do %>
+  <% if @cart_item.food_drink.stock > 0 %>
+    <%= button_to "Thêm vào giỏ",
+                  cart_items_path,
+                  method: :post,
+                  params: { food_drink_id: @cart_item.food_drink.id },
+                  form: { data: { turbo_stream: true, turbo_frame: "_top" } },
+                  class: "btn btn-sm btn-outline-success" %>
+  <% else %>
+    <button class="btn btn-sm btn-outline-secondary" disabled>Hết hàng</button>
+  <% end %>
 <% end %>
 
 <%= turbo_stream.replace "cart-count" do %>

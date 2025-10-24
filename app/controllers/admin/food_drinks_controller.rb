@@ -52,9 +52,10 @@ class Admin::FoodDrinksController < ApplicationController
     @food_drink = FoodDrink.find(params[:id])
   end
 
-  def food_drink_params
-    params.require(:food_drink).permit(:name, :price, :description, :image, :category_id)
-  end
+ def food_drink_params
+  params.require(:food_drink).permit(:name, :price, :description, :image, :category_id, :stock)
+end
+
 
   def require_admin
     redirect_to root_path, alert: "Bạn không có quyền truy cập trang này." unless current_user&.admin?

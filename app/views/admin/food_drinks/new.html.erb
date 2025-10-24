@@ -20,6 +20,11 @@
 </div>
 
 <div class="mb-3">
+    <%= f.label :stock, "Số lượng" %>
+    <%= f.number_field :stock, class: "form-control", min: 0 %>
+</div>
+
+<div class="mb-3">
     <%= f.label :image, "Ảnh" %>
     <%= f.file_field :image, class: "form-control" %>
 </div>

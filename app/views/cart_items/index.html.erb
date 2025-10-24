@@ -1,28 +1,48 @@
-<h2 class="mb-4 d-flex align-items-center gap-3">
-    <%= link_to "Quay lại", food_drinks_path, class: "btn btn-secondary" %>
-    Giỏ hàng của bạn
-</h2>
+<h1><%= link_to "back", food_drinks_path, class: "btn btn-primary" %> Giỏ hàng của bạn</h1>
 
 <% if @cart_items.any? %>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Món ăn / Thức uống</th>
+            <th>Giá</th>
+            <th>Số lượng</th>
+            <th>Tổng</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% @cart_items.each_with_index do |item, index| %>
+        <!-- Đặt id đúng để Turbo Stream remove hoạt động -->
+        <tr id="<%= dom_id(item) %>">
+            <td><%= index + 1 %></td>
+            <td><%= item.food_drink.name %></td>
+            <td><%= number_to_currency(item.food_drink.price, unit: "₫") %></td>
+            <td>
+                <%= form_with model: item, url: cart_item_path(item), method: :patch, local: false do |f| %>
+                <%= f.number_field :quantity, min: 1, value: item.quantity, class: "form-control", style: "width:80px;" %>
+                <%= f.submit "Cập nhật", class: "btn btn-sm btn-primary mt-1" %>
+                <% end %>
+            </td>
+            <td><%= number_to_currency(item.food_drink.price * item.quantity, unit: "₫") %></td>
+            <td>
+                <%= button_to "Xóa", cart_item_path(item), method: :delete, data: { turbo_confirm: "Bạn có chắc muốn xóa món này?" }, class: "btn btn-sm btn-danger" %>
+            </td>
+        </tr>
+        <% end %>
+    </tbody>
+</table>
 
-<!-- ✅ Khung Turbo Frame chứa bảng giỏ hàng -->
-<%= turbo_frame_tag "cart-items" do %>
-<%= render partial: "cart_items/cart_items_table", locals: { cart_items: @cart_items } %>
-<% end %>
-
-<!-- ✅ Khung Turbo Frame chứa phần tổng cộng & đặt hàng -->
-<%= turbo_frame_tag "cart-summary" do %>
-<div class="text-end mt-3">
-    <p class="fs-5">
-        <strong>Tổng cộng:</strong>
-        <span class="fw-bold text-success"><%= number_to_currency(@total_price, unit: "₫") %></span>
-    </p>
-    <%= button_to "Đặt hàng", orders_path, method: :post, class: "btn btn-success btn-lg shadow-sm" %>
+<!-- Tổng tiền và nút đặt hàng -->
+<div id="cart-summary" class="text-end mt-3">
+    <p><strong>Tổng cộng:</strong> <%= number_to_currency(@total_price, unit: "₫") %></p>
+    <%= button_to "Đặt hàng", orders_path, method: :post, class: "btn btn-success btn-lg" %>
 </div>
-<% end %>
 
 <% else %>
-<div class="alert alert-info mt-4 text-center">
-    Giỏ hàng của bạn đang trống.
-</div>
+<p>Giỏ hàng của bạn đang trống.</p>
+<%= link_to "Tiếp tục mua sắm", food_drinks_path, class: "btn btn-primary" %>
 <% end %>
+
+<!-- Cart count trên navbar -->

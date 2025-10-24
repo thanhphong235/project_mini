@@ -6,21 +6,22 @@ Rails.application.routes.draw do
     resources :users
     resources :categories
     resources :food_drinks
-    resources :orders, only: [:index, :show, :destroy]
+    resources :orders, only: [:index, :show,:update, :destroy]
   end
 
   root "pages#home"
+  
 
   resources :food_drinks, only: [:index, :show] do
     resources :ratings, only: [:create]
   end
 
   # Giỏ hàng
-  resources :cart_items, only: [:create, :update, :destroy]
+  resources :cart_items, only: [:create,:show, :update, :destroy]
   get "cart", to: "cart_items#index", as: :cart
 
   resource :profile, only: [:show, :edit, :update]
   resources :suggestions, only: [:new, :create]
-  resources :orders, only: [:index, :show, :create]
+  resources :orders, only: [:index, :show,:update, :create]
 
 end

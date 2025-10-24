@@ -1,7 +1,7 @@
 <h2>Chi tiết đơn hàng #<%= @order.id %></h2>
 
 <p><strong>Ngày đặt:</strong> <%= @order.created_at.strftime("%d/%m/%Y %H:%M") %></p>
-<p><strong>Trạng thái:</strong> <%= @order.status %></p>
+<p><strong>Trạng thái:</strong> <%= @order.status_human %></p>
 
 <table class="table table-striped mt-3">
     <thead>

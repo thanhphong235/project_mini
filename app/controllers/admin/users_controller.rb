@@ -13,9 +13,14 @@ module Admin
     end
 
     def destroy
-      @user.destroy
-      redirect_to admin_users_path, notice: "Người dùng đã bị xóa."
+      if @user.admin?
+        redirect_to admin_users_path, alert: "Không thể xóa admin."
+      else
+        @user.destroy
+        redirect_to admin_users_path, notice: "Người dùng đã bị xóa."
+      end
     end
+
 
     private
 

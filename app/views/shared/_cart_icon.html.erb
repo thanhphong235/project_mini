@@ -1,0 +1,9 @@
+<%= link_to cart_path, class: "nav-link position-relative", data: { turbo_frame: "_top" } do %>
+<i class="bi bi-cart-fill" style="font-size: 1.3rem;"></i>
+<% count = current_user.cart_items.sum(:quantity) %>
+<% if count > 0 %>
+<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+    <%= count %>
+</span>
+<% end %>
+<% end %>

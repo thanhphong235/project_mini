@@ -3,6 +3,7 @@
 <div class="mb-3">
     <%= link_to "Quay lại", admin_dashboard_path, class: "btn btn-secondary" %>
     <%= link_to "Tất cả", admin_food_drinks_path, class: "btn btn-secondary me-2" %>
+
     <% Category.all.each do |category| %>
     <%= link_to category.name, admin_food_drinks_path(category_id: category.id), class: "btn btn-primary me-2" %>
     <% end %>
@@ -41,7 +42,15 @@
             </td>
             <td>
                 <%= link_to "Sửa", edit_admin_food_drink_path(fd), class: "btn btn-warning btn-sm me-1" %>
-                <%= button_to "Xóa", admin_food_drink_path(fd), method: :delete, data: { confirm: "Bạn có chắc chắn muốn xoá?" }, class: "btn btn-danger btn-sm" %>
+
+                <%# Link xóa Turbo-safe với confirm + cảnh báo order_items %>
+                <%= link_to "Xóa", admin_food_drink_path(fd),
+                        data: { turbo_method: :delete,
+                                turbo_confirm: fd.order_items.any? ?
+                                                "⚠️ Món ăn này đang có đơn hàng. Bạn chắc chắn muốn xoá?" :
+                                                "Bạn có chắc chắn muốn xoá món ăn/thức uống này?" },
+                        class: "btn btn-danger btn-sm" %>
+
             </td>
         </tr>
         <% end %>

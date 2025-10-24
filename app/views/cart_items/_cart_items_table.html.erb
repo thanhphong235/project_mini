@@ -1,0 +1,53 @@
+<!-- app/views/cart_items/_cart_items_table.html.erb -->
+
+<table class="table table-striped align-middle shadow-sm rounded">
+    <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Sản phẩm</th>
+            <th>Giá</th>
+            <th>Số lượng</th>
+            <th>Thành tiền</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <% cart_items.each_with_index do |item, index| %>
+        <tr id="<%= dom_id(item) %>">
+            <td><%= index + 1 %></td>
+            <td><%= item.food_drink.name %></td>
+            <td><%= number_to_currency(item.food_drink.price, unit: "₫") %></td>
+
+            <td>
+                <!-- ✅ form chuẩn, có scope :cart_item để gửi params đúng -->
+                <%= form_with(model: item, url: cart_item_path(item), method: :patch, data: { turbo_stream: true }) do |f| %>
+
+                <div class="d-flex align-items-center gap-2">
+                    <%= f.number_field :quantity,
+                                 value: item.quantity,
+                                 min: 1,
+                                 class: "form-control w-auto text-center" %>
+
+                    <%= f.submit "Cập nhật", class: "btn btn-sm btn-outline-primary" %>
+                </div>
+                <% end %>
+            </td>
+
+            <td>
+                <strong><%= number_to_currency(item.quantity * item.food_drink.price, unit: "₫") %></strong>
+            </td>
+
+            <td>
+                <%= link_to "Xóa",
+                      cart_item_path(item),
+                      data: {
+                        turbo_method: :delete,
+                        turbo_confirm: "Bạn có chắc chắn muốn xóa sản phẩm này?"
+                      },
+                      class: "btn btn-sm btn-outline-danger" %>
+            </td>
+        </tr>
+        <% end %>
+    </tbody>
+</table>

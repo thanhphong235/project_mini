@@ -1,13 +1,14 @@
 class OrdersController < ApplicationController
   before_action :authenticate_user!
 
+  def show
+    @order = current_user.orders.includes(order_items: :food_drink).find(params[:id])
+  end
+
   def index
     @orders = current_user.orders.order(created_at: :desc)
   end
 
-  def show
-    @order = current_user.orders.includes(order_items: :food_drink).find(params[:id])
-  end
 
   def create
     cart_items = current_user.cart_items.includes(:food_drink)

@@ -1,10 +1,16 @@
-<%= turbo_stream.remove dom_id(@cart_item) %>
+<%= turbo_stream.replace dom_id(@cart_item) do %>
+  <%= render partial: "cart_items/cart_item_row",
+             locals: { item: @cart_item, index: current_user.cart_items.order(:id).pluck(:id).index(@cart_item.id) } %>
+<% end %>
 
 <%= turbo_stream.replace "cart-summary" do %>
-  <div id="cart-summary" class="text-end mt-3">
+  <div id="cart-summary" class="text-end mt-3 fade-in">
     <% if @cart_items.any? %>
-      <p><strong>Tổng cộng:</strong> <%= number_to_currency(@total_price, unit: "₫") %></p>
-      <%= button_to "Đặt hàng", orders_path, method: :post, class: "btn btn-success btn-lg" %>
+      <p class="fs-5">
+        <strong>Tổng cộng:</strong>
+        <span class="fw-bold text-success"><%= number_to_currency(@total_price, unit: "₫") %></span>
+      </p>
+      <%= button_to "Đặt hàng", orders_path, method: :post, class: "btn btn-success btn-lg shadow-sm" %>
     <% else %>
       <p>Giỏ hàng của bạn đang trống.</p>
     <% end %>

@@ -1,6 +1,6 @@
-<%= turbo_stream.replace "cart-icon" do %>
-  <%= turbo_frame_tag "cart-icon" do %>
-    <%= link_to cart_path, class: "nav-link position-relative" do %>
+<%= turbo_stream.replace "cart-count" do %>
+  <%= turbo_frame_tag "cart-count" do %>
+    <%= link_to cart_path, class: "nav-link position-relative", data: { turbo_frame: "_top" } do %>
       <i class="bi bi-cart-fill" style="font-size: 1.3rem;"></i>
       <% count = current_user.cart_items.sum(:quantity) %>
       <% if count > 0 %>

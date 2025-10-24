@@ -27,9 +27,11 @@
             <td><%= user.created_at.strftime("%d/%m/%Y") %></td>
             <td>
                 <%= link_to "Xem", admin_user_path(user), class: "btn btn-sm btn-outline-primary me-1" %>
-                <%= link_to "Xóa", admin_user_path(user), method: :delete,
-                    data: { turbo_confirm: "Bạn có chắc chắn muốn xóa người dùng này?" },
-                    class: "btn btn-sm btn-outline-danger" %>
+                <%= link_to "Xóa", admin_user_path(user),
+      data: { turbo_method: :delete,
+              turbo_confirm: "Bạn có chắc chắn muốn xóa người dùng này?" },
+      class: "btn btn-sm btn-outline-danger" %>
+
             </td>
         </tr>
         <% end %>

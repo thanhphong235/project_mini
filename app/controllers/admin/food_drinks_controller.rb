@@ -36,9 +36,15 @@ class Admin::FoodDrinksController < ApplicationController
   end
 
   def destroy
-    @food_drink.destroy
-    redirect_to admin_food_drinks_path, notice: "Đã xoá món ăn/thức uống."
+    begin
+      @food_drink.destroy
+      redirect_to admin_food_drinks_path, notice: "Đã xoá món ăn/thức uống."
+    rescue ActiveRecord::InvalidForeignKey
+      redirect_to admin_food_drinks_path, alert: "Không thể xoá món ăn/thức uống vì đang có đơn hàng liên quan."
+    end
   end
+
+
 
   private
 

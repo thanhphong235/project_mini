@@ -1,39 +1,28 @@
-<h2><%= link_to "Quay lại", food_drinks_path, class: "btn btn-secondary" %> Lịch sử đơn hàng của bạn</h2>
+<h1>Lịch sử đơn hàng</h1>
 
-<% if @orders.any? %>
-<table class="table table-bordered mt-3">
-    <thead class="table-dark">
+<table class="table table-striped mt-3">
+    <thead>
         <tr>
             <th>#</th>
+            <th>Mã đơn hàng</th>
             <th>Ngày đặt</th>
             <th>Tổng tiền</th>
             <th>Trạng thái</th>
-            <th>Chi tiết</th>
+            <th>Hành động</th>
         </tr>
     </thead>
     <tbody>
         <% @orders.each_with_index do |order, index| %>
         <tr>
             <td><%= index + 1 %></td>
+            <td>#<%= order.id %></td>
             <td><%= order.created_at.strftime("%d/%m/%Y %H:%M") %></td>
             <td><%= number_to_currency(order.total_price, unit: "₫") %></td>
+            <td><%= order.status_human %></td>
             <td>
-                <% case order.status %>
-                <% when "pending" %>
-                <span class="badge bg-warning text-dark">Đang xử lý</span>
-                <% when "completed" %>
-                <span class="badge bg-success">Hoàn thành</span>
-                <% else %>
-                <span class="badge bg-secondary">Khác</span>
-                <% end %>
-            </td>
-            <td>
-                <%= link_to "Xem chi tiết", order_path(order), class: "btn btn-sm btn-outline-primary" %>
+                <%= link_to "Chi tiết", order_path(order), class: "btn btn-sm btn-primary" %>
             </td>
         </tr>
         <% end %>
     </tbody>
 </table>
-<% else %>
-<p>Bạn chưa có đơn hàng nào.</p>
-<% end %>

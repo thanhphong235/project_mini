@@ -1,0 +1,4 @@
+<div id="cart-summary" class="text-end mt-3">
+    <p><strong>Tổng cộng:</strong> <%= number_to_currency(total_price, unit: "₫") %></p>
+    <%= button_to "Đặt hàng", orders_path, method: :post, class: "btn btn-success btn-lg" %>
+</div>

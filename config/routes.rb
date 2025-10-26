@@ -1,35 +1,47 @@
-# config/routes.rb
 Rails.application.routes.draw do
-  devise_for :users
+  # ======================
+  # Đăng ký / đăng nhập người dùng
+  # ======================
+  devise_for :users, controllers: {
+    omniauth_callbacks: "users/omniauth_callbacks"
+  }
 
+
+  # ======================
+  # Khu vực ADMIN
+  # ======================
   namespace :admin do
     get "dashboard", to: "dashboard#index"
 
     resources :users
     resources :categories
-    resources :food_drinks, except: [:show]   # Admin không có show
+    resources :food_drinks, except: [:show]
     resources :orders, only: [:index, :show, :update, :destroy]
+    resources :suggestions, only: [:index, :show, :edit, :update, :destroy]
   end
 
+  # ======================
+  # Trang chủ
+  # ======================
   root "pages#home"
 
-  # Người dùng bình thường
+  # ======================
+  # Khu vực USER
+  # ======================
   resources :food_drinks, only: [:index, :show] do
     resources :ratings, only: [:create, :update]
   end
 
-  
   # Giỏ hàng
   resources :cart_items, only: [:create, :update, :destroy]
   get "cart", to: "cart_items#index", as: :cart
 
-
-  # Profile
+  # Hồ sơ người dùng
   resource :profile, only: [:show, :edit, :update]
 
-  # Suggestions
-  resources :suggestions, only: [:new, :create]
+  # Góp ý
+  resources :suggestions
 
-  # Orders
+  # Đơn hàng
   resources :orders, only: [:index, :show, :update, :create]
 end

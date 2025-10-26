@@ -127,4 +127,19 @@ body.login-page {
   text-align: center;
 }
 
+// suggestion
+#suggestion-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1050;
+}
+
+#suggestion-button .btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  font-size: 24px;
+}
 

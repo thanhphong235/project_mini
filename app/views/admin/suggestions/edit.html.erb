@@ -1,0 +1,18 @@
+<h2>Cập nhật trạng thái góp ý</h2>
+
+<p><strong>Tiêu đề:</strong> <%= @suggestion.title %></p>
+<p><strong>Nội dung:</strong> <%= @suggestion.content %></p>
+<p><strong>Người gửi:</strong> <%= @suggestion.user.name || @suggestion.user.email %></p>
+
+<hr>
+
+<%= form_with model: [:admin, @suggestion], local: true do |f| %>
+<div class="mb-3">
+    <%= f.label :status, "Trạng thái", class: "form-label" %>
+    <%= f.select :status, [["Chờ duyệt", "pending"], ["Chấp nhận", "approved"], ["Từ chối", "rejected"]],
+        {}, class: "form-select" %>
+</div>
+
+<%= f.submit "Lưu", class: "btn btn-success" %>
+<%= link_to "Quay lại", admin_suggestions_path, class: "btn btn-secondary ms-2" %>
+<% end %>

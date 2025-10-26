@@ -1,0 +1,11 @@
+<%= turbo_stream.replace "flash" do %>
+  <%= render "shared/flash" %>
+<% end %>
+
+<%= turbo_stream.after "suggestionModal" do %>
+  <script>
+    const modal = bootstrap.Modal.getInstance(document.getElementById("suggestionModal"));
+    if (modal) modal.hide();
+    document.querySelector("#suggestionModal form").reset();
+  </script>
+<% end %>

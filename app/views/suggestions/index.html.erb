@@ -1,0 +1,58 @@
+<h1 class="mb-4 text-center">Góp ý của tôi</h1>
+
+<% if @suggestions.any? %>
+<table class="table table-striped table-hover align-middle shadow-sm">
+    <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Tên món / thức uống</th>
+            <th>Nội dung góp ý</th>
+            <th>Trạng thái</th>
+            <th>Ngày gửi</th>
+            <th class="text-center">Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% @suggestions.each_with_index do |s, index| %>
+        <tr>
+            <td><%= index + 1 %></td>
+            <td><%= s.title %></td>
+            <td><%= truncate(s.content, length: 50) %></td>
+            <td>
+                <% if s.status == "pending" %>
+                <span class="badge bg-warning text-dark">Đang chờ</span>
+                <% elsif s.status == "approved" %>
+                <span class="badge bg-success">Đã xác nhận</span>
+                <% else %>
+                <span class="badge bg-secondary">Đã từ chối</span>
+                <% end %>
+            </td>
+            <td><%= s.created_at.strftime("%d/%m/%Y %H:%M") %></td>
+            <td class="text-center">
+                <%= link_to suggestion_path(s), class: "btn btn-sm btn-outline-info me-1", title: "Xem chi tiết" do %>
+                <i class="bi bi-eye"></i>
+                <% end %>
+
+                <% if s.status == "pending" %>
+                <%= link_to edit_suggestion_path(s), class: "btn btn-sm btn-outline-warning me-1", title: "Chỉnh sửa" do %>
+                <i class="bi bi-pencil"></i>
+                <% end %>
+
+                <%= link_to suggestion_path(s), data: { turbo_method: :delete, turbo_confirm: "Bạn có chắc muốn xóa góp ý này?" }, class: "btn btn-sm btn-outline-danger", title: "Xóa góp ý" do %>
+                <i class="bi bi-trash"></i>
+                <% end %>
+                <% else %>
+                <small class="text-muted">Đã xử lý</small>
+                <% end %>
+            </td>
+        </tr>
+        <% end %>
+    </tbody>
+</table>
+<% else %>
+<div class="alert alert-info text-center">
+    Bạn chưa gửi góp ý nào.
+    <br>
+    Nhấn vào nút <i class="bi bi-envelope-fill text-primary"></i> ở góc trái để gửi góp ý nhé!
+</div>
+<% end %>

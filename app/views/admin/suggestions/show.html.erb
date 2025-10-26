@@ -1,0 +1,11 @@
+<h2>Chi tiết Góp ý</h2>
+
+<p><strong>Người gửi:</strong> <%= @suggestion.user.name || @suggestion.user.email %></p>
+<p><strong>Tiêu đề:</strong> <%= @suggestion.title %></p>
+<p><strong>Nội dung:</strong></p>
+<p><%= simple_format(@suggestion.content) %></p>
+<p><strong>Trạng thái:</strong> <%= @suggestion.status || "pending" %></p>
+
+<hr>
+<%= link_to "Quay lại", admin_suggestions_path, class: "btn btn-secondary" %>
+<%= link_to "Sửa", edit_admin_suggestion_path(@suggestion), class: "btn btn-warning ms-2" %>

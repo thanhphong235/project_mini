@@ -1,0 +1,44 @@
+<h1 class="mb-4 text-center">Chi tiết góp ý</h1>
+
+<div class="card shadow-sm mx-auto" style="max-width: 700px;">
+    <div class="card-body">
+        <h5 class="card-title text-primary mb-3">
+            <i class="bi bi-chat-dots"></i>
+            <%= @suggestion.title %>
+        </h5>
+
+        <p class="card-text"><strong>Nội dung góp ý:</strong></p>
+        <p class="border rounded p-3 bg-light"><%= simple_format(@suggestion.content) %></p>
+
+        <p class="mt-3">
+            <strong>Trạng thái:</strong>
+            <% if @suggestion.status == "pending" %>
+            <span class="badge bg-warning text-dark">Đang chờ</span>
+            <% elsif @suggestion.status == "approved" %>
+            <span class="badge bg-success">Đã xác nhận</span>
+            <% else %>
+            <span class="badge bg-secondary">Đã từ chối</span>
+            <% end %>
+        </p>
+
+        <p><strong>Ngày gửi:</strong> <%= @suggestion.created_at.strftime("%d/%m/%Y %H:%M") %></p>
+
+        <div class="mt-4 d-flex justify-content-between">
+            <%= link_to suggestions_path, class: "btn btn-outline-secondary" do %>
+            <i class="bi bi-arrow-left"></i> Quay lại
+            <% end %>
+
+            <% if @suggestion.status == "pending" %>
+            <div>
+                <%= link_to edit_suggestion_path(@suggestion), class: "btn btn-outline-warning me-2" do %>
+                <i class="bi bi-pencil"></i> Sửa
+                <% end %>
+
+                <%= link_to suggestion_path(@suggestion), data: { turbo_method: :delete, turbo_confirm: "Bạn có chắc muốn xóa góp ý này?" }, class: "btn btn-outline-danger" do %>
+                <i class="bi bi-trash"></i> Xóa
+                <% end %>
+            </div>
+            <% end %>
+        </div>
+    </div>
+</div>

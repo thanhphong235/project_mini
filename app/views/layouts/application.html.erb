@@ -9,13 +9,13 @@
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
 
-    <!-- Bootstrap Icons CDN -->
+    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
 </head>
 
 <body class="d-flex flex-column min-vh-100">
-
-    <!-- Header / Navbar -->
+    <!-- Header -->
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm fixed-top">
             <div class="container">
@@ -39,6 +39,9 @@
                         <li class="nav-item">
                             <%= link_to "Shopping", food_drinks_path, class: "nav-link" %>
                         </li>
+                        <li class="nav-item">
+                            <%= link_to "Góp ý của tôi", suggestions_path, class: "nav-link" %>
+                        </li>
                         <li class="nav-item ms-3">
                             <%= turbo_frame_tag "cart-count" do %>
                             <%= render "shared/cart_icon" %>
@@ -52,8 +55,8 @@
 
                         <li class="nav-item ms-3">
                             <%= link_to "Log out", destroy_user_session_path,
-                      data: { turbo_method: :delete, turbo_confirm: "Bạn chắc chắn muốn đăng xuất?" },
-                      class: "nav-link text-danger" %>
+                        data: { turbo_method: :delete, turbo_confirm: "Bạn chắc chắn muốn đăng xuất?" },
+                        class: "nav-link text-danger" %>
                         </li>
                         <% else %>
                         <li class="nav-item">
@@ -69,9 +72,17 @@
         </nav>
     </header>
 
-    <!-- Main Content -->
-    <main class="flex-grow-1" style="padding-top: 80px; padding-bottom: 0;">
+    <!-- Main -->
+    <main class="flex-grow-1" style="padding-top: 80px;">
         <div class="container mt-4">
+            <!-- Flash messages -->
+            <% flash.each do |key, message| %>
+            <div class="alert alert-<%= key == "success" ? "success" : "danger" %> alert-dismissible fade show" role="alert">
+                <%= message %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <% end %>
+
             <%= yield %>
         </div>
     </main>
@@ -83,6 +94,43 @@
         </div>
     </footer>
 
+    <% if user_signed_in? && !current_user.admin? %>
+    <!-- Floating Suggestion Button -->
+    <div id="suggestion-button">
+        <button type="button" class="btn btn-primary rounded-circle" data-bs-toggle="modal" data-bs-target="#suggestionModal" title="Góp ý món ăn / thức uống">
+            <i class="bi bi-envelope-fill"></i>
+        </button>
+    </div>
+
+    <!-- Suggestion Modal -->
+    <div class="modal fade" id="suggestionModal" tabindex="-1" aria-labelledby="suggestionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="suggestionModalLabel">Góp ý món ăn / thức uống</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                </div>
+                <div class="modal-body">
+                    <%= form_with(model: Suggestion.new, url: suggestions_path, local: true) do |f| %>
+                    <div class="mb-3">
+                        <%= f.label :title, "Tên món / thức uống", class: "form-label" %>
+                        <%= f.text_field :title, class: "form-control", required: true %>
+                    </div>
+
+                    <div class="mb-3">
+                        <%= f.label :content, "Mô tả / lý do đề xuất", class: "form-label" %>
+                        <%= f.text_area :content, class: "form-control", rows: 4, required: true %>
+                    </div>
+
+                    <div class="text-end">
+                        <%= f.submit "Gửi góp ý", class: "btn btn-success" %>
+                    </div>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% end %>
 </body>
 
 </html>

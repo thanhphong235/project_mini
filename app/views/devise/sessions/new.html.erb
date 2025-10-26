@@ -7,6 +7,7 @@
             <div class="card-body">
                 <h2 class="card-title text-center mb-4">Log in</h2>
 
+                <!-- Form login email/password -->
                 <%= form_for(:user, url: user_session_path) do |f| %>
 
                 <!-- Email -->
@@ -31,13 +32,30 @@
                 </div>
 
                 <!-- Submit button -->
-                <div class="d-grid">
+                <div class="d-grid mb-3">
                     <%= f.submit "Log in", class: "btn btn-primary" %>
                 </div>
 
                 <% end %>
 
                 <hr>
+
+                <!-- Social login buttons -->
+                <div class="d-grid gap-2 mb-3">
+                    <%= link_to "Sign in with Google", user_google_oauth2_omniauth_authorize_path, class: "btn btn-danger" %>
+
+
+
+                    <%= link_to "Sign in with Facebook",
+                            user_facebook_omniauth_authorize_path,
+                            class: "btn btn-primary",
+                            data: { turbo: false } %>
+
+                    <%= link_to "Sign in with Twitter",
+                                user_twitter_omniauth_authorize_path,
+                                class: "btn btn-info text-white",
+                                data: { turbo: false } %>
+                </div>
 
                 <p class="text-center mb-0">
                     New user? <%= link_to "Sign up now!", new_user_registration_path %>

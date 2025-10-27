@@ -17,6 +17,7 @@ gem "omniauth"
 gem "omniauth-facebook"
 gem "omniauth-google-oauth2"
 gem "omniauth-twitter"
+gem "omniauth-rails_csrf_protection"
 
 # --- UI / Frontend ---
 gem "bootstrap", "~> 5.3"
@@ -27,10 +28,10 @@ gem "stimulus-rails"
 
 # --- Utilities ---
 gem "jbuilder"
-gem "ransack" # Tìm kiếm / Lọc sản phẩm
-gem "dotenv-rails", groups: [:development, :test] # Load biến môi trường từ .env
+gem "ransack"
+gem "dotenv-rails", groups: [:development, :test]
 
-# --- Windows timezone fix (chỉ áp dụng khi cần) ---
+# --- Windows timezone fix ---
 gem "tzinfo-data", platforms: %i[mswin mswin64 mingw x64_mingw jruby]
 
 # --- Development & Debugging ---

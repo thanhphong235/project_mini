@@ -1,11 +1,15 @@
 Rails.application.routes.draw do
   # ======================
-  # Đăng ký / đăng nhập người dùng
+  # Devise: Đăng ký / đăng nhập người dùng + OmniAuth
   # ======================
   devise_for :users, controllers: {
     omniauth_callbacks: "users/omniauth_callbacks"
   }
 
+  # ======================
+  # Trang chủ
+  # ======================
+  root "pages#home"
 
   # ======================
   # Khu vực ADMIN
@@ -19,11 +23,6 @@ Rails.application.routes.draw do
     resources :orders, only: [:index, :show, :update, :destroy]
     resources :suggestions, only: [:index, :show, :edit, :update, :destroy]
   end
-
-  # ======================
-  # Trang chủ
-  # ======================
-  root "pages#home"
 
   # ======================
   # Khu vực USER

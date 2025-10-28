@@ -22,7 +22,7 @@ Rails.application.configure do
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info").to_sym
 
   # Assets
-  config.assets.compile = false
+  config.assets.compile = true
 
   # I18n fallback
   config.i18n.fallbacks = true

@@ -1,0 +1,13 @@
+<h1>Đơn hàng của bạn đã được đặt thành công!</h1>
+
+<p>Xin chào <%= @user.name %>,</p>
+<p>Bạn vừa đặt đơn hàng #<%= @order.id %> với tổng giá: <%= number_to_currency(@order.total_price, unit: "₫") %>.</p>
+
+<h2>Chi tiết đơn hàng:</h2>
+<ul>
+    <% @order.order_items.each do |item| %>
+    <li><%= item.food_drink.name %> x <%= item.quantity %> = <%= number_to_currency(item.price * item.quantity, unit: "₫") %></li>
+    <% end %>
+</ul>
+
+<p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!</p>

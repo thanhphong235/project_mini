@@ -1,0 +1,4 @@
+<h1>Xin chào <%= @order.user.name %>,</h1>
+<p>Đơn hàng của bạn đã được tạo thành công!</p>
+<p>Mã đơn: <%= @order.id %></p>
+<p>Tổng tiền: <%= number_to_currency(@order.total_price) %></p>

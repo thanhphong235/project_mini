@@ -1,0 +1,8 @@
+<h2>Monthly Order Statistics</h2>
+<p>Total Orders: <%= @stats[:total_orders] %></p>
+<p>Total Revenue: <%= @stats[:total_revenue] %> VND</p>
+<ul>
+    <% @stats[:top_products].each do |name, count| %>
+    <li><%= name %> - <%= count %> sold</li>
+    <% end %>
+</ul>

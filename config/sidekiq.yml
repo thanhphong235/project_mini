@@ -1,0 +1,9 @@
+:concurrency: 5
+:queues:
+  - default
+
+:schedule:
+  monthly_statistics:
+    cron: "0 8 1 * *" # 8:00 sáng ngày 1 hàng tháng
+    class: "MonthlyStatisticsJob"
+    queue: default

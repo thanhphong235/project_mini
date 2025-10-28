@@ -1,0 +1,32 @@
+<div class="order-statistics">
+    <div class="container">
+        <%= link_to "Quay lại", admin_dashboard_path, class: "btn btn-secondary" %>
+        <h1>Thống kê đơn hàng tháng <%= Time.current.month %>/<%= Time.current.year %></h1>
+
+        <p>Tổng số đơn hàng: <%= @total_orders %></p>
+        <p>Tổng doanh thu: $<%= @total_revenue %></p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID đơn</th>
+                    <th>Người dùng</th>
+                    <th>Ngày đặt</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% @orders.each do |order| %>
+                <tr>
+                    <td><%= order.id %></td>
+                    <td><%= order.user.email %></td>
+                    <td><%= order.created_at.strftime("%d/%m/%Y") %></td>
+                    <td>$<%= order.total_price %></td>
+                    <td><%= order.status %></td>
+                </tr>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+</div>

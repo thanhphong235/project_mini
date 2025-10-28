@@ -1,0 +1,28 @@
+<!-- app/views/admin_mailer/monthly_order_summary.html.erb -->
+<h1>Thống kê đơn hàng tháng <%= @month %>/<%= @year %></h1>
+
+<p>Tổng số đơn hàng: <%= @orders.count %></p>
+<p>Tổng doanh thu: $<%= @orders.sum(&:total_price) %></p>
+
+<table border="1" cellpadding="5" cellspacing="0">
+    <thead>
+        <tr>
+            <th>ID đơn</th>
+            <th>Người dùng</th>
+            <th>Ngày đặt</th>
+            <th>Tổng tiền</th>
+            <th>Trạng thái</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% @orders.each do |order| %>
+        <tr>
+            <td><%= order.id %></td>
+            <td><%= order.user.email %></td>
+            <td><%= order.created_at.strftime("%d/%m/%Y") %></td>
+            <td>$<%= order.total_price %></td>
+            <td><%= order.status %></td>
+        </tr>
+        <% end %>
+    </tbody>
+</table>

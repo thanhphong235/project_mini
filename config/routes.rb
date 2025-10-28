@@ -27,6 +27,9 @@ Rails.application.routes.draw do
     resources :food_drinks, except: [:show]
     resources :orders, only: [:index, :show, :update, :destroy]
     resources :suggestions, only: [:index, :show, :edit, :update, :destroy]
+
+      # Thêm route thống kê đơn hàng
+    get "order_statistics", to: "dashboard#order_statistics", as: "order_statistics"
   end
 
   # ======================

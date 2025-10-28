@@ -21,11 +21,13 @@ Rails.application.configure do
   config.action_mailer.smtp_settings = {
     address: "smtp.gmail.com",
     port: 587,
-    domain: "example.com",
+    domain: "gmail.com",
     user_name: ENV["USER_EMAIL"],    # mặc định gửi bằng email user
     password: ENV["USER_EMAIL_PASSWORD"],
     authentication: "plain",
     enable_starttls_auto: true
+    open_timeout: 10,
+    read_timeout: 10
   }
 
   # ActiveJob chạy ngay lập tức trong dev

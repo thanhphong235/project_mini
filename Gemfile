@@ -39,7 +39,7 @@ gem "active_storage_validations"
 gem "jbuilder"
 gem "ransack"
 gem "kaminari"
-gem "dotenv-rails", groups: [:development, :test]
+gem "dotenv-rails", groups: [:development, :test, :production]
 
 # --- Background Jobs ---
 gem "sidekiq"

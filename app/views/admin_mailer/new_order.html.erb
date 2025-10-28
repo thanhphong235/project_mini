@@ -1,0 +1,12 @@
+<h1>Đơn hàng mới từ <%= @order.user.name || @order.user.email %></h1>
+
+<p>Đơn hàng #<%= @order.id %> vừa được đặt với tổng giá: <%= number_to_currency(@order.total_price) %></p>
+
+<h2>Chi tiết đơn hàng:</h2>
+<ul>
+    <% @order.order_items.each do |item| %>
+    <li>
+        <%= item.food_drink.name %> x <%= item.quantity %> = <%= number_to_currency(item.price * item.quantity) %>
+    </li>
+    <% end %>
+</ul>

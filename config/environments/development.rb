@@ -13,17 +13,17 @@ Rails.application.configure do
   # ActiveStorage
   config.active_storage.service = :local
 
-  # Mailer setup (gửi thật)
+  # Mailer setup (default: user email)
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.perform_caching = false
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address: "smtp.gmail.com", # hoặc server bạn dùng
+    address: "smtp.gmail.com",
     port: 587,
     domain: "example.com",
-    user_name: ENV["GMAIL_USERNAME"], # email gửi
-    password: ENV["GMAIL_PASSWORD"],   # mật khẩu / app password
+    user_name: ENV["USER_EMAIL"],    # mặc định gửi bằng email user
+    password: ENV["USER_EMAIL_PASSWORD"],
     authentication: "plain",
     enable_starttls_auto: true
   }
@@ -37,9 +37,3 @@ Rails.application.configure do
   config.active_record.verbose_query_logs = true
   config.assets.quiet = true
 end
-
-
-
-# Hướng dẫn chạy:
-# 1️⃣ Chạy Sidekiq (nếu muốn test job bất đồng bộ): `bundle exec sidekiq`
-# 2️⃣ Chạy Rails server: `rails s`

@@ -25,7 +25,6 @@ class OrdersController < ApplicationController
     begin
       order = nil
 
-      # Transaction chỉ để thao tác DB
       ActiveRecord::Base.transaction do
         order = current_user.orders.create!(total_price: total_price, status: "pending")
 
@@ -40,16 +39,19 @@ class OrdersController < ApplicationController
         cart_items.destroy_all
       end
 
-      # Gửi mail và job **sau khi transaction commit**
-      OrderMailer.new_order(order).deliver_now
+      # Gửi mail sử dụng .with
+      AdminMailer.with(order: order).new_order.deliver_now
+      OrderMailer.with(order: order).new_order.deliver_now
 
+      # Nếu có job khác (chat, notification)
       SystemNotifierJob.perform_later(order.id)
 
-      redirect_to order_path(order), notice: "Đặt hàng thành công!"
+      redirect_to order_path(order), notice: "Đặt hàng thành công! Mail đã gửi đến bạn và admin."
     rescue ActiveRecord::RecordInvalid => e
       redirect_to cart_path, alert: "Đặt hàng thất bại: #{e.record.errors.full_messages.join(', ')}"
     rescue => e
       redirect_to cart_path, alert: "Đặt hàng thất bại: #{e.message}"
     end
   end
+
 end

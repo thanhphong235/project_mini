@@ -15,6 +15,8 @@ class User < ApplicationRecord
   has_many :suggestions, dependent: :destroy
   has_many :ratings, dependent: :destroy
 
+  # Validations
+  validates :role, inclusion: { in: ROLES }
 
   # Callbacks
   before_create :set_default_role
@@ -29,16 +31,16 @@ class User < ApplicationRecord
   end
 
   # Class method: tạo hoặc tìm user từ dữ liệu OAuth
-def self.from_omniauth(auth)
-  where(provider: auth.provider, uid: auth.uid).first_or_initialize.tap do |user|
-    # Nếu không có email (Facebook có thể ẩn email), tạo email tạm
-    user.email = auth.info.email || "#{auth.uid}@#{auth.provider}.com"
-    user.name  = auth.info.name || auth.info.nickname || "User #{auth.uid}"
+  def self.from_omniauth(auth)
+    user = where(provider: auth.provider, uid: auth.uid).first_or_initialize
+    user.email = auth.info.email.presence || "#{auth.uid}@#{auth.provider}.com"
+    user.name  = auth.info.name.presence || auth.info.nickname.presence || "User #{auth.uid}"
     user.password ||= Devise.friendly_token[0, 20]
     user.role ||= "user"
-    user.save if user.changed?
+
+    # Lưu user nếu có thay đổi, return nil nếu save thất bại
+    user.save ? user : nil
   end
-end
 
   private
 

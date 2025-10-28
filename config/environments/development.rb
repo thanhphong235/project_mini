@@ -25,7 +25,7 @@ Rails.application.configure do
     user_name: ENV["USER_EMAIL"],    # mặc định gửi bằng email user
     password: ENV["USER_EMAIL_PASSWORD"],
     authentication: "plain",
-    enable_starttls_auto: true
+    enable_starttls_auto: true,
     open_timeout: 10,
     read_timeout: 10
   }

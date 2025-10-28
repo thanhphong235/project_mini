@@ -25,19 +25,23 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def handle_oauth(provider_name)
     auth = request.env["omniauth.auth"]
 
-    # Tìm user theo email nếu có (Google/Facebook), hoặc tạo mới
-    user = User.find_by(email: auth.info.email) if auth.info.email.present?
+    # Tìm user theo provider+uid hoặc email
+    user = User.find_by(provider: auth.provider, uid: auth.uid)
+    user ||= User.find_by(email: auth.info.email) if auth.info.email.present?
 
-    user ||= User.from_omniauth(auth)
-
-    if user.persisted?
-      # Đăng nhập user và redirect theo after_sign_in_path_for
-      sign_in_and_redirect user, event: :authentication
-      set_flash_message(:notice, :success, kind: provider_name) if is_navigational_format?
-    else
-      # Nếu user không save được, lưu dữ liệu tạm và redirect đến đăng ký
-      session["devise.#{provider_name.downcase}_data"] = auth.except("extra")
-      redirect_to new_user_registration_url, alert: "Đăng nhập bằng #{provider_name} thất bại."
+    # Nếu không có, tạo mới
+    unless user
+      user = User.from_omniauth(auth)
+      unless user.persisted?
+        session["devise.#{provider_name.downcase}_data"] = auth.except("extra")
+        return redirect_to new_user_registration_url, alert: "Đăng nhập bằng #{provider_name} thất bại."
+      end
     end
+
+    # Sign in và redirect relative path
+    sign_in(user, event: :authentication)
+    flash[:notice] = "Đăng nhập thành công bằng #{provider_name}" if is_navigational_format?
+
+    redirect_to food_drinks_path
   end
 end

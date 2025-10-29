@@ -22,9 +22,10 @@ class OrdersController < ApplicationController
 
     total_price = cart_items.sum { |item| item.food_drink.price * item.quantity }
 
-    begin
-      order = nil
+    order = nil
 
+    begin
+      # Transaction chỉ dùng cho DB operations
       ActiveRecord::Base.transaction do
         order = current_user.orders.create!(total_price: total_price, status: "pending")
 
@@ -39,19 +40,32 @@ class OrdersController < ApplicationController
         cart_items.destroy_all
       end
 
-      # Gửi mail sử dụng .with
-      AdminMailer.with(order: order).new_order.deliver_now
-      OrderMailer.with(order: order).new_order.deliver_now
+      # Redirect ngay khi order tạo thành công
+      redirect_to order_path(order), notice: "Đặt hàng thành công! Đơn hàng đã được lưu."
 
-      # Nếu có job khác (chat, notification)
-      SystemNotifierJob.perform_later(order.id)
+      # Gửi mail và job ngoài transaction, async để không phá flow
+      send_order_notifications(order)
 
-      redirect_to order_path(order), notice: "Đặt hàng thành công! Mail đã gửi đến bạn và admin."
     rescue ActiveRecord::RecordInvalid => e
       redirect_to cart_path, alert: "Đặt hàng thất bại: #{e.record.errors.full_messages.join(', ')}"
     rescue => e
-      redirect_to cart_path, alert: "Đặt hàng thất bại: #{e.message}"
+      # Log lỗi để debug production, vẫn redirect về cart
+      Rails.logger.error("[OrderCreateError] #{e.class} - #{e.message}")
+      redirect_to cart_path, alert: "Đặt hàng thất bại, vui lòng thử lại sau."
     end
   end
 
+  private
+
+  def send_order_notifications(order)
+    # Deliver_later để gửi mail async
+    AdminMailer.with(order: order).new_order.deliver_later
+    OrderMailer.with(order: order).new_order.deliver_later
+
+    # Job khác, ví dụ notification, chat
+    SystemNotifierJob.perform_later(order.id)
+  rescue => e
+    Rails.logger.error("[OrderNotificationError] #{e.class} - #{e.message}")
+    # Không raise, tránh phá flow
+  end
 end

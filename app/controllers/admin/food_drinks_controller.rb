@@ -36,14 +36,21 @@ class Admin::FoodDrinksController < ApplicationController
   end
 
   def destroy
-    begin
-      @food_drink.destroy
-      redirect_to admin_food_drinks_path, notice: "Đã xoá món ăn/thức uống."
-    rescue ActiveRecord::InvalidForeignKey
-      redirect_to admin_food_drinks_path, alert: "Không thể xoá món ăn/thức uống vì đang có đơn hàng liên quan."
+  begin
+    @food_drink.destroy
+    respond_to do |format|
+      format.html { redirect_to admin_food_drinks_path, notice: "Đã xoá món ăn/thức uống." }
+      format.turbo_stream # Turbo sẽ dùng file destroy.turbo_stream.erb
+    end
+  rescue ActiveRecord::InvalidForeignKey
+    respond_to do |format|
+      format.html { redirect_to admin_food_drinks_path, alert: "Không thể xoá món ăn/thức uống vì đang có đơn hàng liên quan." }
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.alert("Không thể xoá món ăn/thức uống vì đang có đơn hàng liên quan.")
+      end
     end
   end
-
+end
 
 
   private

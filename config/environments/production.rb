@@ -3,6 +3,7 @@
 Rails.application.configure do
   # Không reload code giữa các request
   config.enable_reloading = false
+  config.cache_classes = true
   config.eager_load = true
 
   # Tắt hiển thị lỗi chi tiết trên môi trường production
@@ -31,7 +32,7 @@ Rails.application.configure do
   # ----------------------------
   config.assets.compile = true
   config.assets.digest = true
-  config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present? || ENV["RENDER"].present?
+  config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present?
 
   # ----------------------------
   # 🌍 I18n fallback
@@ -53,13 +54,14 @@ Rails.application.configure do
   # ----------------------------
   config.action_mailer.perform_caching = false
   config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.prefrom_deliveries = true
+  config.action_mailer.delivery_method = :smtp
 
   config.action_mailer.default_url_options = {
     host: ENV["HOST"] || "project-mini-igbt.onrender.com",
     protocol: "https"
   }
 
-  config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     address: "smtp.gmail.com",
     port: 587,
@@ -79,5 +81,8 @@ Rails.application.configure do
   # ----------------------------
   # 🌐 Host authorization
   # ----------------------------
+  config.hosts.clear
   config.hosts << "project-mini-igbt.onrender.com"
+  config.hosts << ".onrender.com" # Cho phép tất cả subdomain của Render
+  config.hosts << /.*\.onrender\.com/
 end

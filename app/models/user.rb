@@ -36,11 +36,17 @@ class User < ApplicationRecord
     user.email = auth.info.email.presence || "#{auth.uid}@#{auth.provider}.com"
     user.name  = auth.info.name.presence || auth.info.nickname.presence || "User #{auth.uid}"
     user.password ||= Devise.friendly_token[0, 20]
+
+    # Gán role admin nếu email trùng ADMIN_EMAIL
+    admin_email = ENV['ADMIN_EMAIL']
+    user.role = "admin" if user.email == admin_email
+
+    # Mặc định user bình thường
     user.role ||= "user"
 
-    # Lưu user nếu có thay đổi, return nil nếu save thất bại
     user.save ? user : nil
   end
+
 
   private
 

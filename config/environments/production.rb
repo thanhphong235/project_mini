@@ -1,56 +1,51 @@
 # frozen_string_literal: true
 
 Rails.application.configure do
-  # Không reload code giữa các request
-  config.enable_reloading = false
+  # ----------------------------
+  # 🔧 Code loading
+  # ----------------------------
   config.cache_classes = true
   config.eager_load = true
-
-  # Tắt hiển thị lỗi chi tiết trên môi trường production
+  config.enable_reloading = false
   config.consider_all_requests_local = false
-
-  # Bật cache để tối ưu hiệu suất
   config.action_controller.perform_caching = true
-
-  # Cấu hình Active Storage (Render chưa hỗ trợ S3 => dùng local)
-  config.active_storage.service = :local
-
-  # Bắt buộc truy cập qua HTTPS
-  config.force_ssl = true
-
-  # ----------------------------
-  # ⚙️ Logging
-  # ----------------------------
-  config.logger = ActiveSupport::Logger.new(STDOUT)
-                        .tap { |logger| logger.formatter = ::Logger::Formatter.new }
-                        .then { |logger| ActiveSupport::TaggedLogging.new(logger) }
-  config.log_tags = [:request_id]
-  config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info").to_sym
-
-  # ----------------------------
-  # 🎨 Assets (JS, CSS, images)
-  # ----------------------------
-  config.assets.compile = true
-  config.assets.digest = true
   config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present?
 
   # ----------------------------
-  # 🌍 I18n fallback
+  # 🖼️ Assets (JS, CSS, images)
   # ----------------------------
-  config.i18n.fallbacks = true
+  config.assets.compile = true      # Runtime compile (ok cho Render Free)
+  config.assets.digest = true
 
   # ----------------------------
-  # ⚠️ Deprecation
+  # 🌐 Hosts / SSL
   # ----------------------------
-  config.active_support.report_deprecations = false
+  config.force_ssl = true
+  config.hosts.clear
+  config.hosts << "project-mini-igbt.onrender.com"
+  config.hosts << ".onrender.com"
+  config.hosts << /.*\.onrender\.com/
 
   # ----------------------------
-  # 🗃️ Database schema
+  # 🗃️ Database / ActiveRecord
   # ----------------------------
   config.active_record.dump_schema_after_migration = false
 
   # ----------------------------
-  # 📧 Action Mailer
+  # 🧵 Active Job (Sidekiq / inline)
+  # ----------------------------
+  config.active_job.queue_adapter = :inline
+  config.active_job.queue_name_prefix = "foods_drinks_app_production"
+
+  # ----------------------------
+  # 📦 Active Storage
+  # ----------------------------
+  config.active_storage.service = :local  # Render Free chưa hỗ trợ S3
+  # Phân tích ảnh (AnalyzeJob) sẽ chạy inline
+  # Nếu dùng S3 sau này, đổi adapter & dùng Sidekiq
+
+  # ----------------------------
+  # 📧 Action Mailer (Gmail)
   # ----------------------------
   config.action_mailer.perform_caching = false
   config.action_mailer.raise_delivery_errors = true
@@ -72,18 +67,22 @@ Rails.application.configure do
     enable_starttls_auto: true
   }
 
+  # ----------------------------
+  # ⚙️ Logging
+  # ----------------------------
+  config.logger = ActiveSupport::Logger.new(STDOUT)
+                        .tap { |logger| logger.formatter = ::Logger::Formatter.new }
+                        .then { |logger| ActiveSupport::TaggedLogging.new(logger) }
+  config.log_tags = [:request_id]
+  config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info").to_sym
 
   # ----------------------------
-  # 🧵 Active Job (Sidekiq)
+  # 🌍 I18n fallback
   # ----------------------------
-  config.active_job.queue_adapter = :sidekiq
-  config.active_job.queue_name_prefix = "foods_drinks_app_production"
+  config.i18n.fallbacks = true
 
   # ----------------------------
-  # 🌐 Host authorization
+  # ⚠️ Deprecations
   # ----------------------------
-  config.hosts.clear
-  config.hosts << "project-mini-igbt.onrender.com"
-  config.hosts << ".onrender.com" # Cho phép tất cả subdomain của Render
-  config.hosts << /.*\.onrender\.com/
+  config.active_support.report_deprecations = false
 end

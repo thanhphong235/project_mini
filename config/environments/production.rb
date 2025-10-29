@@ -14,7 +14,7 @@ Rails.application.configure do
   # ----------------------------
   # 🖼️ Assets (JS, CSS, images)
   # ----------------------------
-  config.assets.compile = true      # Runtime compile (ok cho Render Free)
+  config.assets.compile = true
   config.assets.digest = true
 
   # ----------------------------
@@ -32,17 +32,19 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   # ----------------------------
-  # 🧵 Active Job (Sidekiq / inline)
+  # 🧵 Active Job
   # ----------------------------
+  # mặc định chạy inline để không cần Redis trên Render Free
   config.active_job.queue_adapter = :inline
   config.active_job.queue_name_prefix = "foods_drinks_app_production"
 
   # ----------------------------
   # 📦 Active Storage
   # ----------------------------
-  config.active_storage.service = :local  # Render Free chưa hỗ trợ S3
-  # Phân tích ảnh (AnalyzeJob) sẽ chạy inline
-  # Nếu dùng S3 sau này, đổi adapter & dùng Sidekiq
+  config.active_storage.service = :local
+  Rails.application.config.active_storage.queues.analysis = :inline
+  Rails.application.config.active_storage.queues.purge    = :inline
+  Rails.application.config.active_storage.queues.mirror   = :inline
 
   # ----------------------------
   # 📧 Action Mailer (Gmail)

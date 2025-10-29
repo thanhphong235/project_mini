@@ -1,11 +1,9 @@
-# app/models/user.rb
 class User < ApplicationRecord
   # Devise modules
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
          :omniauthable, omniauth_providers: %i[google_oauth2 facebook twitter]
 
-  # Constants
   ROLES = %w[user admin].freeze
 
   # Associations
@@ -30,14 +28,17 @@ class User < ApplicationRecord
     role == "user"
   end
 
-  # Class method: tạo hoặc tìm user từ dữ liệu OAuth
+  # ----------------------------
+  # OAuth login / signup
+  # ----------------------------
   def self.from_omniauth(auth)
     user = where(provider: auth.provider, uid: auth.uid).first_or_initialize
+
     user.email = auth.info.email.presence || "#{auth.uid}@#{auth.provider}.com"
     user.name  = auth.info.name.presence || auth.info.nickname.presence || "User #{auth.uid}"
     user.password ||= Devise.friendly_token[0, 20]
 
-    # Gán role admin nếu email trùng ADMIN_EMAIL
+    # Nếu email trùng ADMIN_EMAIL thì gán role admin
     admin_email = ENV['ADMIN_EMAIL']
     user.role = "admin" if user.email == admin_email
 
@@ -47,10 +48,8 @@ class User < ApplicationRecord
     user.save ? user : nil
   end
 
-
   private
 
-  # Set role mặc định là "user"
   def set_default_role
     self.role ||= "user"
   end

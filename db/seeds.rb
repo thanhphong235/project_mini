@@ -1,8 +1,29 @@
+# frozen_string_literal: true
+
+# ----------------------------
+# Users
+# ----------------------------
+admin_email = ENV['ADMIN_EMAIL'] || "admin@example.com"
+user_email  = ENV['USER_EMAIL']  || "user@example.com"
+
+admin = User.find_or_initialize_by(email: admin_email)
+admin.update!(
+  name: "Admin User",
+  password: Devise.friendly_token[0, 20],
+  role: "admin"
+)
+
+user = User.find_or_initialize_by(email: user_email)
+user.update!(
+  name: "Normal User",
+  password: Devise.friendly_token[0, 20],
+  role: "user"
+)
 
 # ----------------------------
 # Categories
 # ----------------------------
-cat_food = Category.find_or_create_by!(name: "Food")
+cat_food  = Category.find_or_create_by!(name: "Food")
 cat_drink = Category.find_or_create_by!(name: "Drink")
 
 # ----------------------------
@@ -24,7 +45,7 @@ foods_drinks_seed.each do |fd_data|
   )
 end
 
-# Lấy lại các món vừa tạo hoặc tồn tại
+# Lấy lại các món vừa tạo
 fd1 = FoodDrink.find_by(name: "Pizza")
 fd2 = FoodDrink.find_by(name: "Coffee")
 fd3 = FoodDrink.find_by(name: "Burger")
@@ -60,13 +81,13 @@ end
 # ----------------------------
 ratings_data = [
   { food_drink: fd1, user: user, score: 5, comment: "Pizza ngon tuyệt vời!" },
-  { food_drink: fd1, user: admin, score: 4, comment: "Pizza ổn, nhưng có thể nhiều phô mai hơn." },
+  { food_drink: fd1, user: admin, score: 4, comment: "Pizza ổn, có thể thêm phô mai." },
   { food_drink: fd2, user: user, score: 4, comment: "Cà phê thơm, ngon." },
-  { food_drink: fd2, user: admin, score: 3, comment: "Cà phê ổn, nhưng hơi đắng." },
-  { food_drink: fd3, user: user, score: 5, comment: "Burger mềm, thịt chất lượng." },
-  { food_drink: fd3, user: admin, score: 4, comment: "Burger ngon, nhưng hơi ít sốt." },
-  { food_drink: fd4, user: user, score: 3, comment: "Trà bình thường, dễ uống." },
-  { food_drink: fd4, user: admin, score: 4, comment: "Trà ngon, thích vị thanh nhẹ." }
+  { food_drink: fd2, user: admin, score: 3, comment: "Cà phê hơi đắng." },
+  { food_drink: fd3, user: user, score: 5, comment: "Burger mềm, thịt ngon." },
+  { food_drink: fd3, user: admin, score: 4, comment: "Burger ngon, hơi ít sốt." },
+  { food_drink: fd4, user: user, score: 3, comment: "Trà bình thường." },
+  { food_drink: fd4, user: admin, score: 4, comment: "Trà ngon, vị thanh nhẹ." }
 ]
 
 ratings_data.each do |data|
@@ -77,4 +98,4 @@ ratings_data.each do |data|
   )
 end
 
-puts "✅ Seed completed: Users, Categories, FoodDrinks, Orders, OrderItems, Ratings"
+puts "✅ Seed completed: Users (#{admin_email}, #{user_email}), Categories, FoodDrinks, Orders, OrderItems, Ratings"

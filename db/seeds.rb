@@ -1,24 +1,3 @@
-# db/seeds.rb
-
-puts "⚡ Cleaning old data..."
-
-# ----------------------------
-# Users
-# ----------------------------
-admin = User.find_or_initialize_by(email: "admin@example.com")
-admin.update!(
-  name: "Admin User",
-  password: "123456",
-  role: "admin"
-)
-
-user = User.find_or_initialize_by(email: "user@example.com")
-user.update!(
-  name: "Test User",
-  password: "123456",
-  role: "user"
-)
-
 
 # ----------------------------
 # Categories

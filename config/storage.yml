@@ -10,9 +10,9 @@ test:
   service: Disk
   root: <%= Rails.root.join("tmp/storage") %>
 # --- Production storage on AWS S3 ---
-# amazon:
-#   service: S3
-#   access_key_id: <%= ENV["AWS_ACCESS_KEY_ID"] %>
-#   secret_access_key: <%= ENV["AWS_SECRET_ACCESS_KEY"] %>
-#   region: <%= ENV["AWS_REGION"] %>
-#   bucket: <%= ENV["AWS_BUCKET"] %>
+amazon:
+  service: S3
+  access_key_id: <%= ENV["AWS_ACCESS_KEY_ID"] %>
+  secret_access_key: <%= ENV["AWS_SECRET_ACCESS_KEY"] %>
+  region: <%= ENV["AWS_REGION"] %>
+  bucket: <%= ENV["AWS_BUCKET"] %>

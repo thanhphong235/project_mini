@@ -12,7 +12,7 @@ Rails.application.configure do
   config.action_controller.perform_caching = true
 
   # Cấu hình Active Storage (Render chưa hỗ trợ S3 => dùng local)
-  config.active_storage.service = :local
+  config.active_storage.service = :amazon
 
   # Bắt buộc truy cập qua HTTPS
   config.force_ssl = true

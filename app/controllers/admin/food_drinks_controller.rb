@@ -52,9 +52,9 @@ class Admin::FoodDrinksController < ApplicationController
     @food_drink = FoodDrink.find(params[:id])
   end
 
- def food_drink_params
-  params.require(:food_drink).permit(:name, :price, :description, :image, :category_id, :stock)
-end
+  def food_drink_params
+    params.require(:food_drink).permit(:name, :price, :description, :image, :category_id, :stock)
+  end
 
 
   def require_admin

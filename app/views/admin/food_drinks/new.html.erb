@@ -1,17 +1,29 @@
-<%= form_with(model: [:admin, @food_drink], local: true) do |f| %>
+<%= form_with(model: [:admin, @food_drink], local: true, html: { multipart: true }) do |f| %>
+
+<% if @food_drink.errors.any? %>
+<div class="alert alert-danger">
+    <h5><%= pluralize(@food_drink.errors.count, "lỗi") %> xảy ra:</h5>
+    <ul>
+        <% @food_drink.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+        <% end %>
+    </ul>
+</div>
+<% end %>
+
 <div class="mb-3">
     <%= f.label :name, "Tên" %>
-    <%= f.text_field :name, class: "form-control" %>
+    <%= f.text_field :name, class: "form-control", required: true %>
 </div>
 
 <div class="mb-3">
     <%= f.label :price, "Giá" %>
-    <%= f.number_field :price, class: "form-control" %>
+    <%= f.number_field :price, class: "form-control", min: 0, required: true %>
 </div>
 
 <div class="mb-3">
     <%= f.label :category_id, "Category" %>
-    <%= f.collection_select :category_id, Category.all, :id, :name, prompt: "Chọn loại", class: "form-select" %>
+    <%= f.collection_select :category_id, Category.all, :id, :name, { prompt: "Chọn loại" }, { class: "form-select", required: true } %>
 </div>
 
 <div class="mb-3">
@@ -21,14 +33,35 @@
 
 <div class="mb-3">
     <%= f.label :stock, "Số lượng" %>
-    <%= f.number_field :stock, class: "form-control", min: 0 %>
+    <%= f.number_field :stock, class: "form-control", min: 0, required: true %>
 </div>
 
 <div class="mb-3">
     <%= f.label :image, "Ảnh" %>
-    <%= f.file_field :image, class: "form-control" %>
+    <%= f.file_field :image, class: "form-control", accept: "image/*", onchange: "previewImage(event)" %>
+    <br>
+    <% if @food_drink.image.attached? %>
+    <img id="image-preview" src="<%= url_for(@food_drink.image) %>" alt="Preview" style="max-width: 200px; margin-top: 10px;">
+    <% else %>
+    <img id="image-preview" style="display: none; max-width: 200px; margin-top: 10px;">
+    <% end %>
 </div>
 
 <%= f.submit "Lưu", class: "btn btn-primary me-2" %>
 <%= link_to "Hủy", admin_food_drinks_path, class: "btn btn-secondary" %>
+
 <% end %>
+
+<script>
+    function previewImage(event) {
+        const input = event.target;
+        const preview = document.getElementById('image-preview');
+        if (input.files && input.files[0]) {
+            preview.src = URL.createObjectURL(input.files[0]);
+            preview.style.display = 'block';
+        } else {
+            preview.src = '';
+            preview.style.display = 'none';
+        }
+    }
+</script>

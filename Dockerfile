@@ -48,18 +48,16 @@ RUN apt-get update -qq && apt-get install --no-install-recommends -y \
 COPY --from=build /usr/local/bundle /usr/local/bundle
 COPY --from=build /rails /rails
 
-# 👤 Non-root user
+# 🛠️ Entrypoint riêng (chạy db:prepare trước khi start)
+COPY --chown=root:root bin/docker-entrypoint /rails/bin/docker-entrypoint
+RUN chmod +x /rails/bin/docker-entrypoint
+
+# 👤 Tạo user không root
 RUN useradd rails --create-home --shell /bin/bash && \
     chown -R rails:rails db log storage tmp
 USER rails
 
-# 🛠️ Entrypoint riêng (chạy db:prepare trước khi start)
-COPY bin/docker-entrypoint /rails/bin/docker-entrypoint
-RUN chmod +x /rails/bin/docker-entrypoint
-
 ENTRYPOINT ["./bin/docker-entrypoint"]
 
 EXPOSE 3000
-
-# 🌐 Run Puma server
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]

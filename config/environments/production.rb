@@ -60,4 +60,6 @@ Rails.application.configure do
   # I18n
   config.i18n.fallbacks = true
   config.active_support.report_deprecations = false
+  config.hosts << "projectmini-production.up.railway.app"
+
 end

@@ -1,10 +1,10 @@
-# syntax = docker/dockerfile:1
+# syntax=docker/dockerfile:1
 
 # ----------------------------
 # Base Ruby image
 # ----------------------------
 ARG RUBY_VERSION=3.2.2
-FROM registry.docker.com/library/ruby:$RUBY_VERSION-slim AS base
+FROM ruby:$RUBY_VERSION-slim AS base
 
 WORKDIR /rails
 
@@ -23,10 +23,10 @@ FROM base AS build
 RUN apt-get update -qq && apt-get install --no-install-recommends -y \
     build-essential git libpq-dev libvips pkg-config nodejs yarn
 
-# Copy Gemfile trước để cache bundle layer
+# Copy Gemfile trước để cache layer
 COPY Gemfile Gemfile.lock ./
 RUN gem install bundler -v 2.5.23 && \
-    bundle install --jobs 4 && \
+    bundle install --jobs 4 --retry 3 && \
     rm -rf ~/.bundle "${BUNDLE_PATH}"/ruby/*/cache
 
 # Copy toàn bộ source
@@ -43,7 +43,7 @@ FROM base
 
 RUN apt-get update -qq && apt-get install --no-install-recommends -y \
     curl libvips postgresql-client && \
-    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+    rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
 COPY --from=build /usr/local/bundle /usr/local/bundle
 COPY --from=build /rails /rails
@@ -54,10 +54,16 @@ RUN chmod +x /rails/bin/docker-entrypoint
 
 # 👤 Tạo user không root
 RUN useradd rails --create-home --shell /bin/bash && \
+    mkdir -p tmp/pids tmp/sockets && \
     chown -R rails:rails db log storage tmp
-USER rails
 
+USER rails
+WORKDIR /rails
+
+# ⚙️ Entrypoint fix tmp/pids & db prepare
 ENTRYPOINT ["./bin/docker-entrypoint"]
 
+# ⚡ Puma port
 EXPOSE 3000
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
+

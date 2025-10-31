@@ -19,22 +19,33 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   private
 
   def handle_oauth(provider_name)
-    auth = request.env["omniauth.auth"]
+  auth = request.env["omniauth.auth"]
 
-    # Tìm user theo provider+uid hoặc email
-    user = User.find_by(provider: auth.provider, uid: auth.uid)
-    user ||= User.find_by(email: auth.info.email) if auth.info.email.present?
+  # Tìm hoặc khởi tạo user theo provider+uid hoặc email
+  user = User.find_by(provider: auth.provider, uid: auth.uid)
+  user ||= User.find_by(email: auth.info.email) if auth.info.email.present?
 
-    # Nếu không có, tạo mới
-    user ||= User.from_omniauth(auth)
-
-    if user.persisted?
-      sign_in(user, event: :authentication)
-      flash[:notice] = "Đăng nhập thành công bằng #{provider_name}" if is_navigational_format?
-      redirect_to after_sign_in_path_for(user)  # sẽ phân biệt admin & user
-    else
-      session["devise.#{provider_name.downcase}_data"] = auth.except("extra")
-      redirect_to new_user_registration_url, alert: "Đăng nhập bằng #{provider_name} thất bại."
-    end
+  if user
+    # Cập nhật thông tin từ provider mỗi lần đăng nhập
+    user.update(
+      provider: auth.provider,
+      uid: auth.uid,
+      name: auth.info.name.presence || auth.info.nickname,
+      email: auth.info.email.presence || user.email
+    )
+  else
+    # Nếu chưa có user, tạo mới
+    user = User.from_omniauth(auth)
   end
+
+  if user.persisted?
+    sign_in(user, event: :authentication)
+    flash[:notice] = "Đăng nhập thành công bằng #{provider_name}" if is_navigational_format?
+    redirect_to after_sign_in_path_for(user)
+  else
+    session["devise.#{provider_name.downcase}_data"] = auth.except("extra")
+    redirect_to new_user_registration_url, alert: "Đăng nhập bằng #{provider_name} thất bại."
+  end
+end
+
 end

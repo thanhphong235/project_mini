@@ -39,10 +39,16 @@ Devise.setup do |config|
                   info_fields: 'email,name'
 
   # Google
+# Google
   config.omniauth :google_oauth2,
                   ENV['GOOGLE_CLIENT_ID'],
                   ENV['GOOGLE_CLIENT_SECRET'],
-                  scope: 'email,profile'
+                  {
+                    scope: 'email,profile',
+                    prompt: 'select_account',
+                    provider_ignores_state: true
+                  }
+
 
 
                   # redirect_uri: 'http://localhost:3000/users/auth/google_oauth2/callback'

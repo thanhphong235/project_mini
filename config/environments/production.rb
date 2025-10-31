@@ -17,6 +17,9 @@ Rails.application.configure do
   # Allow all hosts (simplify)
   config.hosts.clear
   config.hosts << "projectmini-production.up.railway.app"
+  config.hosts << "localhost"
+  config.hosts << "127.0.0.1"
+
 
   # Database
   config.active_record.dump_schema_after_migration = false

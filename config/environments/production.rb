@@ -58,6 +58,7 @@ Rails.application.configure do
     host: ENV["HOST"] || "project-mini-igbt.onrender.com",
     protocol: "https"
   }
+  config.secret_key_base = ENV["SECRET_KEY_BASE"]
 
   config.action_mailer.smtp_settings = {
     address: "smtp.gmail.com",

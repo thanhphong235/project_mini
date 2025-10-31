@@ -16,6 +16,7 @@ Rails.application.configure do
 
   # Allow all hosts (simplify)
   config.hosts.clear
+  config.hosts << "projectmini-production.up.railway.app"
 
   # Database
   config.active_record.dump_schema_after_migration = false
@@ -30,25 +31,27 @@ Rails.application.configure do
   Rails.application.config.active_storage.queues.purge    = :inline
   Rails.application.config.active_storage.queues.mirror   = :inline
 
-  # Mailer
+  # ✅ Mailer (chuẩn cho Gmail)
   config.action_mailer.perform_caching = false
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.perform_deliveries = true
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.default_url_options = {
-    host: ENV['HOST'] || 'localhost',
+    host: ENV['HOST'] || 'https://projectmini-production.up.railway.app',
     protocol: 'https'
   }
-  config.secret_key_base = ENV['SECRET_KEY_BASE']
   config.action_mailer.smtp_settings = {
-    address: "smtp.gmail.com",
-    port: 587,
-    domain: ENV["MAIL_DOMAIN"] || "gmail.com",
-    user_name: ENV["ADMIN_EMAIL"],
-    password: ENV["ADMIN_EMAIL_PASSWORD"],
-    authentication: "plain",
+    address:              "smtp.gmail.com",
+    port:                 587,
+    domain:               ENV["MAIL_DOMAIN"] || "gmail.com",
+    user_name:            ENV["ADMIN_EMAIL"],             # 👈 tài khoản Gmail gửi mail
+    password:             ENV["ADMIN_EMAIL_PASSWORD"],    # 👈 mật khẩu ứng dụng Gmail
+    authentication:       "plain",
     enable_starttls_auto: true
   }
+
+  # Secret key
+  config.secret_key_base = ENV['SECRET_KEY_BASE']
 
   # Logging
   config.logger = ActiveSupport::Logger.new(STDOUT)
@@ -60,6 +63,4 @@ Rails.application.configure do
   # I18n
   config.i18n.fallbacks = true
   config.active_support.report_deprecations = false
-  config.hosts << "projectmini-production.up.railway.app"
-
 end

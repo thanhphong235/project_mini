@@ -1,19 +1,10 @@
 # syntax = docker/dockerfile:1
 
-# ----------------------------
-# 🧱 Base Ruby image
-# ----------------------------
 ARG RUBY_VERSION=3.2.2
 FROM registry.docker.com/library/ruby:$RUBY_VERSION-slim AS base
 
-# ----------------------------
-# 📂 Rails app directory
-# ----------------------------
 WORKDIR /rails
 
-# ----------------------------
-# 🌍 Environment
-# ----------------------------
 ENV RAILS_ENV=production \
     BUNDLE_DEPLOYMENT=1 \
     BUNDLE_PATH=/usr/local/bundle \
@@ -21,9 +12,6 @@ ENV RAILS_ENV=production \
     RAILS_LOG_TO_STDOUT=true \
     RAILS_SERVE_STATIC_FILES=true
 
-# ----------------------------
-# 🔨 Build stage
-# ----------------------------
 FROM base AS build
 
 RUN apt-get update -qq && apt-get install --no-install-recommends -y \
@@ -34,15 +22,13 @@ RUN gem install bundler -v 2.5.23 && \
     bundle install --jobs 4 && \
     rm -rf ~/.bundle "${BUNDLE_PATH}"/ruby/*/cache
 
+# 🧹 Xóa file/thư mục puma.rb lỗi cũ trước khi copy
+RUN rm -rf config/puma.rb
 COPY . .
 
-# Precompile bootsnap & assets
 RUN bundle exec bootsnap precompile app/ lib/
 RUN SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile
 
-# ----------------------------
-# 🚀 Runtime stage
-# ----------------------------
 FROM base
 
 RUN apt-get update -qq && apt-get install --no-install-recommends -y \
@@ -52,16 +38,14 @@ RUN apt-get update -qq && apt-get install --no-install-recommends -y \
 COPY --from=build /usr/local/bundle /usr/local/bundle
 COPY --from=build /rails /rails
 
-# 👤 Tạo user không root (bảo mật)
 RUN useradd rails --create-home --shell /bin/bash && \
     chown -R rails:rails db log storage tmp
 USER rails
 
-# 🛠️ Entrypoint chuẩn
+# 🔹 Entrypoint chỉ chuẩn bị DB, không khởi động server ngay
 ENTRYPOINT ["./bin/rails", "db:prepare"]
 
-# 🌐 Port
 EXPOSE 3000
 
-# 🦾 Default command
+# 🔹 Puma config chuẩn
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]

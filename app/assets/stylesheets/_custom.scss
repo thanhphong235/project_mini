@@ -6,10 +6,65 @@ body {
   color: #333;
   
 }
-footer a:hover {
-  color: #ffc107 !important;
-  transition: color 0.3s ease;
+footer, .app-footer {
+  background-color: #333;
+  color: #333;
+  font-size: 0.8rem;
+  padding: 1rem 0;
+  line-height: 1.4;
+
+  h5, h6 {
+    color: #fff;
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  p, a {
+    font-size: 0.85rem;
+  }
+
+  a {
+    color: #bbb;
+    transition: color 0.2s ease, transform 0.2s ease;
+
+    &:hover {
+      color: #fff;
+      transform: translateY(-1px);
+      text-decoration: none;
+    }
+  }
+
+  ul {
+    padding-left: 0;
+    list-style: none;
+    margin-bottom: 0;
+
+    li {
+      margin-bottom: 0.4rem;
+    }
+  }
+
+  hr {
+    margin: 1rem 0;
+    border-color: #444;
+  }
+
+  .bi {
+    font-size: 1.1rem;
+  }
+
+  @media (max-width: 768px) {
+    .row {
+      text-align: center;
+      > div {
+        margin-bottom: 1rem;
+      }
+    }
+  }
 }
+
+
+
 
 
 .navbar {

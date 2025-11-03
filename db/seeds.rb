@@ -27,13 +27,13 @@ cat_food  = Category.find_or_create_by!(name: "Food")
 cat_drink = Category.find_or_create_by!(name: "Drink")
 
 # ----------------------------
-# Food & Drinks
+# Food & Drinks (mặc định)
 # ----------------------------
 foods_drinks_seed = [
-  { name: "Pizza", price: 100_000, category: cat_food, stock: 10 },
-  { name: "Burger", price: 80_000, category: cat_food, stock: 15 },
-  { name: "Coffee", price: 30_000, category: cat_drink, stock: 20 },
-  { name: "Tea", price: 20_000, category: cat_drink, stock: 25 }
+  { name: "Pizza",  price: 100_000, category: cat_food,  stock: 10 },
+  { name: "Burger", price: 80_000,  category: cat_food,  stock: 15 },
+  { name: "Coffee", price: 30_000,  category: cat_drink, stock: 20 },
+  { name: "Tea",    price: 20_000,  category: cat_drink, stock: 25 }
 ]
 
 foods_drinks_seed.each do |fd_data|
@@ -45,7 +45,27 @@ foods_drinks_seed.each do |fd_data|
   )
 end
 
+# ----------------------------
+# Thêm 20 món ăn & đồ uống ngẫu nhiên
+# ----------------------------
+puts "Đang tạo thêm 20 món ăn & đồ uống ngẫu nhiên..."
+
+20.times do |i|
+  category = [cat_food, cat_drink].sample
+  name = "#{category.name} #{i + 1}"
+
+  fd = FoodDrink.find_or_initialize_by(name: name)
+  fd.update!(
+    price: rand(15_000..120_000),
+    category: category,
+    stock: rand(5..30),
+    description: "Món #{name} – hương vị hấp dẫn, phù hợp mọi khẩu vị."
+  )
+end
+
+# ----------------------------
 # Lấy lại các món vừa tạo
+# ----------------------------
 fd1 = FoodDrink.find_by(name: "Pizza")
 fd2 = FoodDrink.find_by(name: "Coffee")
 fd3 = FoodDrink.find_by(name: "Burger")
@@ -80,13 +100,13 @@ end
 # Ratings
 # ----------------------------
 ratings_data = [
-  { food_drink: fd1, user: user, score: 5, comment: "Pizza ngon tuyệt vời!" },
+  { food_drink: fd1, user: user,  score: 5, comment: "Pizza ngon tuyệt vời!" },
   { food_drink: fd1, user: admin, score: 4, comment: "Pizza ổn, có thể thêm phô mai." },
-  { food_drink: fd2, user: user, score: 4, comment: "Cà phê thơm, ngon." },
+  { food_drink: fd2, user: user,  score: 4, comment: "Cà phê thơm, ngon." },
   { food_drink: fd2, user: admin, score: 3, comment: "Cà phê hơi đắng." },
-  { food_drink: fd3, user: user, score: 5, comment: "Burger mềm, thịt ngon." },
+  { food_drink: fd3, user: user,  score: 5, comment: "Burger mềm, thịt ngon." },
   { food_drink: fd3, user: admin, score: 4, comment: "Burger ngon, hơi ít sốt." },
-  { food_drink: fd4, user: user, score: 3, comment: "Trà bình thường." },
+  { food_drink: fd4, user: user,  score: 3, comment: "Trà bình thường." },
   { food_drink: fd4, user: admin, score: 4, comment: "Trà ngon, vị thanh nhẹ." }
 ]
 

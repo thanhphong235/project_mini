@@ -1,26 +1,14 @@
-# app/mailers/admin_mailer.rb
 class AdminMailer < ApplicationMailer
-  default from: ENV["ADMIN_EMAIL"]
+  default from: ENV.fetch("ADMIN_EMAIL", "no-reply@example.com")
 
-  # Mail thông báo đơn hàng mới
-  def new_order
-    @order = params[:order]
-
-    mail(
-      to: ENV["ADMIN_EMAIL"],
-      subject: "Có đơn hàng mới từ #{@order.user.email}"
-    )
-  end
-
-  # Mail thống kê đơn hàng hàng tháng
-  def monthly_order_summary
-    @orders = params[:orders]       # Danh sách đơn hàng
-    @month = params[:month]         # Tháng
-    @year = params[:year]           # Năm
+  def monthly_order_summary(orders, month, year)
+    @orders = orders
+    @month = month
+    @year = year
 
     mail(
-      to: ENV["ADMIN_EMAIL"],
-      subject: "Thống kê đơn hàng #{@month}/#{@year}"
+      to: ENV.fetch("ADMIN_EMAIL", "admin@example.com"),
+      subject: "📊 Thống kê đơn hàng tháng #{@month}/#{@year}"
     )
   end
 end

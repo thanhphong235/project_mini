@@ -30,6 +30,7 @@ Rails.application.routes.draw do
 
       # Thêm route thống kê đơn hàng
     get "order_statistics", to: "dashboard#order_statistics", as: "order_statistics"
+    post "send_monthly_report", to: "dashboard#send_monthly_report", as: "send_monthly_report"
   end
 
   # ======================

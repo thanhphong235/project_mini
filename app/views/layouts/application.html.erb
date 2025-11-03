@@ -88,11 +88,49 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-light py-3 shadow-sm mt-auto">
-        <div class="container text-center">
-            <p class="mb-0">© 2025 Foods & Drinks App</p>
+    <footer class="bg-dark text-light py-5 mt-auto">
+        <div class="container">
+            <div class="row text-center text-md-start">
+                <!-- Cột 1: Giới thiệu -->
+                <div class="col-md-4 mb-4">
+                    <h5 class="fw-bold mb-3">🍴 Foods & Drinks App</h5>
+                    <p class="text-secondary">
+                        Ứng dụng giúp bạn khám phá, đặt món ăn và đồ uống yêu thích mọi lúc, mọi nơi.
+                    </p>
+                </div>
+
+                <!-- Cột 2: Liên kết nhanh -->
+                <div class="col-md-4 mb-4">
+                    <h6 class="fw-bold mb-3 text-uppercase">Liên kết nhanh</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-secondary text-decoration-none d-block mb-2">Trang chủ</a></li>
+                        <li><a href="#" class="text-secondary text-decoration-none d-block mb-2">Về chúng tôi</a></li>
+                        <li><a href="#" class="text-secondary text-decoration-none d-block mb-2">Chính sách bảo mật</a></li>
+                        <li><a href="#" class="text-secondary text-decoration-none d-block mb-2">Điều khoản sử dụng</a></li>
+                    </ul>
+                </div>
+
+                <!-- Cột 3: Mạng xã hội -->
+                <div class="col-md-4 mb-4 text-center text-md-start">
+                    <h6 class="fw-bold mb-3 text-uppercase">Theo dõi chúng tôi</h6>
+                    <div class="mb-3">
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=<%= request.original_url %>" class="text-light fs-4 me-3"><i class="bi bi-facebook"></i></a>
+                        <a href="https://www.instagram.com/sharer/sharer.php?u=<%= request.original_url %>" class="text-light fs-4 me-3"><i class="bi bi-instagram"></i></a>
+                        <a href="https://twitter.com/intent/tweet?url=<%= request.original_url %>" class="text-light fs-4 me-3"><i class="bi bi-twitter"></i></a>
+                    </div>
+                    <p class="text-secondary small mb-0">Email: support@foodsdrinksapp.com</p>
+                </div>
+            </div>
+
+            <hr class="border-secondary my-4">
+
+            <div class="text-center text-secondary small">
+                © <%= Time.current.year %> Foods & Drinks App — Thiết kế bởi <strong>Phong Nguyen</strong>.
+            </div>
         </div>
     </footer>
+
+
 
     <% if user_signed_in? && !current_user.admin? %>
     <!-- Floating Suggestion Button -->

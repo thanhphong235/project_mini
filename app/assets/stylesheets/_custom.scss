@@ -6,6 +6,11 @@ body {
   color: #333;
   
 }
+footer a:hover {
+  color: #ffc107 !important;
+  transition: color 0.3s ease;
+}
+
 
 .navbar {
   border-bottom: 2px solid #eee;

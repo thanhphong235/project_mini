@@ -42,7 +42,7 @@
 
                 <!-- Submit button -->
                 <div class="d-grid">
-                    <%= f.submit "Update Profile", class: "btn btn-primary" %>
+                    <%= f.submit "Update Profile",  class: "btn btn-primary", data: { turbo_confirm: "Bạn có chắc chắn muốn đổi không" } %>
                 </div>
 
                 <% end %>

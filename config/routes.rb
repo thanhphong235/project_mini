@@ -8,7 +8,8 @@ Rails.application.routes.draw do
   # Devise: Đăng ký / đăng nhập người dùng + OmniAuth
   # ======================
   devise_for :users, controllers: {
-    omniauth_callbacks: "users/omniauth_callbacks"
+    omniauth_callbacks: "users/omniauth_callbacks",
+    registrations: 'users/registrations'
   }
 
   # ======================

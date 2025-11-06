@@ -1,7 +1,8 @@
-<h1>Quản lý Món ăn & Thức uống</h1>
+<h1 class="text-center flex-grow-1 mb-0">Quản lý Món ăn & Thức uống</h1>
 
+<!-- Nút điều hướng -->
 <div class="mb-3">
-    <%= link_to "Quay lại", admin_dashboard_path, class: "btn btn-secondary" %>
+    <%= link_to "Quay lại", admin_dashboard_path, class: "btn btn-secondary me-2" %>
     <%= link_to "Tất cả", admin_food_drinks_path, class: "btn btn-secondary me-2" %>
 
     <% Category.all.each do |category| %>
@@ -9,10 +10,32 @@
     <% end %>
 </div>
 
-<div class="mb-3">
-    <%= link_to "Thêm mới", new_admin_food_drink_path, class: "btn btn-success me-2" %>
+<!-- Thanh công cụ: thêm mới, tìm kiếm, sắp xếp -->
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+    <!-- Nút thêm mới -->
+    <div class="mb-2">
+        <%= link_to "Thêm mới", new_admin_food_drink_path, class: "btn btn-success me-2" %>
+        <%= link_to "Làm mới", admin_food_drinks_path, class: "btn btn-outline-secondary" %>
+    </div>
+
+    <!-- Thanh tìm kiếm -->
+    <div class="d-flex align-items-center mb-2">
+        <%= form_with url: admin_food_drinks_path, method: :get, local: true, class: "d-flex" do |f| %>
+        <%= f.text_field :query, value: params[:query], placeholder: "🔍 Tìm kiếm món ăn hoặc thức uống...", class: "form-control me-2" %>
+        <%= f.select :sort, options_for_select([
+            ['Mới nhất', 'newest'],
+            ['Tên A → Z', 'name_asc'],
+            ['Tên Z → A', 'name_desc'],
+            ['Giá tăng dần', 'price_asc'],
+            ['Giá giảm dần', 'price_desc']
+          ], params[:sort]),
+          {}, class: "form-select me-2" %>
+        <%= f.submit "Lọc", class: "btn btn-primary" %>
+        <% end %>
+    </div>
 </div>
 
+<!-- Bảng danh sách -->
 <table class="table table-striped align-middle">
     <thead>
         <tr>
@@ -26,6 +49,7 @@
             <th>Hành động</th>
         </tr>
     </thead>
+
     <tbody>
         <% @food_drinks.each_with_index do |fd, index| %>
         <tr id="food_drink_<%= fd.id %>">
@@ -44,29 +68,29 @@
                 <% end %>
             </td>
 
-
-
             <td><%= truncate(fd.description, length: 50) %></td>
 
             <td>
                 <% if fd.image.attached? %>
-                <%= image_tag fd.image, width: 80, height: 80, alt: fd.name %>
+                <%= image_tag fd.image, width: 80, height: 80, alt: fd.name, class: "rounded shadow-sm" %>
                 <% else %>
-                Không có ảnh
+                <span class="text-muted">Không có ảnh</span>
                 <% end %>
             </td>
 
             <td>
                 <%= link_to "Sửa", edit_admin_food_drink_path(fd), class: "btn btn-warning btn-sm me-1" %>
                 <%= link_to "Xóa", admin_food_drink_path(fd),
-    data: { turbo_method: :delete, turbo_confirm: fd.order_items.any? ? 
-        "⚠️ Món ăn này đang có đơn hàng. Bạn chắc chắn muốn xoá?" : 
-        "Bạn có chắc chắn muốn xoá món ăn/thức uống này?" },
-    class: "btn btn-danger btn-sm" %>
-
-
+              data: { turbo_method: :delete, turbo_confirm: fd.order_items.any? ?
+                "⚠️ Món ăn này đang có đơn hàng. Bạn chắc chắn muốn xoá?" :
+                "Bạn có chắc chắn muốn xoá món ăn/thức uống này?" },
+              class: "btn btn-danger btn-sm" %>
             </td>
         </tr>
         <% end %>
     </tbody>
 </table>
+
+<% if @food_drinks.empty? %>
+<p class="text-center text-muted mt-3">Không tìm thấy món ăn/thức uống nào phù hợp.</p>
+<% end %>

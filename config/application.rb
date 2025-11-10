@@ -13,7 +13,7 @@ module FoodsDrinksApp
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.1
-    config.time_zone = "Asia/Ho_Chi_Minh"
+    config.time_zone = "Hanoi"
     config.active_record.default_timezone = :local
 
 

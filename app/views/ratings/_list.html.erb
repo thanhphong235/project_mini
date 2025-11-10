@@ -3,17 +3,26 @@
 <div class="list-group">
     <% ratings.includes(:user).each do |r| %>
     <div class="list-group-item">
-        <strong><%= r.user.name %></strong>
-        <span class="text-muted"> - <%= r.created_at.strftime("%d/%m/%Y %H:%M") %></span>
-        <div class="rating-stars" style="font-size: 1.2rem;">
+        <div class="d-flex justify-content-between align-items-center">
+            <strong><%= r.user.name %></strong>
+            <span class="text-muted">
+                <% time = r.updated_at.in_time_zone('Hanoi') %>
+                <%= time.strftime("%H:%M %d/%m/%Y") %>
+                <% if r.updated_at > r.created_at %>
+
+                <% end %>
+            </span>
+
+        </div>
+
+        <!-- Hiển thị sao -->
+        <div class="rating-stars my-1" style="font-size: 1.2rem;">
             <% 1.upto(5) do |i| %>
-            <% if i <= r.score %>
-            <span style="color: gold;">★</span>
-            <% else %>
-            <span style="color: lightgray;">★</span>
-            <% end %>
+            <span style="color: <%= i <= r.score ? 'gold' : 'lightgray' %>;">★</span>
             <% end %>
         </div>
+
+        <!-- Hiển thị bình luận -->
         <div><%= r.comment %></div>
     </div>
     <% end %>

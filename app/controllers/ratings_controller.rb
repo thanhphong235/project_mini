@@ -9,40 +9,88 @@ class RatingsController < ApplicationController
     @rating.assign_attributes(rating_params)
 
     if @rating.save
-      render_turbo_stream
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace(
+              "user_rating_form",
+              partial: "ratings/form",
+              locals: { food_drink: @food_drink, rating: @rating }
+            ),
+            turbo_stream.replace(
+              "ratings_list",
+              partial: "ratings/list",
+              locals: { ratings: @food_drink.ratings.includes(:user) }
+            ),
+            turbo_stream.replace(
+              "flash_messages",
+              partial: "shared/flash"
+            ),
+            # Gọi lại JS khởi tạo sao sau khi frame được thay thế
+            turbo_stream.append(
+              "user_rating_form",
+              "<script>initStarRating(document.querySelector('#user_rating_form'))</script>".html_safe
+            )
+          ]
+        end
+      end
     else
-      render :new
+      render partial: "ratings/form", locals: { food_drink: @food_drink, rating: @rating }, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /food_drinks/:food_drink_id/ratings/:id
   def update
-    @rating.assign_attributes(rating_params)
-
-    if @rating.save
-      render_turbo_stream
+    if @rating.update(rating_params)
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace(
+              "user_rating_form",
+              partial: "ratings/form",
+              locals: { food_drink: @food_drink, rating: @rating }
+            ),
+            turbo_stream.replace(
+              "ratings_list",
+              partial: "ratings/list",
+              locals: { ratings: @food_drink.ratings.includes(:user) }
+            ),
+            turbo_stream.replace(
+              "flash_messages",
+              partial: "shared/flash"
+            ),
+            # Gọi lại JS để kích hoạt sao vàng
+            turbo_stream.append(
+              "user_rating_form",
+              "<script>initStarRating(document.querySelector('#user_rating_form'))</script>".html_safe
+            )
+          ]
+        end
+      end
     else
-      render :edit
+      render partial: "ratings/form", locals: { food_drink: @food_drink, rating: @rating }, status: :unprocessable_entity
     end
   end
 
   # DELETE /food_drinks/:food_drink_id/ratings/:id
   def destroy
-    @rating = @food_drink.ratings.find(params[:id])
     @rating.destroy
+    new_rating = @food_drink.ratings.find_or_initialize_by(user: current_user)
 
     respond_to do |format|
       format.turbo_stream do
-        rating = @food_drink.ratings.find_or_initialize_by(user: current_user)
         render turbo_stream: [
           turbo_stream.replace(
             "user_rating_form",
             partial: "ratings/form",
-            locals: { rating: rating, food_drink: @food_drink }
+            locals: { food_drink: @food_drink, rating: new_rating }
           ),
-          turbo_stream.replace("ratings_list", partial: "ratings/list", locals: { ratings: @food_drink.ratings.includes(:user) }),
+          turbo_stream.replace(
+            "ratings_list",
+            partial: "ratings/list",
+            locals: { ratings: @food_drink.ratings.includes(:user) }
+          ),
           turbo_stream.replace("flash_messages", partial: "shared/flash"),
-          # thêm line này để gọi init JS sau khi frame replace
           turbo_stream.append(
             "user_rating_form",
             "<script>initStarRating(document.querySelector('#user_rating_form'))</script>".html_safe
@@ -51,7 +99,6 @@ class RatingsController < ApplicationController
       end
     end
   end
-
 
   private
 
@@ -65,18 +112,5 @@ class RatingsController < ApplicationController
 
   def rating_params
     params.require(:rating).permit(:score, :comment)
-  end
-
-  # Gửi turbo_stream để cập nhật form, danh sách ratings và flash
-  def render_turbo_stream
-    respond_to do |format|
-      format.turbo_stream do
-        render turbo_stream: [
-          turbo_stream.replace("user_rating_form", partial: "ratings/form", locals: { rating: @rating, food_drink: @food_drink }),
-          turbo_stream.replace("ratings_list", partial: "ratings/list", locals: { ratings: @food_drink.ratings.includes(:user) }),
-          turbo_stream.replace("flash_messages", partial: "shared/flash")
-        ]
-      end
-    end
   end
 end

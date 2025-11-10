@@ -2,6 +2,7 @@
     <%= link_to "Quay lại", food_drinks_path, class: "btn btn-outline-secondary" %>
     <h1 class="text-center flex-grow-1 mb-0">Giỏ hàng của Bạn</h1>
 </div>
+
 <% if @cart_items.any? %>
 <table class="table table-striped">
     <thead>
@@ -16,18 +17,16 @@
     </thead>
     <tbody>
         <% @cart_items.each_with_index do |item, index| %>
-        <!-- Đặt id đúng để Turbo Stream remove hoạt động -->
-        <tr id="<%= dom_id(item) %>">
+        <tr id="<%= dom_id(item) %>" data-item-id="<%= item.id %>" data-unit-price="<%= item.food_drink.price %>">
             <td><%= index + 1 %></td>
             <td><%= item.food_drink.name %></td>
-            <td><%= number_to_currency(item.food_drink.price, unit: "₫") %></td>
+            <td class="unit-price"><%= number_to_currency(item.food_drink.price, unit: "₫", precision: 2) %></td>
             <td>
-                <%= form_with model: item, url: cart_item_path(item), method: :patch, local: false do |f| %>
-                <%= f.number_field :quantity, min: 1, value: item.quantity, class: "form-control", style: "width:80px;" %>
-                <%= f.submit "Cập nhật", class: "btn btn-sm btn-primary mt-1" %>
+                <%= form_with model: item, url: cart_item_path(item), method: :patch, local: false, html: { class: "cart-item-form" } do |f| %>
+                <%= f.number_field :quantity, min: 1, value: item.quantity, class: "form-control cart-quantity", style: "width:80px;" %>
                 <% end %>
             </td>
-            <td><%= number_to_currency(item.food_drink.price * item.quantity, unit: "₫") %></td>
+            <td class="item-total"><%= number_to_currency(item.food_drink.price * item.quantity, unit: "₫", precision: 2) %></td>
             <td>
                 <%= button_to "Xóa", cart_item_path(item), method: :delete, data: { turbo_confirm: "Bạn có chắc muốn xóa món này?" }, class: "btn btn-sm btn-danger" %>
             </td>
@@ -36,11 +35,65 @@
     </tbody>
 </table>
 
-<!-- Tổng tiền và nút đặt hàng -->
 <div id="cart-summary" class="text-end mt-3">
-    <p><strong>Tổng cộng:</strong> <%= number_to_currency(@total_price, unit: "₫") %></p>
+    <p><strong>Tổng cộng:</strong> <span id="cart-total"><%= number_to_currency(@total_price, unit: "₫", precision: 2) %></span></p>
     <%= button_to "Đặt hàng", orders_path, method: :post, class: "btn btn-success btn-lg" %>
 </div>
+
+<script>
+    document.addEventListener('turbo:load', () => {
+        document.querySelectorAll('.cart-item-form').forEach(form => {
+            const input = form.querySelector('.cart-quantity');
+            const tr = form.closest('tr');
+            const unitPrice = parseFloat(tr.dataset.unitPrice);
+
+            // Hàm cập nhật giá tổng món và tổng giỏ hàng
+            function updateTotals(newQty) {
+                const itemTotalCell = tr.querySelector('.item-total');
+                const newTotal = unitPrice * newQty;
+                itemTotalCell.textContent = new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND',
+                    minimumFractionDigits: 2
+                }).format(newTotal);
+
+                // Cập nhật tổng giỏ hàng
+                let cartTotal = 0;
+                document.querySelectorAll('tr[data-item-id]').forEach(row => {
+                    const qty = parseInt(row.querySelector('.cart-quantity').value);
+                    const price = parseFloat(row.dataset.unitPrice);
+                    cartTotal += price * qty;
+                });
+                document.getElementById('cart-total').textContent = new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND',
+                    minimumFractionDigits: 2
+                }).format(cartTotal);
+            }
+
+            // Khi nhấn Enter
+            input.addEventListener('keypress', e => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const val = parseInt(input.value);
+                    if (val >= 1) {
+                        form.requestSubmit();
+                        updateTotals(val);
+                    }
+                }
+            });
+
+            // Khi click ra ngoài (blur)
+            input.addEventListener('blur', () => {
+                const val = parseInt(input.value);
+                if (val >= 1) {
+                    form.requestSubmit();
+                    updateTotals(val);
+                }
+            });
+        });
+    });
+</script>
 
 <% else %>
 <p>Giỏ hàng của bạn đang trống.</p>

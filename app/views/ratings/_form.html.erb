@@ -1,0 +1,38 @@
+<%# Partial form đánh giá: rating + food_drink %>
+<%= turbo_frame_tag "user_rating_form" do %>
+<%= form_with(model: [food_drink, rating], local: false) do |f| %>
+
+<% if rating.errors.any? %>
+<div class="alert alert-danger">
+    <ul>
+        <% rating.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+        <% end %>
+    </ul>
+</div>
+<% end %>
+
+<div class="mb-2">
+    <%= f.label :score, "Điểm (1-5)" %>
+    <%= f.number_field :score, in: 1..5, step: 1, class: "form-control" %>
+</div>
+
+<div class="mb-2">
+    <%= f.label :comment, "Bình luận" %>
+    <%= f.text_area :comment, rows: 3, class: "form-control" %>
+</div>
+
+<div class="d-flex gap-2">
+    <%= f.submit rating.persisted? ? "Cập nhật đánh giá" : "Gửi đánh giá", class: "btn btn-sm btn-primary" %>
+
+    <% if rating.persisted? %>
+    <%= link_to "Xóa đánh giá", food_drink_rating_path(food_drink, rating),
+        method: :delete,
+        data: { turbo_frame: "user_rating_form", confirm: "Bạn có chắc muốn xóa đánh giá?" },
+        class: "btn btn-sm btn-danger" %>
+
+    <% end %>
+</div>
+
+<% end %>
+<% end %>

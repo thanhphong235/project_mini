@@ -1,0 +1,17 @@
+<%# Partial danh sách đánh giá: ratings %>
+<%= turbo_frame_tag "ratings_list" do %>
+<% if ratings.any? %>
+<div class="list-group">
+    <% ratings.includes(:user).each do |r| %>
+    <div class="list-group-item">
+        <strong><%= r.user.name %></strong>
+        <span class="text-muted">- <%= r.created_at.strftime("%d/%m/%Y %H:%M") %></span>
+        <div>Điểm: <%= r.score %> ⭐</div>
+        <div><%= r.comment %></div>
+    </div>
+    <% end %>
+</div>
+<% else %>
+<p>Chưa có đánh giá nào.</p>
+<% end %>
+<% end %>

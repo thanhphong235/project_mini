@@ -1,0 +1,11 @@
+<%= turbo_stream.replace "user_rating_form" do %>
+  <%= render "ratings/form", rating: @food_drink.ratings.find_or_initialize_by(user: current_user) %>
+<% end %>
+
+<%= turbo_stream.replace "ratings_list" do %>
+  <%= render "ratings/list", ratings: @food_drink.ratings.includes(:user) %>
+<% end %>
+
+<%= turbo_stream.replace "flash_messages" do %>
+  <%= render "shared/flash" %>
+<% end %>

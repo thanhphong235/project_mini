@@ -1,15 +1,16 @@
 Rails.application.routes.draw do
-
+  # ======================
+  # Sidekiq Web UI
+  # ======================
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
 
-
   # ======================
-  # Devise: Đăng ký / đăng nhập người dùng + OmniAuth
+  # Devise: đăng ký / đăng nhập + OmniAuth
   # ======================
   devise_for :users, controllers: {
     omniauth_callbacks: "users/omniauth_callbacks",
-    registrations: 'users/registrations'
+    registrations: "users/registrations"
   }
 
   # ======================
@@ -29,7 +30,6 @@ Rails.application.routes.draw do
     resources :orders, only: [:index, :show, :update, :destroy]
     resources :suggestions, only: [:index, :show, :edit, :update, :destroy]
 
-      # Thêm route thống kê đơn hàng
     get "order_statistics", to: "dashboard#order_statistics", as: "order_statistics"
     post "send_monthly_report", to: "dashboard#send_monthly_report", as: "send_monthly_report"
   end
@@ -37,8 +37,8 @@ Rails.application.routes.draw do
   # ======================
   # Khu vực USER
   # ======================
-  resources :food_drinks, only: [:index, :show] do
-    resources :ratings, only: [:create, :update]
+  resources :food_drinks do
+    resources :ratings, only: [:create, :update, :destroy] # hoặc thêm :new nếu cần
   end
 
   # Giỏ hàng

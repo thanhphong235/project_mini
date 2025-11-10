@@ -1,14 +1,10 @@
-<!-- app/views/food_drinks/index.html.erb -->
-
 <div class="container mt-3">
-
     <!-- Header + Filter cố định -->
     <div class="position-sticky" style="top: 0; z-index: 1020; background-color: white;">
         <h1 class="p-3 mb-0 border-bottom">Danh sách Món ăn & Thức uống</h1>
 
         <!-- Filter / Phân loại -->
-        <div class="d-flex flex-wrap gap-2 p-2 border-bottom">
-
+        <div class="d-flex flex-wrap gap-2 p-2 border-bottom align-items-center">
             <!-- Xem tất cả -->
             <%= link_to "Tất cả", food_drinks_path, class: "btn btn-sm btn-outline-dark" %>
 
@@ -17,37 +13,56 @@
             <%= link_to cat.name, food_drinks_path(category_id: cat.id), class: "btn btn-sm btn-outline-primary" %>
             <% end %>
 
-            <!-- Filter theo chữ cái -->
-            <% ("A".."Z").each do |letter| %>
-            <% link_params = {
-          category_id: params[:category_id],
-          kind: params[:kind],
-          min_price: params[:min_price],
-          max_price: params[:max_price],
-          min_rating: params[:min_rating],
-          letter: letter
-        }.compact %>
-            <%= link_to letter, food_drinks_path(link_params), class: "btn btn-sm btn-outline-info" %>
-            <% end %>
+            <!-- 🔍 Tìm kiếm + Lọc giá + rating + sort -->
+            <div class="ms-auto" data-controller="search">
+                <%= form_with url: food_drinks_path,
+                      method: :get,
+                      data: { search_target: "form", turbo_frame: "food_drinks_list" },
+                      class: "d-flex gap-2 align-items-center",
+                      local: true do |f| %>
 
-            <!-- Filter giá & rating -->
-            <%= form_with url: food_drinks_path, method: :get, local: true, class: "d-flex gap-1" do |f| %>
-            <%= f.number_field :min_price, placeholder: "Giá min", class: "form-control form-control-sm" %>
-            <%= f.number_field :max_price, placeholder: "Giá max", class: "form-control form-control-sm" %>
-            <%= f.number_field :min_rating, placeholder: "Đánh giá min", class: "form-control form-control-sm", step: 0.1 %>
-            <%= f.submit "Lọc", class: "btn btn-sm btn-primary" %>
-            <% end %>
+                <%= f.text_field :query,
+                  value: params[:query],
+                  placeholder: "Tìm món ăn / thức uống...",
+                  class: "form-control form-control-sm",
+                  style: "min-width: 200px;",
+                  data: { action: "input->search#update" } %>
 
+                <%= f.number_field :min_price,
+                  value: params[:min_price],
+                  placeholder: "Giá min",
+                  class: "form-control form-control-sm",
+                  data: { action: "input->search#update" } %>
+
+                <%= f.number_field :max_price,
+                  value: params[:max_price],
+                  placeholder: "Giá max",
+                  class: "form-control form-control-sm",
+                  data: { action: "input->search#update" } %>
+
+                <%= f.number_field :min_rating,
+                  value: params[:min_rating],
+                  placeholder: "Đánh giá min",
+                  step: 0.1,
+                  class: "form-control form-control-sm",
+                  data: { action: "input->search#update" } %>
+
+                <%= f.select :sort_by,
+                options_for_select([["Mặc định (A-Z)", ""], ["Giá tăng dần", "price_asc"], ["Giá giảm dần", "price_desc"]], params[:sort_by]),
+                class: "form-select form-select-sm" %>
+
+                <%= f.submit "Lọc", class: "btn btn-sm btn-primary" %>
+                <% end %>
+            </div>
         </div>
     </div>
 
     <!-- Danh sách món ăn -->
+    <%= turbo_frame_tag "food_drinks_list" do %>
     <div class="row mt-3">
         <% @food_drinks.each do |fd| %>
         <div class="col-md-4 mb-3">
             <div class="card shadow-sm h-100">
-
-                <!-- Hình ảnh -->
                 <% if fd.image.attached? %>
                 <%= image_tag fd.image, class: "card-img-top", style: "height: 200px; object-fit: cover;" %>
                 <% else %>
@@ -57,12 +72,13 @@
                 <% end %>
 
                 <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">
+                        <%= link_to fd.name, food_drink_path(fd), data: { turbo: false } %>
+                    </h5>
 
-                    <h5 class="card-title"><%= link_to fd.name, food_drink_path(fd) %></h5>
                     <p class="card-text"><strong>Giá:</strong> <%= number_to_currency(fd.price, unit: "₫") %></p>
                     <p class="card-text"><strong>Danh mục:</strong> <%= fd.category&.name || "Không có" %></p>
 
-                    <!-- Stock hiển thị với Turbo Frame -->
                     <p class="card-text">
                         <strong>Số lượng còn:</strong>
                         <%= turbo_frame_tag "food_drink_#{fd.id}_stock" do %>
@@ -70,28 +86,31 @@
                         <% end %>
                     </p>
 
-                    <!-- Nút hành động -->
                     <div class="mt-auto d-flex gap-1">
-                        <%= link_to "Xem chi tiết", food_drink_path(fd), class: "btn btn-sm btn-outline-primary" %>
+                        <%= link_to "Xem chi tiết", food_drink_path(fd), class: "btn btn-sm btn-outline-primary", data: { turbo: false } %>
 
                         <%= turbo_frame_tag "food_drink_#{fd.id}_button" do %>
                         <% if fd.stock > 0 %>
                         <%= button_to "Thêm vào giỏ",
-                        cart_items_path,
-                        method: :post,
-                        params: { food_drink_id: fd.id },
-                        form: { data: { turbo_stream: true, turbo_frame: "_top" } },
-                        class: "btn btn-sm btn-outline-success" %>
+                          cart_items_path,
+                          method: :post,
+                          params: { food_drink_id: fd.id },
+                          form: { data: { turbo_stream: true, turbo_frame: "_top" } },
+                          class: "btn btn-sm btn-outline-success" %>
                         <% else %>
                         <button class="btn btn-sm btn-outline-secondary" disabled>Hết hàng</button>
                         <% end %>
                         <% end %>
                     </div>
-
                 </div>
             </div>
         </div>
         <% end %>
     </div>
 
+    <% if @food_drinks.empty? %>
+    <p class="text-center text-muted mt-4">Không tìm thấy món nào phù hợp.</p>
+    <% end %>
+    <% end %>
+    <!-- ✅ kết thúc turbo_frame_tag -->
 </div>

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+puts "🚀 Bắt đầu seed database..."
+
 # ----------------------------
 # Users
 # ----------------------------
@@ -27,16 +29,16 @@ cat_food  = Category.find_or_create_by!(name: "Food")
 cat_drink = Category.find_or_create_by!(name: "Drink")
 
 # ----------------------------
-# Food & Drinks (mặc định)
+# Món mặc định
 # ----------------------------
-foods_drinks_seed = [
+default_foods_drinks = [
   { name: "Pizza",  price: 100_000, category: cat_food,  stock: 10 },
   { name: "Burger", price: 80_000,  category: cat_food,  stock: 15 },
   { name: "Coffee", price: 30_000,  category: cat_drink, stock: 20 },
   { name: "Tea",    price: 20_000,  category: cat_drink, stock: 25 }
 ]
 
-foods_drinks_seed.each do |fd_data|
+default_foods_drinks.each do |fd_data|
   fd = FoodDrink.find_or_initialize_by(name: fd_data[:name])
   fd.update!(
     price: fd_data[:price],
@@ -46,48 +48,58 @@ foods_drinks_seed.each do |fd_data|
 end
 
 # ----------------------------
-# Thêm 20 món ăn & đồ uống ngẫu nhiên
+# Tạo 50 món ăn & đồ uống ngẫu nhiên với tên thực tế
 # ----------------------------
-puts "Đang tạo thêm 20 món ăn & đồ uống ngẫu nhiên..."
+food_names = [
+  "Pizza Margherita", "Burger Bò Mỹ", "Spaghetti Carbonara", "Salad Caesar",
+  "Sushi Sashimi", "Bún Chả", "Phở Bò", "Cơm Tấm Sườn", "Gà Rán KFC", "Bánh Mì Thịt"
+]
 
-20.times do |i|
+drink_names = [
+  "Cà Phê Sữa Đá", "Trà Sữa Trân Châu", "Nước Ép Cam", "Sinh Tố Bơ",
+  "Matcha Latte", "Coca Cola", "Pepsi", "Trà Xanh", "Bia Sài Gòn", "Nước Khoáng"
+]
+
+puts "Đang tạo 50 món ăn & đồ uống ngẫu nhiên..."
+50.times do |i|
   category = [cat_food, cat_drink].sample
-  name = "#{category.name} #{i + 1}"
+  base_name = category == cat_food ? food_names.sample : drink_names.sample
+  name = "#{base_name} #{i + 1}"
 
   fd = FoodDrink.find_or_initialize_by(name: name)
   fd.update!(
-    price: rand(15_000..120_000),
+    price: rand(15_000..150_000),
     category: category,
-    stock: rand(5..30),
+    stock: rand(5..50),
     description: "Món #{name} – hương vị hấp dẫn, phù hợp mọi khẩu vị."
   )
 end
 
 # ----------------------------
-# Lấy lại các món vừa tạo
+# Lấy lại các món mặc định để tạo Orders & Ratings
 # ----------------------------
-fd1 = FoodDrink.find_by(name: "Pizza")
-fd2 = FoodDrink.find_by(name: "Coffee")
-fd3 = FoodDrink.find_by(name: "Burger")
-fd4 = FoodDrink.find_by(name: "Tea")
+fd_pizza  = FoodDrink.find_by(name: "Pizza")
+fd_burger = FoodDrink.find_by(name: "Burger")
+fd_coffee = FoodDrink.find_by(name: "Coffee")
+fd_tea    = FoodDrink.find_by(name: "Tea")
 
 # ----------------------------
 # Orders
 # ----------------------------
-order1 = Order.find_or_initialize_by(user: user, status: :pending, total_price: fd1.price + fd2.price)
-order1.save! unless order1.persisted?
+order1 = Order.find_or_initialize_by(user: user, status: :pending)
+order1.update!(total_price: fd_pizza.price + fd_coffee.price)
 
-order2 = Order.find_or_initialize_by(user: user, status: :completed, total_price: fd3.price + fd4.price)
-order2.save! unless order2.persisted?
+order2 = Order.find_or_initialize_by(user: user, status: :completed)
+order2.update!(total_price: fd_burger.price + fd_tea.price)
 
 # ----------------------------
 # Order Items
 # ----------------------------
 [
-  { order: order1, food_drink: fd1, quantity: 1 },
-  { order: order1, food_drink: fd2, quantity: 1 },
-  { order: order2, food_drink: fd3, quantity: 1 },
-  { order: order2, food_drink: fd4, quantity: 1 }
+  { order: order1, food_drink: fd_pizza, quantity: 1 },
+  { order: order1, food_drink: fd_coffee, quantity: 1 },
+  { order: order2, food_drink: fd_burger, quantity: 1 },
+  { order: order2, food_drink: fd_tea, quantity: 1 }
 ].each do |oi_data|
   oi = OrderItem.find_or_initialize_by(order: oi_data[:order], food_drink: oi_data[:food_drink])
   oi.update!(
@@ -97,17 +109,17 @@ order2.save! unless order2.persisted?
 end
 
 # ----------------------------
-# Ratings
+# Ratings mặc định
 # ----------------------------
 ratings_data = [
-  { food_drink: fd1, user: user,  score: 5, comment: "Pizza ngon tuyệt vời!" },
-  { food_drink: fd1, user: admin, score: 4, comment: "Pizza ổn, có thể thêm phô mai." },
-  { food_drink: fd2, user: user,  score: 4, comment: "Cà phê thơm, ngon." },
-  { food_drink: fd2, user: admin, score: 3, comment: "Cà phê hơi đắng." },
-  { food_drink: fd3, user: user,  score: 5, comment: "Burger mềm, thịt ngon." },
-  { food_drink: fd3, user: admin, score: 4, comment: "Burger ngon, hơi ít sốt." },
-  { food_drink: fd4, user: user,  score: 3, comment: "Trà bình thường." },
-  { food_drink: fd4, user: admin, score: 4, comment: "Trà ngon, vị thanh nhẹ." }
+  { food_drink: fd_pizza,  user: user,  score: 5, comment: "Pizza ngon tuyệt vời!" },
+  { food_drink: fd_pizza,  user: admin, score: 4, comment: "Pizza ổn, có thể thêm phô mai." },
+  { food_drink: fd_coffee, user: user,  score: 4, comment: "Cà phê thơm, ngon." },
+  { food_drink: fd_coffee, user: admin, score: 3, comment: "Cà phê hơi đắng." },
+  { food_drink: fd_burger, user: user,  score: 5, comment: "Burger mềm, thịt ngon." },
+  { food_drink: fd_burger, user: admin, score: 4, comment: "Burger ngon, hơi ít sốt." },
+  { food_drink: fd_tea,    user: user,  score: 3, comment: "Trà bình thường." },
+  { food_drink: fd_tea,    user: admin, score: 4, comment: "Trà ngon, vị thanh nhẹ." }
 ]
 
 ratings_data.each do |data|
@@ -118,4 +130,17 @@ ratings_data.each do |data|
   )
 end
 
-puts "✅ Seed completed: Users (#{admin_email}, #{user_email}), Categories, FoodDrinks, Orders, OrderItems, Ratings"
+# ----------------------------
+# Tạo rating ngẫu nhiên cho các món mới
+# ----------------------------
+puts "Đang tạo rating ngẫu nhiên cho các món mới..."
+FoodDrink.where.not(id: [fd_pizza.id, fd_burger.id, fd_coffee.id, fd_tea.id]).limit(50).each do |fd|
+  [user, admin].each do |u|
+    Rating.find_or_create_by!(food_drink: fd, user: u) do |r|
+      r.score = rand(3..5)
+      r.comment = ["Ngon", "Hấp dẫn", "Tuyệt vời", "Bình thường"].sample
+    end
+  end
+end
+
+puts "✅ Seed completed: Users, Categories, FoodDrinks, Orders, OrderItems, Ratings"

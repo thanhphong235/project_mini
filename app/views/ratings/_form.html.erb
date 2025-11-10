@@ -1,38 +1,93 @@
-<%# Partial form đánh giá: rating + food_drink %>
 <%= turbo_frame_tag "user_rating_form" do %>
-<%= form_with(model: [food_drink, rating], local: false) do |f| %>
+<%= form_with(model: [food_drink, rating], local: false, html: { data: { turbo_frame: "user_rating_form" } }) do |f| %>
 
-<% if rating.errors.any? %>
-<div class="alert alert-danger">
-    <ul>
-        <% rating.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
+<div class="mb-3 rating-wrapper" data-rating-form>
+    <%= f.label :score, "Điểm (1–5)" %>
+
+    <% if rating.persisted? %>
+    <!-- Nếu đã đánh giá: hiện input số -->
+    <%= f.number_field :score, step: 1, min: 1, max: 5, value: rating.score,
+              class: "form-control w-auto d-inline-block me-2",
+              data: { rating_input: true } %>
+    <span class="text-danger d-none" data-rating-error>!</span>
+    <% else %>
+    <!-- Nếu chưa đánh giá: hiện sao -->
+    <div class="d-flex gap-2">
+        <% (1..5).each do |i| %>
+        <span class="star" data-value="<%= i %>" style="font-size:1.5rem; color: lightgray; cursor: pointer;">★</span>
         <% end %>
-    </ul>
-</div>
-<% end %>
-
-<div class="mb-2">
-    <%= f.label :score, "Điểm (1-5)" %>
-    <%= f.number_field :score, in: 1..5, step: 1, class: "form-control" %>
+        <%= f.hidden_field :score, value: rating.score, data: { rating_input: true } %>
+    </div>
+    <span class="text-danger d-none" data-rating-error> ! Vui lòng đánh giá </span>
+    <% end %>
 </div>
 
-<div class="mb-2">
+<div class="mb-3">
     <%= f.label :comment, "Bình luận" %>
     <%= f.text_area :comment, rows: 3, class: "form-control" %>
 </div>
 
 <div class="d-flex gap-2">
-    <%= f.submit rating.persisted? ? "Cập nhật đánh giá" : "Gửi đánh giá", class: "btn btn-sm btn-primary" %>
+    <%= f.submit rating.persisted? ? "Cập nhật đánh giá" : "Gửi đánh giá",
+            class: "btn btn-sm btn-primary",
+            data: { disable_with: "Đang gửi..." } %>
 
     <% if rating.persisted? %>
-    <%= link_to "Xóa đánh giá", food_drink_rating_path(food_drink, rating),
-        method: :delete,
-        data: { turbo_frame: "user_rating_form", confirm: "Bạn có chắc muốn xóa đánh giá?" },
-        class: "btn btn-sm btn-danger" %>
-
+    <%= link_to "Xóa đánh giá",
+                    food_drink_rating_path(food_drink, rating),
+                    data: { turbo_frame: "user_rating_form", turbo_method: :delete, turbo_confirm: "Bạn có chắc muốn xóa đánh giá?" },
+                    class: "btn btn-sm btn-danger" %>
     <% end %>
 </div>
 
 <% end %>
 <% end %>
+
+<script>
+    function initStarRating(wrapper) {
+        wrapper = wrapper || document.querySelector('[data-rating-form]');
+        if (!wrapper) return;
+
+        const input = wrapper.querySelector('[data-rating-input]');
+        const error = wrapper.querySelector('[data-rating-error]');
+        const stars = wrapper.querySelectorAll('.star');
+
+        function updateStars(val) {
+            stars.forEach(star => {
+                star.style.color = parseInt(star.dataset.value) <= val ? 'gold' : 'lightgray';
+            });
+        }
+
+        // click vào sao
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                const val = parseInt(star.dataset.value);
+                input.value = val;
+                updateStars(val);
+                error.classList.add('d-none'); // ẩn lỗi khi đã chọn
+            });
+        });
+
+        // init màu sao nếu đã có giá trị
+        updateStars(parseInt(input.value) || 0);
+
+        const form = input.closest('form');
+        form.addEventListener('submit', (e) => {
+            const val = parseInt(input.value);
+            if (!val || val < 1 || val > 5) {
+                e.preventDefault();
+                error.classList.remove('d-none'); // hiện thông báo lỗi
+                input.focus();
+            }
+        });
+    }
+
+    // gọi khi page load
+    document.addEventListener('turbo:load', () => initStarRating());
+    // gọi khi frame được load lại (replace hoặc append)
+    document.addEventListener('turbo:frame-load', e => {
+        if (e.target.id === 'user_rating_form') {
+            initStarRating(e.target);
+        }
+    });
+</script>

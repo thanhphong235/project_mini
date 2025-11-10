@@ -1,5 +1,5 @@
 <%= turbo_stream.replace "user_rating_form" do %>
-  <%= render "ratings/form", rating: @food_drink.ratings.find_or_initialize_by(user: current_user) %>
+  <%= render "ratings/form", rating: @rating, food_drink: @food_drink %>
 <% end %>
 
 <%= turbo_stream.replace "ratings_list" do %>

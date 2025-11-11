@@ -4,15 +4,27 @@ body {
   background-color: #fafafa;
   font-family: "Poppins", sans-serif;
   color: #333;
-  
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; // Giữ footer luôn ở đáy
 }
+
+main {
+  flex: 1; // Giúp main chiếm hết chiều cao trống
+  padding-bottom: 3rem; // 🔹 Tạo khoảng trống giữa nội dung và footer
+}
+
+// ================================
+// Footer Styles
+// ================================
 footer, .app-footer {
   background-color: #333;
-  color: #333;
-  font-size: 0.8rem;
-  padding: 1rem 0;
-  line-height: 1.4;
-  
+  color: #ccc; // 🔹 Sửa lại màu text cho dễ đọc
+  font-size: 0.85rem;
+  padding: 2rem 0; // 🔹 Tăng padding cho thoáng
+  line-height: 1.5;
+  margin-top: 2rem; // 🔹 Cách phần nội dung ra một đoạn
+
   h5, h6 {
     color: #fff;
     font-size: 1rem;
@@ -63,6 +75,9 @@ footer, .app-footer {
   }
 }
 
+// ================================
+// Navbar
+// ================================
 .navbar {
   border-bottom: 2px solid #eee;
 
@@ -79,6 +94,9 @@ footer, .app-footer {
   }
 }
 
+// ================================
+// Card
+// ================================
 .card {
   border: none;
   border-radius: 15px;
@@ -96,6 +114,9 @@ footer, .app-footer {
   }
 }
 
+// ================================
+// Buttons
+// ================================
 .btn {
   border-radius: 30px;
   font-weight: 500;
@@ -115,6 +136,9 @@ footer, .app-footer {
   }
 }
 
+// ================================
+// Alerts
+// ================================
 .alert {
   border-radius: 10px;
 }
@@ -123,7 +147,9 @@ h1, h2, h3 {
   font-weight: 600;
 }
 
-// Làm đẹp filter button
+// ================================
+// Filter Buttons
+// ================================
 .filter-buttons {
   text-align: center;
   margin-bottom: 20px;
@@ -133,7 +159,9 @@ h1, h2, h3 {
   }
 }
 
-/* Login Page Custom Styles */
+// ================================
+// Login Page
+// ================================
 body.login-page {
   background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
   min-height: 100vh;
@@ -147,62 +175,57 @@ body.login-page {
   padding: 2rem;
   background-color: #ffffff;
   box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.2);
+
+  .form-control:focus {
+    border-color: #2575fc;
+    box-shadow: 0 0 0 0.2rem rgba(37,117,252,0.25);
+  }
+
+  .btn-primary {
+    background-color: #2575fc;
+    border-color: #2575fc;
+
+    &:hover {
+      background-color: #1356d6;
+      border-color: #1356d6;
+    }
+  }
+
+  h2.card-title {
+    font-weight: 600;
+    color: #333333;
+  }
+
+  small.form-text a {
+    color: #2575fc;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
 
-.login-card .form-control:focus {
-  border-color: #2575fc;
-  box-shadow: 0 0 0 0.2rem rgba(37,117,252,0.25);
-}
-
-.login-card .btn-primary {
-  background-color: #2575fc;
-  border-color: #2575fc;
-}
-
-.login-card .btn-primary:hover {
-  background-color: #1356d6;
-  border-color: #1356d6;
-}
-
-.login-card h2.card-title {
-  font-weight: 600;
-  color: #333333;
-}
-
-.login-card small.form-text a {
-  color: #2575fc;
-}
-
-.login-card small.form-text a:hover {
-  text-decoration: underline;
-}
-
-// footer
-.text{
-  background-color: gray;
-  text-align: center;
-}
-
-// suggestion
+// ================================
+// Suggestion Floating Button
+// ================================
 #suggestion-button {
   position: fixed;
   bottom: 20px;
   right: 20px;
   z-index: 1050;
-}
 
-#suggestion-button .btn {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  font-size: 24px;
+  .btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    font-size: 24px;
+  }
 }
 
 // ================================
-// Admin Order Statistics Page
+// Admin Order Statistics
 // ================================
-
 .order-statistics {
   .container {
     max-width: 900px;
@@ -264,7 +287,9 @@ body.login-page {
   }
 }
 
-// rate
+// ================================
+// Rating Form
+// ================================
 .rating-wrapper {
   display: flex;
   flex-direction: column;

@@ -10,20 +10,27 @@ puts "👤 Tạo tài khoản người dùng mặc định..."
 admin_email = "admin@example.com"
 user_email  = "user@example.com"
 
-admin = User.find_or_initialize_by(email: admin_email)
-admin.update!(
+# Xóa nếu đã tồn tại để tránh lỗi provider/email
+User.where(email: [admin_email, user_email]).destroy_all
+
+admin = User.create!(
   name: "Admin User",
+  email: admin_email,
   password: "123456",
   password_confirmation: "123456",
-  role: "admin"
+  role: "admin",
+  provider: nil,
+  uid: nil
 )
 
-user = User.find_or_initialize_by(email: user_email)
-user.update!(
+user = User.create!(
   name: "Normal User",
+  email: user_email,
   password: "123456",
   password_confirmation: "123456",
-  role: "user"
+  role: "user",
+  provider: nil,
+  uid: nil
 )
 
 # ----------------------------
@@ -54,15 +61,11 @@ end
 # ----------------------------
 # Tạo 50 món ăn & đồ uống ngẫu nhiên
 # ----------------------------
-food_names = [
-  "Pizza Margherita", "Burger Bò Mỹ", "Spaghetti Carbonara", "Salad Caesar",
-  "Sushi Sashimi", "Bún Chả", "Phở Bò", "Cơm Tấm Sườn", "Gà Rán KFC", "Bánh Mì Thịt"
-]
+food_names = ["Pizza Margherita", "Burger Bò Mỹ", "Spaghetti Carbonara", "Salad Caesar",
+              "Sushi Sashimi", "Bún Chả", "Phở Bò", "Cơm Tấm Sườn", "Gà Rán KFC", "Bánh Mì Thịt"]
 
-drink_names = [
-  "Cà Phê Sữa Đá", "Trà Sữa Trân Châu", "Nước Ép Cam", "Sinh Tố Bơ",
-  "Matcha Latte", "Coca Cola", "Pepsi", "Trà Xanh", "Bia Sài Gòn", "Nước Khoáng"
-]
+drink_names = ["Cà Phê Sữa Đá", "Trà Sữa Trân Châu", "Nước Ép Cam", "Sinh Tố Bơ",
+               "Matcha Latte", "Coca Cola", "Pepsi", "Trà Xanh", "Bia Sài Gòn", "Nước Khoáng"]
 
 puts "🍽️  Đang tạo 50 món ăn & đồ uống ngẫu nhiên..."
 50.times do |i|
@@ -103,10 +106,7 @@ order2.update!(total_price: fd_burger.price + fd_tea.price)
   { order: order2, food_drink: fd_tea, quantity: 1 }
 ].each do |oi_data|
   oi = OrderItem.find_or_initialize_by(order: oi_data[:order], food_drink: oi_data[:food_drink])
-  oi.update!(
-    quantity: oi_data[:quantity],
-    price: oi_data[:food_drink].price
-  )
+  oi.update!(quantity: oi_data[:quantity], price: oi_data[:food_drink].price)
 end
 
 # ----------------------------
@@ -128,22 +128,11 @@ ratings_data.each do |data|
   r.update!(score: data[:score], comment: data[:comment])
 end
 
-puts "⭐  Đang tạo rating ngẫu nhiên..."
-FoodDrink.where.not(id: [fd_pizza.id, fd_burger.id, fd_coffee.id, fd_tea.id]).limit(50).each do |fd|
-  [user, admin].each do |u|
-    Rating.find_or_create_by!(food_drink: fd, user: u) do |r|
-      r.score = rand(3..5)
-      r.comment = ["Ngon", "Hấp dẫn", "Tuyệt vời", "Bình thường"].sample
-    end
-  end
-end
-
-puts "✅ Seed completed!"
+puts "⭐ Seed completed!"
 puts "--------------------------------------------"
 puts "👨‍💻  Admin account:"
 puts "   Email: admin@example.com"
 puts "   Password: 123456"
-puts ""
 puts "👤  User account:"
 puts "   Email: user@example.com"
 puts "   Password: 123456"

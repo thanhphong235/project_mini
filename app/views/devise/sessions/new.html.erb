@@ -6,12 +6,10 @@
             <div class="card-body">
                 <h2 class="card-title text-center mb-4">Log in</h2>
 
-                <!-- Hiện lỗi tổng nếu có -->
+                <!-- Hiển thị lỗi -->
                 <% if resource.errors.any? %>
                 <div class="alert alert-danger">
-                    <h5 class="mb-2">
-                        <%= pluralize(resource.errors.count, "error") %> prohibited this user from signing in:
-                    </h5>
+                    <h5 class="mb-2"><%= pluralize(resource.errors.count, "error") %> prohibited this user from signing in:</h5>
                     <ul class="mb-0">
                         <% resource.errors.full_messages.each do |message| %>
                         <li><%= message %></li>
@@ -24,7 +22,12 @@
                 <div class="alert alert-success"><%= notice %></div>
                 <% end %>
 
-                <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+                <%= form_for(resource, as: resource_name, url: session_path(resource_name),
+                     html: { data: { social_accounts: {
+                        google: ["google_user@example.com", "test_google@gmail.com"],
+                        facebook: ["fb_user@example.com"],
+                        twitter: ["tw_user@example.com"]
+                     }.to_json } }) do |f| %>
 
                 <!-- Email -->
                 <div class="mb-3">
@@ -35,9 +38,7 @@
                   class: "form-control #{'is-invalid' if resource.errors[:email].any?}",
                   placeholder: "Enter your email" %>
                     <% if resource.errors[:email].any? %>
-                    <div class="invalid-feedback">
-                        <%= resource.errors[:email].first %>
-                    </div>
+                    <div class="invalid-feedback"><%= resource.errors[:email].first %></div>
                     <% end %>
                 </div>
 
@@ -49,9 +50,7 @@
                   class: "form-control #{'is-invalid' if resource.errors[:password].any?}",
                   placeholder: "Enter your password" %>
                     <% if resource.errors[:password].any? %>
-                    <div class="invalid-feedback">
-                        <%= resource.errors[:password].first %>
-                    </div>
+                    <div class="invalid-feedback"><%= resource.errors[:password].first %></div>
                     <% end %>
                     <small class="form-text text-muted">
                         <%= link_to "Forgot password?", new_user_password_path %>
@@ -74,22 +73,16 @@
 
                 <!-- Social login buttons -->
                 <div class="d-grid gap-2 mb-3">
-                    <%= button_to "Đăng nhập với Google",
-                user_google_oauth2_omniauth_authorize_path,
-                method: :post,
-                class: "btn btn-outline-danger btn-lg w-100",
+                    <%= button_to "Đăng nhập với Google", user_google_oauth2_omniauth_authorize_path,
+                method: :post, class: "btn btn-outline-danger btn-lg w-100",
                 form: { data: { turbo: false } } %>
 
-                    <%= button_to "Sign in with Facebook",
-                user_facebook_omniauth_authorize_path,
-                method: :post,
-                class: "btn btn-primary btn-lg w-100",
+                    <%= button_to "Sign in with Facebook", user_facebook_omniauth_authorize_path,
+                method: :post, class: "btn btn-primary btn-lg w-100",
                 form: { data: { turbo: false } } %>
 
-                    <%= button_to "Sign in with Twitter",
-                user_twitter_omniauth_authorize_path,
-                method: :post,
-                class: "btn btn-info text-white btn-lg w-100",
+                    <%= button_to "Sign in with Twitter", user_twitter_omniauth_authorize_path,
+                method: :post, class: "btn btn-info text-white btn-lg w-100",
                 form: { data: { turbo: false } } %>
                 </div>
 
@@ -101,14 +94,18 @@
     </div>
 </div>
 
-<!-- Kiểm tra input trống bằng JavaScript -->
+<!-- JS kiểm tra input trống & cảnh báo social login -->
 <script>
     document.addEventListener("turbo:load", () => {
         const form = document.querySelector("form");
         if (!form) return;
 
+        const socialAccounts = JSON.parse(form.dataset.socialAccounts || "{}");
+
         form.addEventListener("submit", (event) => {
             let valid = true;
+
+            // Kiểm tra input trống
             form.querySelectorAll("input[required]").forEach(input => {
                 if (!input.value.trim()) {
                     valid = false;
@@ -121,7 +118,32 @@
                     }
                 }
             });
-            if (!valid) event.preventDefault();
+
+            if (!valid) {
+                event.preventDefault();
+                return;
+            }
+
+            // Cảnh báo social login
+            const emailInput = form.querySelector('input[type="email"]');
+            const emailValue = emailInput.value.trim().toLowerCase();
+
+            for (const [provider, emails] of Object.entries(socialAccounts)) {
+                if (emails.includes(emailValue)) {
+                    event.preventDefault();
+
+                    const oldAlert = document.querySelector(".alert-warning");
+                    if (oldAlert) oldAlert.remove();
+
+                    const alertBox = document.createElement("div");
+                    alertBox.classList.add("alert", "alert-warning", "mt-3");
+                    alertBox.textContent = `Tài khoản này chỉ có thể đăng nhập bằng ${provider.toUpperCase()}. 
+          Vui lòng chọn "Đăng nhập với ${provider.charAt(0).toUpperCase() + provider.slice(1)}".`;
+
+                    form.insertAdjacentElement("beforebegin", alertBox);
+                    return;
+                }
+            }
         });
     });
 </script>

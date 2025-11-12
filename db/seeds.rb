@@ -1,30 +1,24 @@
 # db/seeds.rb
 # frozen_string_literal: true
 
-puts "🚀 Bắt đầu seed database sạch..."
-
-# ----------------------------
-# Users
-# ----------------------------
-# ----------------------------
 puts "🚀 Bắt đầu seed database..."
 
 # ----------------------------
-# Tạo Admin test
+# Admin Test
 # ----------------------------
-admin_email = "admin_test@example.com"
+admin_email = "admin@example.com"
 admin_password = "123456"
 
 admin = User.find_by(email: admin_email)
 
 if admin
-  puts "⚠️  Admin đã tồn tại: #{admin_email}"
+  puts "⚠️ Admin test đã tồn tại: #{admin_email}"
   # Reset password & confirm nếu dùng confirmable
   admin.password = admin_password
   admin.password_confirmation = admin_password
   admin.confirmed_at = Time.current if admin.respond_to?(:confirmed_at)
   admin.save!
-  puts "🔑  Password đã được reset thành #{admin_password}"
+  puts "🔑 Password đã reset thành #{admin_password}"
 else
   admin = User.new(
     name: "Admin Test",
@@ -35,7 +29,7 @@ else
   )
   admin.confirmed_at = Time.current if admin.respond_to?(:confirmed_at)
   admin.save!
-  puts "✅  Admin mới tạo thành công!"
+  puts "✅ Admin test mới tạo thành công!"
 end
 
 # ----------------------------
@@ -59,13 +53,28 @@ default_foods_drinks.each do |fd_data|
   fd.update!(
     price: fd_data[:price],
     category: fd_data[:category],
-    stock: fd_data[:stock]
+    stock: fd_data[:stock],
+    description: "Món #{fd_data[:name]} – hương vị hấp dẫn, phù hợp mọi khẩu vị."
   )
 end
 
 # ----------------------------
-# Orders
+# Orders và Order Items
 # ----------------------------
+# Lấy 1 user bất kỳ (không phải admin test) để tạo orders
+user = User.where.not(id: admin.id).first
+unless user
+  user = User.create!(
+    name: "Normal User",
+    email: "user_for_seed@example.com",
+    password: "123456",
+    password_confirmation: "123456",
+    role: "user",
+    confirmed_at: Time.current
+  )
+  puts "✅ User mới tạo để seed orders & ratings: #{user.email}"
+end
+
 fd_pizza  = FoodDrink.find_by(name: "Pizza")
 fd_burger = FoodDrink.find_by(name: "Burger")
 fd_coffee = FoodDrink.find_by(name: "Coffee")
@@ -77,9 +86,6 @@ order1.update!(total_price: fd_pizza.price + fd_coffee.price)
 order2 = Order.find_or_initialize_by(user: user, status: :completed)
 order2.update!(total_price: fd_burger.price + fd_tea.price)
 
-# ----------------------------
-# Order Items
-# ----------------------------
 [
   { order: order1, food_drink: fd_pizza, quantity: 1 },
   { order: order1, food_drink: fd_coffee, quantity: 1 },
@@ -109,9 +115,9 @@ ratings_data.each do |data|
   r.update!(score: data[:score], comment: data[:comment])
 end
 
-puts "✅ Seed database sạch hoàn tất!"
+puts "✅ Seed database hoàn tất!"
 puts "--------------------------------------------"
-puts "👨‍💻  Admin test account:"
+puts "👨‍💻 Admin test account:"
 puts "   Email: #{admin.email}"
 puts "   Password: #{admin_password}"
 puts "--------------------------------------------"

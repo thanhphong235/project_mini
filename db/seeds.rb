@@ -6,32 +6,18 @@ puts "🚀 Bắt đầu seed database sạch..."
 # ----------------------------
 # Users
 # ----------------------------
-admin_email = "admin@example.com"
-user_email  = "user@example.com"
-
-puts "👤 Xóa các tài khoản cũ (nếu có)..."
-User.where(email: [admin_email, user_email]).destroy_all
-
-puts "👤 Tạo tài khoản Admin và User mới..."
-admin = User.create!(
-  name: "Admin User",
-  email: admin_email,
-  password: "123456",
-  password_confirmation: "123456",
-  role: "admin",
-  provider: nil,
-  uid: nil
-)
-
-user = User.create!(
-  name: "Normal User",
-  email: user_email,
-  password: "123456",
-  password_confirmation: "123456",
-  role: "user",
-  provider: nil,
-  uid: nil
-)
+# ----------------------------
+# Tài khoản admin test
+# ----------------------------
+admin_test_email = "admin_test@example.com" # email test riêng, tránh trùng
+admin_test = User.find_or_create_by!(email: admin_test_email) do |u|
+  u.name = "Admin Test"
+  u.password = "123456"
+  u.password_confirmation = "123456"
+  u.role = "admin"
+  u.provider = nil
+  u.uid = nil
+end
 
 # ----------------------------
 # Categories
@@ -106,11 +92,6 @@ end
 
 puts "✅ Seed database sạch hoàn tất!"
 puts "--------------------------------------------"
-puts "👨‍💻  Admin account:"
-puts "   Email: #{admin.email}"
+puts "✅ Tài khoản admin test đã sẵn sàng:"
+puts "   Email: #{admin_test.email}"
 puts "   Password: 123456"
-puts ""
-puts "👤  User account:"
-puts "   Email: #{user.email}"
-puts "   Password: 123456"
-puts "--------------------------------------------"

@@ -1,0 +1,6 @@
+# config/locales/devise.vi.yml
+vi:
+  devise:
+    sessions:
+      user:
+        invalid: "Email hoặc mật khẩu không đúng."

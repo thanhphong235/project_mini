@@ -5,20 +5,24 @@ puts "🚀 Bắt đầu seed database..."
 # ----------------------------
 # Users
 # ----------------------------
-admin_email = ENV['ADMIN_EMAIL'] || "admin@example.com"
-user_email  = ENV['USER_EMAIL']  || "user@example.com"
+puts "👤 Tạo tài khoản người dùng mặc định..."
+
+admin_email = "admin@example.com"
+user_email  = "user@example.com"
 
 admin = User.find_or_initialize_by(email: admin_email)
 admin.update!(
   name: "Admin User",
-  password: Devise.friendly_token[0, 20],
+  password: "123456",
+  password_confirmation: "123456",
   role: "admin"
 )
 
 user = User.find_or_initialize_by(email: user_email)
 user.update!(
   name: "Normal User",
-  password: Devise.friendly_token[0, 20],
+  password: "123456",
+  password_confirmation: "123456",
   role: "user"
 )
 
@@ -48,7 +52,7 @@ default_foods_drinks.each do |fd_data|
 end
 
 # ----------------------------
-# Tạo 50 món ăn & đồ uống ngẫu nhiên với tên thực tế
+# Tạo 50 món ăn & đồ uống ngẫu nhiên
 # ----------------------------
 food_names = [
   "Pizza Margherita", "Burger Bò Mỹ", "Spaghetti Carbonara", "Salad Caesar",
@@ -60,7 +64,7 @@ drink_names = [
   "Matcha Latte", "Coca Cola", "Pepsi", "Trà Xanh", "Bia Sài Gòn", "Nước Khoáng"
 ]
 
-puts "Đang tạo 50 món ăn & đồ uống ngẫu nhiên..."
+puts "🍽️  Đang tạo 50 món ăn & đồ uống ngẫu nhiên..."
 50.times do |i|
   category = [cat_food, cat_drink].sample
   base_name = category == cat_food ? food_names.sample : drink_names.sample
@@ -76,16 +80,13 @@ puts "Đang tạo 50 món ăn & đồ uống ngẫu nhiên..."
 end
 
 # ----------------------------
-# Lấy lại các món mặc định để tạo Orders & Ratings
+# Orders
 # ----------------------------
 fd_pizza  = FoodDrink.find_by(name: "Pizza")
 fd_burger = FoodDrink.find_by(name: "Burger")
 fd_coffee = FoodDrink.find_by(name: "Coffee")
 fd_tea    = FoodDrink.find_by(name: "Tea")
 
-# ----------------------------
-# Orders
-# ----------------------------
 order1 = Order.find_or_initialize_by(user: user, status: :pending)
 order1.update!(total_price: fd_pizza.price + fd_coffee.price)
 
@@ -109,7 +110,7 @@ order2.update!(total_price: fd_burger.price + fd_tea.price)
 end
 
 # ----------------------------
-# Ratings mặc định
+# Ratings
 # ----------------------------
 ratings_data = [
   { food_drink: fd_pizza,  user: user,  score: 5, comment: "Pizza ngon tuyệt vời!" },
@@ -124,16 +125,10 @@ ratings_data = [
 
 ratings_data.each do |data|
   r = Rating.find_or_initialize_by(food_drink: data[:food_drink], user: data[:user])
-  r.update!(
-    score: data[:score],
-    comment: data[:comment]
-  )
+  r.update!(score: data[:score], comment: data[:comment])
 end
 
-# ----------------------------
-# Tạo rating ngẫu nhiên cho các món mới
-# ----------------------------
-puts "Đang tạo rating ngẫu nhiên cho các món mới..."
+puts "⭐  Đang tạo rating ngẫu nhiên..."
 FoodDrink.where.not(id: [fd_pizza.id, fd_burger.id, fd_coffee.id, fd_tea.id]).limit(50).each do |fd|
   [user, admin].each do |u|
     Rating.find_or_create_by!(food_drink: fd, user: u) do |r|
@@ -143,4 +138,13 @@ FoodDrink.where.not(id: [fd_pizza.id, fd_burger.id, fd_coffee.id, fd_tea.id]).li
   end
 end
 
-puts "✅ Seed completed: Users, Categories, FoodDrinks, Orders, OrderItems, Ratings"
+puts "✅ Seed completed!"
+puts "--------------------------------------------"
+puts "👨‍💻  Admin account:"
+puts "   Email: admin@example.com"
+puts "   Password: 123456"
+puts ""
+puts "👤  User account:"
+puts "   Email: user@example.com"
+puts "   Password: 123456"
+puts "--------------------------------------------"

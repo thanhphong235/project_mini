@@ -43,12 +43,18 @@
                 </div>
 
                 <!-- Password -->
-                <div class="mb-3">
+                <div class="mb-3 position-relative">
                     <%= f.label :password, class: "form-label" %>
-                    <%= f.password_field :password,
-                  required: true,
-                  class: "form-control #{'is-invalid' if resource.errors[:password].any?}",
-                  placeholder: "Enter your password" %>
+                    <div class="input-group">
+                        <%= f.password_field :password,
+                            required: true,
+                            class: "form-control #{'is-invalid' if resource.errors[:password].any?}",
+                            placeholder: "Enter your password",
+                            id: "password-field" %>
+                        <button type="button" class="btn btn-outline-secondary" id="toggle-password">
+                            👁
+                        </button>
+                    </div>
                     <% if resource.errors[:password].any? %>
                     <div class="invalid-feedback"><%= resource.errors[:password].first %></div>
                     <% end %>
@@ -56,6 +62,7 @@
                         <%= link_to "Forgot password?", new_user_password_path %>
                     </small>
                 </div>
+
 
                 <!-- Remember me -->
                 <div class="form-check mb-3">
@@ -98,6 +105,8 @@
 <script>
     document.addEventListener("turbo:load", () => {
         const form = document.querySelector("form");
+        const toggleBtn = document.getElementById("toggle-password");
+        const passwordField = document.getElementById("password-field");
         if (!form) return;
 
         const socialAccounts = JSON.parse(form.dataset.socialAccounts || "{}");
@@ -145,5 +154,16 @@
                 }
             }
         });
+        if (toggleBtn && passwordField) {
+            toggleBtn.addEventListener("click", () => {
+                if (passwordField.type === "password") {
+                    passwordField.type = "text";
+                    toggleBtn.textContent = "🙈"; // đổi icon
+                } else {
+                    passwordField.type = "password";
+                    toggleBtn.textContent = "👁";
+                }
+            });
+        }
     });
 </script>

@@ -1,18 +1,18 @@
+# db/seeds.rb
 # frozen_string_literal: true
 
-puts "🚀 Bắt đầu seed database..."
+puts "🚀 Bắt đầu seed database sạch..."
 
 # ----------------------------
 # Users
 # ----------------------------
-puts "👤 Tạo tài khoản người dùng mặc định..."
-
 admin_email = "admin@example.com"
 user_email  = "user@example.com"
 
-# Xóa nếu đã tồn tại để tránh lỗi provider/email
+puts "👤 Xóa các tài khoản cũ (nếu có)..."
 User.where(email: [admin_email, user_email]).destroy_all
 
+puts "👤 Tạo tài khoản Admin và User mới..."
 admin = User.create!(
   name: "Admin User",
   email: admin_email,
@@ -55,30 +55,6 @@ default_foods_drinks.each do |fd_data|
     price: fd_data[:price],
     category: fd_data[:category],
     stock: fd_data[:stock]
-  )
-end
-
-# ----------------------------
-# Tạo 50 món ăn & đồ uống ngẫu nhiên
-# ----------------------------
-food_names = ["Pizza Margherita", "Burger Bò Mỹ", "Spaghetti Carbonara", "Salad Caesar",
-              "Sushi Sashimi", "Bún Chả", "Phở Bò", "Cơm Tấm Sườn", "Gà Rán KFC", "Bánh Mì Thịt"]
-
-drink_names = ["Cà Phê Sữa Đá", "Trà Sữa Trân Châu", "Nước Ép Cam", "Sinh Tố Bơ",
-               "Matcha Latte", "Coca Cola", "Pepsi", "Trà Xanh", "Bia Sài Gòn", "Nước Khoáng"]
-
-puts "🍽️  Đang tạo 50 món ăn & đồ uống ngẫu nhiên..."
-50.times do |i|
-  category = [cat_food, cat_drink].sample
-  base_name = category == cat_food ? food_names.sample : drink_names.sample
-  name = "#{base_name} #{i + 1}"
-
-  fd = FoodDrink.find_or_initialize_by(name: name)
-  fd.update!(
-    price: rand(15_000..150_000),
-    category: category,
-    stock: rand(5..50),
-    description: "Món #{name} – hương vị hấp dẫn, phù hợp mọi khẩu vị."
   )
 end
 
@@ -128,12 +104,13 @@ ratings_data.each do |data|
   r.update!(score: data[:score], comment: data[:comment])
 end
 
-puts "⭐ Seed completed!"
+puts "✅ Seed database sạch hoàn tất!"
 puts "--------------------------------------------"
 puts "👨‍💻  Admin account:"
-puts "   Email: admin@example.com"
+puts "   Email: #{admin.email}"
 puts "   Password: 123456"
+puts ""
 puts "👤  User account:"
-puts "   Email: user@example.com"
+puts "   Email: #{user.email}"
 puts "   Password: 123456"
 puts "--------------------------------------------"

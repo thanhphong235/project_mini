@@ -1,4 +1,6 @@
-if Rails.env.production?
+# config/initializers/admin_test.rb
+# ❌ Chỉ chạy khi không precompile assets
+if Rails.env.production? && ENV["RUNNING_ASSET_PRECOMPILE"].blank?
   Rails.application.config.after_initialize do
     admin_email = "admin_test@example.com"
     admin_password = "123456"

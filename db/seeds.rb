@@ -1,22 +1,29 @@
 # db/seeds.rb
 # frozen_string_literal: true
 
-puts "🚀 Bắt đầu seed database..."
+puts "🚀 Seed database bắt đầu..."
 
 # ----------------------------
-# Admin Test
+# Admin test
 # ----------------------------
 admin_email = "admin_test@example.com"
 admin_password = "123456"
 
 admin = User.find_or_initialize_by(email: admin_email)
-admin.name = "Admin Test"
-admin.role = "admin"
-admin.password = admin_password
-admin.password_confirmation = admin_password
-admin.confirmed_at = Time.current if admin.respond_to?(:confirmed_at)
-admin.save!
-puts admin.previously_new_record? ? "✅ Admin test mới tạo thành công!" : "⚠️ Admin test đã tồn tại, password đã reset."
+if admin.new_record?
+  admin.name = "Admin Test"
+  admin.role = "admin"
+  admin.password = admin_password
+  admin.password_confirmation = admin_password
+  admin.confirmed_at = Time.current if admin.respond_to?(:confirmed_at)
+  admin.save!
+  puts "✅ Admin test mới tạo thành công!"
+else
+  admin.password = admin_password
+  admin.password_confirmation = admin_password
+  admin.save!
+  puts "⚠️ Admin test đã tồn tại. Password đã reset!"
+end
 
 # ----------------------------
 # Categories

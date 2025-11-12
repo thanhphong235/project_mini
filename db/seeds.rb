@@ -7,16 +7,35 @@ puts "🚀 Bắt đầu seed database sạch..."
 # Users
 # ----------------------------
 # ----------------------------
-# Tài khoản admin test
+puts "🚀 Bắt đầu seed database..."
+
 # ----------------------------
-admin_test_email = "admin_test@example.com" # email test riêng, tránh trùng
-admin_test = User.find_or_create_by!(email: admin_test_email) do |u|
-  u.name = "Admin Test"
-  u.password = "123456"
-  u.password_confirmation = "123456"
-  u.role = "admin"
-  u.provider = nil
-  u.uid = nil
+# Tạo Admin test
+# ----------------------------
+admin_email = "admin_test@example.com"
+admin_password = "123456"
+
+admin = User.find_by(email: admin_email)
+
+if admin
+  puts "⚠️  Admin đã tồn tại: #{admin_email}"
+  # Reset password & confirm nếu dùng confirmable
+  admin.password = admin_password
+  admin.password_confirmation = admin_password
+  admin.confirmed_at = Time.current if admin.respond_to?(:confirmed_at)
+  admin.save!
+  puts "🔑  Password đã được reset thành #{admin_password}"
+else
+  admin = User.new(
+    name: "Admin Test",
+    email: admin_email,
+    password: admin_password,
+    password_confirmation: admin_password,
+    role: "admin"
+  )
+  admin.confirmed_at = Time.current if admin.respond_to?(:confirmed_at)
+  admin.save!
+  puts "✅  Admin mới tạo thành công!"
 end
 
 # ----------------------------
@@ -92,6 +111,7 @@ end
 
 puts "✅ Seed database sạch hoàn tất!"
 puts "--------------------------------------------"
-puts "✅ Tài khoản admin test đã sẵn sàng:"
-puts "   Email: #{admin_test.email}"
-puts "   Password: 123456"
+puts "👨‍💻  Admin test account:"
+puts "   Email: #{admin.email}"
+puts "   Password: #{admin_password}"
+puts "--------------------------------------------"

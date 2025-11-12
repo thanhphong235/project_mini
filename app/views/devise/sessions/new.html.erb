@@ -23,20 +23,20 @@
                 <% end %>
 
                 <%= form_for(resource, as: resource_name, url: session_path(resource_name),
-                     html: { data: { social_accounts: {
-                        google: ["google_user@example.com", "test_google@gmail.com"],
-                        facebook: ["fb_user@example.com"],
-                        twitter: ["tw_user@example.com"]
-                     }.to_json } }) do |f| %>
+          html: { data: { social_accounts: {
+            google: ["google_user@example.com", "test_google@gmail.com"],
+            facebook: ["fb_user@example.com"],
+            twitter: ["tw_user@example.com"]
+          }.to_json } }) do |f| %>
 
                 <!-- Email -->
                 <div class="mb-3">
                     <%= f.label :email, class: "form-label" %>
                     <%= f.email_field :email,
-                  required: true,
-                  autofocus: true,
-                  class: "form-control #{'is-invalid' if resource.errors[:email].any?}",
-                  placeholder: "Enter your email" %>
+              required: true,
+              autofocus: true,
+              class: "form-control #{'is-invalid' if resource.errors[:email].any?}",
+              placeholder: "Enter your email" %>
                     <% if resource.errors[:email].any? %>
                     <div class="invalid-feedback"><%= resource.errors[:email].first %></div>
                     <% end %>
@@ -47,10 +47,10 @@
                     <%= f.label :password, class: "form-label" %>
                     <div class="input-group">
                         <%= f.password_field :password,
-                            required: true,
-                            class: "form-control #{'is-invalid' if resource.errors[:password].any?}",
-                            placeholder: "Enter your password",
-                            id: "password-field" %>
+                  required: true,
+                  class: "form-control #{'is-invalid' if resource.errors[:password].any?}",
+                  placeholder: "Enter your password",
+                  id: "password-field" %>
                         <button type="button" class="btn btn-outline-secondary" id="toggle-password">
                             👁
                         </button>
@@ -62,7 +62,6 @@
                         <%= link_to "Forgot password?", new_user_password_path %>
                     </small>
                 </div>
-
 
                 <!-- Remember me -->
                 <div class="form-check mb-3">
@@ -81,16 +80,16 @@
                 <!-- Social login buttons -->
                 <div class="d-grid gap-2 mb-3">
                     <%= button_to "Đăng nhập với Google", user_google_oauth2_omniauth_authorize_path,
-                method: :post, class: "btn btn-outline-danger btn-lg w-100",
-                form: { data: { turbo: false } } %>
+              method: :post, class: "btn btn-outline-danger btn-lg w-100",
+              form: { data: { turbo: false } } %>
 
                     <%= button_to "Sign in with Facebook", user_facebook_omniauth_authorize_path,
-                method: :post, class: "btn btn-primary btn-lg w-100",
-                form: { data: { turbo: false } } %>
+              method: :post, class: "btn btn-primary btn-lg w-100",
+              form: { data: { turbo: false } } %>
 
                     <%= button_to "Sign in with Twitter", user_twitter_omniauth_authorize_path,
-                method: :post, class: "btn btn-info text-white btn-lg w-100",
-                form: { data: { turbo: false } } %>
+              method: :post, class: "btn btn-info text-white btn-lg w-100",
+              form: { data: { turbo: false } } %>
                 </div>
 
                 <p class="text-center mb-0">
@@ -101,20 +100,18 @@
     </div>
 </div>
 
-<!-- JS kiểm tra input trống & cảnh báo social login -->
+<!-- JS: Turbo-safe, event delegation -->
 <script>
     document.addEventListener("turbo:load", () => {
         const form = document.querySelector("form");
-        const toggleBtn = document.getElementById("toggle-password");
-        const passwordField = document.getElementById("password-field");
         if (!form) return;
 
         const socialAccounts = JSON.parse(form.dataset.socialAccounts || "{}");
 
+        // Input validation & social login warning
         form.addEventListener("submit", (event) => {
             let valid = true;
 
-            // Kiểm tra input trống
             form.querySelectorAll("input[required]").forEach(input => {
                 if (!input.value.trim()) {
                     valid = false;
@@ -133,7 +130,7 @@
                 return;
             }
 
-            // Cảnh báo social login
+            // Social login warning
             const emailInput = form.querySelector('input[type="email"]');
             const emailValue = emailInput.value.trim().toLowerCase();
 
@@ -146,24 +143,29 @@
 
                     const alertBox = document.createElement("div");
                     alertBox.classList.add("alert", "alert-warning", "mt-3");
-                    alertBox.textContent = `Tài khoản này chỉ có thể đăng nhập bằng ${provider.toUpperCase()}. 
-          Vui lòng chọn "Đăng nhập với ${provider.charAt(0).toUpperCase() + provider.slice(1)}".`;
+                    alertBox.textContent = `Tài khoản này chỉ có thể đăng nhập bằng ${provider.toUpperCase()}. Vui lòng chọn "Đăng nhập với ${provider.charAt(0).toUpperCase() + provider.slice(1)}".`;
 
                     form.insertAdjacentElement("beforebegin", alertBox);
                     return;
                 }
             }
         });
-        if (toggleBtn && passwordField) {
-            toggleBtn.addEventListener("click", () => {
-                if (passwordField.type === "password") {
-                    passwordField.type = "text";
-                    toggleBtn.textContent = "🙈"; // đổi icon
-                } else {
-                    passwordField.type = "password";
-                    toggleBtn.textContent = "👁";
-                }
-            });
-        }
+
+        // Show/hide password: event delegation, Turbo-safe
+        document.addEventListener("click", (event) => {
+            const toggleBtn = event.target.closest("#toggle-password");
+            if (!toggleBtn) return;
+
+            const passwordField = toggleBtn.closest(".input-group").querySelector("#password-field");
+            if (!passwordField) return;
+
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleBtn.textContent = "🙈";
+            } else {
+                passwordField.type = "password";
+                toggleBtn.textContent = "👁";
+            }
+        });
     });
 </script>

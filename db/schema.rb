@@ -86,6 +86,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_06_074055) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "status", default: 0
+    t.integer "status_tmp", default: 0
     t.datetime "ordered_at"
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
@@ -103,9 +104,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_06_074055) do
 
   create_table "suggestions", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.string "title"
-    t.text "content"
-    t.string "status"
+    t.string "title", null: false
+    t.text "content", null: false
+    t.string "status", default: "pending"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_suggestions_on_user_id"

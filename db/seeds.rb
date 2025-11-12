@@ -6,31 +6,17 @@ puts "🚀 Bắt đầu seed database..."
 # ----------------------------
 # Admin Test
 # ----------------------------
-admin_email = "admin@example.com"
+admin_email = "admin_test@example.com"
 admin_password = "123456"
 
-admin = User.find_by(email: admin_email)
-
-if admin
-  puts "⚠️ Admin test đã tồn tại: #{admin_email}"
-  # Reset password & confirm nếu dùng confirmable
-  admin.password = admin_password
-  admin.password_confirmation = admin_password
-  admin.confirmed_at = Time.current if admin.respond_to?(:confirmed_at)
-  admin.save!
-  puts "🔑 Password đã reset thành #{admin_password}"
-else
-  admin = User.new(
-    name: "Admin Test",
-    email: admin_email,
-    password: admin_password,
-    password_confirmation: admin_password,
-    role: "admin"
-  )
-  admin.confirmed_at = Time.current if admin.respond_to?(:confirmed_at)
-  admin.save!
-  puts "✅ Admin test mới tạo thành công!"
-end
+admin = User.find_or_initialize_by(email: admin_email)
+admin.name = "Admin Test"
+admin.role = "admin"
+admin.password = admin_password
+admin.password_confirmation = admin_password
+admin.confirmed_at = Time.current if admin.respond_to?(:confirmed_at)
+admin.save!
+puts admin.previously_new_record? ? "✅ Admin test mới tạo thành công!" : "⚠️ Admin test đã tồn tại, password đã reset."
 
 # ----------------------------
 # Categories
@@ -61,7 +47,7 @@ end
 # ----------------------------
 # Orders và Order Items
 # ----------------------------
-# Lấy 1 user bất kỳ (không phải admin test) để tạo orders
+# Lấy một user bất kỳ (không phải admin test) để seed orders
 user = User.where.not(id: admin.id).first
 unless user
   user = User.create!(
@@ -72,7 +58,6 @@ unless user
     role: "user",
     confirmed_at: Time.current
   )
-  puts "✅ User mới tạo để seed orders & ratings: #{user.email}"
 end
 
 fd_pizza  = FoodDrink.find_by(name: "Pizza")

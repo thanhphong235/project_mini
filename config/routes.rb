@@ -39,7 +39,7 @@ Rails.application.routes.draw do
   # Khu vực USER
   # ======================
   resources :food_drinks do
-    resources :ratings, only: [:create, :update, :destroy] # hoặc thêm :new nếu cần
+    resources :ratings, only: [:edit, :create, :update, :destroy] # hoặc thêm :new nếu cần
   end
 
   # Giỏ hàng

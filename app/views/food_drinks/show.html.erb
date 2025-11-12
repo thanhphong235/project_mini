@@ -8,20 +8,24 @@
     <!-- Card chi tiết món ăn -->
     <div class="card shadow-sm p-3 mb-3">
 
+        <!-- Tên sản phẩm -->
         <h2><%= @food_drink.name %></h2>
 
+        <!-- Hình ảnh -->
         <% if @food_drink.image.attached? %>
-        <%= image_tag @food_drink.image, class: "img-fluid mb-3" %>
+        <%= image_tag @food_drink.image, class: "img-fluid mb-3 rounded" %>
         <% else %>
         <div class="bg-secondary text-white d-flex align-items-center justify-content-center mb-3" style="height: 250px;">
             Không có ảnh
         </div>
         <% end %>
 
+        <!-- Thông tin sản phẩm -->
         <p><strong>Giá:</strong> <%= number_to_currency(@food_drink.price, unit: "₫") %></p>
         <p><strong>Danh mục:</strong> <%= @food_drink.category&.name || "Không có" %></p>
         <p><strong>Mô tả:</strong> <%= @food_drink.description.presence || "Chưa có mô tả" %></p>
 
+        <!-- Nút thao tác -->
         <div class="mb-3 d-flex gap-2">
             <% if @food_drink.stock > 0 && user_signed_in? %>
             <%= button_to "Thêm vào giỏ", cart_items_path,
@@ -40,17 +44,35 @@
 
         <hr>
 
-        <!-- Form đánh giá user -->
+        <!-- Đánh giá của user -->
         <% if user_signed_in? %>
         <h5>Đánh giá của bạn</h5>
-        <% user_rating = @food_drink.ratings.find_or_initialize_by(user: current_user) %>
-        <%= render "ratings/form", rating: user_rating, food_drink: @food_drink %>
+
+        <% user_rating = @food_drink.ratings.find_by(user: current_user) %>
+
+        <% if user_rating.nil? %>
+        <!-- User chưa đánh giá: show form trống luôn -->
+        <%= turbo_frame_tag "user_rating_form" do %>
+        <%= render "ratings/form", rating: @food_drink.ratings.new(user: current_user), food_drink: @food_drink %>
+        <% end %>
+        <% else %>
+        <!-- User đã đánh giá: chỉ show link "Cập nhật" -->
+        <%= turbo_frame_tag "user_rating_form" do %>
+        <div id="user_rating_form_placeholder">
+            <%= link_to "Cập nhật đánh giá",
+                        edit_food_drink_rating_path(@food_drink, user_rating),
+                        data: { turbo_frame: "user_rating_form" },
+                        class: "btn btn-sm btn-outline-primary" %>
+        </div>
+        <% end %>
+        <% end %>
+
         <% else %>
         <p><%= link_to "Đăng nhập", new_user_session_path %> để đánh giá sản phẩm.</p>
         <% end %>
 
         <!-- Danh sách đánh giá -->
-        <h5>Đánh giá sản phẩm</h5>
+        <h5 class="mt-4">Đánh giá sản phẩm</h5>
         <%= turbo_frame_tag "ratings_list" do %>
         <%= render "ratings/list", ratings: @food_drink.ratings.includes(:user) %>
         <% end %>
@@ -64,3 +86,65 @@
 
     </div>
 </div>
+
+<!-- JS khởi tạo sao và validate -->
+<script>
+    function initStarRating(wrapper) {
+        const ratingForm = wrapper?.querySelector('[data-rating-form]');
+        if (!ratingForm) return;
+
+        const input = ratingForm.querySelector('[data-rating-input]');
+        const stars = ratingForm.querySelectorAll('.star');
+        const error = ratingForm.querySelector('[data-rating-error]');
+
+        const updateStars = (val) => {
+            stars.forEach(star => {
+                star.style.color = parseInt(star.dataset.value) <= val ? 'gold' : 'lightgray';
+            });
+        };
+
+        stars.forEach(star => {
+            star.onclick = () => {
+                const val = parseInt(star.dataset.value);
+                input.value = val;
+                updateStars(val);
+                error.classList.add('d-none');
+            };
+        });
+
+        updateStars(parseInt(input.value) || 0);
+
+        const form = ratingForm.closest('form');
+        form.addEventListener('submit', (e) => {
+            const val = parseInt(input.value);
+            if (!val || val < 1 || val > 5) {
+                e.preventDefault();
+                error.classList.remove('d-none');
+                input.focus();
+            }
+        });
+    }
+
+    // Khi trang load
+    document.addEventListener('turbo:load', () => {
+        const wrapper = document.querySelector('#user_rating_form');
+        if (wrapper) initStarRating(wrapper);
+    });
+
+    // Khi Turbo Frame load (edit hoặc submit)
+    document.addEventListener('turbo:frame-load', (e) => {
+        if (e.target.id === 'user_rating_form') {
+            initStarRating(e.target);
+
+            // Reset form nếu là form đánh giá mới
+            const form = e.target.querySelector('form');
+            if (form) {
+                form.reset();
+                const stars = form.querySelectorAll('.star');
+                stars.forEach(star => star.style.color = 'lightgray');
+                const error = form.querySelector('[data-rating-error]');
+                if (error) error.classList.add('d-none');
+            }
+        }
+    });
+</script>

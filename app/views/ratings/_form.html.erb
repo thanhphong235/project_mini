@@ -1,10 +1,9 @@
 <%= turbo_frame_tag "user_rating_form" do %>
-<%= form_with(model: [food_drink, rating], local: false, html: { data: { turbo_frame: "user_rating_form" } }) do |f| %>
+<%= form_with(model: [food_drink, rating], local: false, data: { turbo_frame: "user_rating_form" }) do |f| %>
 
 <div class="mb-3 rating-wrapper" data-rating-form>
     <%= f.label :score, "Điểm (1–5)" %>
-
-    <div class="d-flex gap-2 stars-container mt-1">
+    <div class="d-flex gap-2 stars-container mt-1" id="star-rating">
         <% (1..5).each do |i| %>
         <span class="star" data-value="<%= i %>" style="font-size:1.8rem; color:<%= rating.score && rating.score >= i ? 'gold' : 'lightgray' %>; cursor:pointer;">
             ★
@@ -12,84 +11,34 @@
         <% end %>
         <%= f.hidden_field :score, value: rating.score, data: { rating_input: true } %>
     </div>
-
     <span class="text-danger d-none mt-1" data-rating-error>! Vui lòng đánh giá</span>
 </div>
 
 <div class="mb-3">
     <%= f.label :comment, "Bình luận" %>
-    <%= f.text_area :comment, rows: 3, class: "form-control" %>
+    <%= f.text_area :comment, rows: 3, class: "form-control", value: rating.comment %>
 </div>
 
 <div class="d-flex gap-2">
     <%= f.submit rating.persisted? ? "Cập nhật đánh giá" : "Gửi đánh giá",
-          class: "btn btn-sm btn-primary",
-          data: { disable_with: "Đang gửi..." } %>
-
-    <% if rating.persisted? %>
-    <%= link_to "Xóa đánh giá",
-            food_drink_rating_path(food_drink, rating),
-            data: {
-              turbo_frame: "user_rating_form",
-              turbo_method: :delete,
-              turbo_confirm: "Bạn có chắc muốn xóa đánh giá?"
-            },
-            class: "btn btn-sm btn-danger" %>
-    <% end %>
+              class: "btn btn-sm btn-primary",
+              data: { disable_with: "Đang gửi..." } %>
 </div>
 
 <% end %>
 <% end %>
 
 <script>
-    function initStarRating(wrapper) {
-        const ratingForm = wrapper?.querySelector('[data-rating-form]');
-        if (!ratingForm) return;
+    // Chọn sao
+    document.querySelectorAll('#star-rating .star').forEach(star => {
+        star.addEventListener('click', function() {
+            const value = this.dataset.value;
+            const input = this.closest('[data-rating-form]').querySelector('[data-rating-input]');
+            input.value = value;
 
-        const input = ratingForm.querySelector('[data-rating-input]');
-        const stars = ratingForm.querySelectorAll('.star');
-        const error = ratingForm.querySelector('[data-rating-error]');
-
-        const updateStars = (val) => {
-            stars.forEach(star => {
-                star.style.color = parseInt(star.dataset.value) <= val ? 'gold' : 'lightgray';
+            this.closest('#star-rating').querySelectorAll('.star').forEach(s => {
+                s.style.color = s.dataset.value <= value ? 'gold' : 'lightgray';
             });
-        };
-
-        stars.forEach(star => {
-            star.onclick = () => {
-                const val = parseInt(star.dataset.value);
-                input.value = val;
-                updateStars(val);
-                error.classList.add('d-none');
-            };
         });
-
-        // Khởi tạo trạng thái sao ban đầu
-        updateStars(parseInt(input.value) || 0);
-
-        // Kiểm tra lỗi khi submit
-        const form = ratingForm.closest('form');
-        form.addEventListener('submit', (e) => {
-            const val = parseInt(input.value);
-            if (!val || val < 1 || val > 5) {
-                e.preventDefault();
-                error.classList.remove('d-none');
-                input.focus();
-            }
-        });
-    }
-
-    // Khi trang load
-    document.addEventListener('turbo:load', () => {
-        const wrapper = document.querySelector('#user_rating_form');
-        if (wrapper) initStarRating(wrapper);
-    });
-
-    // Khi turbo frame thay mới (sau khi gửi/xóa)
-    document.addEventListener('turbo:frame-load', (e) => {
-        if (e.target.id === 'user_rating_form') {
-            initStarRating(e.target);
-        }
     });
 </script>

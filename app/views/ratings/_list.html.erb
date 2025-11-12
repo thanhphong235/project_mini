@@ -1,33 +1,43 @@
 <%= turbo_frame_tag "ratings_list" do %>
 <% if ratings.any? %>
-<div class="list-group">
-    <% ratings.includes(:user).each do |r| %>
-    <div class="list-group-item">
-        <div class="d-flex justify-content-between align-items-center">
-            <strong><%= r.user.name %></strong>
-            <span class="text-muted">
-                <% time = r.updated_at.in_time_zone('Hanoi') %>
-                <%= time.strftime("%H:%M %d/%m/%Y") %>
-                <% if r.updated_at > r.created_at %>
-
-                <% end %>
-            </span>
-
-        </div>
-
-        <!-- Hiển thị sao -->
-        <div class="rating-stars my-1" style="font-size: 1.2rem;">
-            <% 1.upto(5) do |i| %>
-            <span style="color: <%= i <= r.score ? 'gold' : 'lightgray' %>;">★</span>
+<% ratings.includes(:user).each do |r| %>
+<div class="border p-2 mb-2 rounded" id="rating_<%= r.id %>">
+    <div class="d-flex justify-content-between">
+        <strong><%= r.user.name.presence || r.user.email %></strong>
+        <small class="text-muted">
+            <%= r.updated_at.in_time_zone('Hanoi').strftime("%H:%M %d/%m/%Y") %>
+            <% if r.updated_at > r.created_at %>
+            <span class="fst-italic">(đã chỉnh sửa)</span>
             <% end %>
-        </div>
+        </small>
+    </div>
 
-        <!-- Hiển thị bình luận -->
-        <div><%= r.comment %></div>
+    <div>
+        <% 1.upto(5) do |i| %>
+        <span style="color: <%= i <= r.score ? 'gold' : 'lightgray' %>;">★</span>
+        <% end %>
+    </div>
+
+    <p><%= r.comment.presence || "Không có bình luận" %></p>
+
+    <% if user_signed_in? && r.user_id == current_user.id %>
+    <div class="mt-2 d-flex gap-2">
+        <%= link_to "Cập nhật",
+                        edit_food_drink_rating_path(r.food_drink, r),
+                        data: { turbo_frame: "user_rating_form" },
+                        class: "btn btn-sm btn-outline-primary" %>
+
+        <%= link_to "Xóa",
+                        food_drink_rating_path(r.food_drink, r),
+                        data: { turbo_method: :delete,
+                                turbo_confirm: "Bạn có chắc muốn xóa đánh giá này?",
+                                turbo_frame: "ratings_list" },
+                        class: "btn btn-sm btn-outline-danger" %>
     </div>
     <% end %>
 </div>
+<% end %>
 <% else %>
-<p>Chưa có đánh giá nào.</p>
+<p class="text-muted fst-italic">Chưa có đánh giá nào</p>
 <% end %>
 <% end %>

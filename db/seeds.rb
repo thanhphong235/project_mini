@@ -52,6 +52,52 @@ default_foods_drinks.each do |fd_data|
 end
 
 # ----------------------------
+# Thêm các món ăn & thức uống mở rộng
+# ----------------------------
+cat_food  = Category.find_or_create_by!(name: "Food")
+cat_drink = Category.find_or_create_by!(name: "Drink")
+
+user = User.where.not(role: "admin").first || User.first
+
+extra_foods = [
+  ["Spaghetti",       90_000,  cat_food, 10],
+  ["Sushi",           120_000, cat_food, 8],
+  ["Bánh mì kẹp",     50_000,  cat_food, 15],
+  ["Pizza Pepperoni", 110_000, cat_food, 12],
+  ["Burger Phô mai",  85_000,  cat_food, 10],
+  ["Nước cam",        25_000,  cat_drink, 20],
+  ["Sinh tố dâu",     40_000,  cat_drink, 18],
+  ["Trà sữa",         35_000,  cat_drink, 25],
+  ["Cà phê sữa",      30_000,  cat_drink, 30],
+  ["Trà xanh",        20_000,  cat_drink, 25]
+]
+
+extra_foods.each do |name, price, category, stock|
+  fd = FoodDrink.find_or_initialize_by(name: name)
+  fd.update!(
+    price: price,
+    category: category,
+    stock: stock,
+    description: "Món #{name} – hương vị hấp dẫn, phù hợp mọi khẩu vị."
+  )
+
+  # ----------------------------
+  # Thêm 2–3 đánh giá mẫu cho mỗi món
+  # ----------------------------
+  rand(2..3).times do
+    fd.ratings.find_or_create_by!(
+      user: user,
+      score: rand(3..5),
+      comment: [
+        "Rất ngon, sẽ quay lại!",
+        "Hương vị tuyệt vời.",
+        "Giá hợp lý, phục vụ tốt.",
+        "Món ăn ổn, đáng thử."
+      ].sample
+    )
+  end
+end
+# ----------------------------
 # Orders và Order Items
 # ----------------------------
 # Lấy một user bất kỳ (không phải admin test) để seed orders

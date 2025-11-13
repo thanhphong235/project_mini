@@ -91,7 +91,7 @@ end
 # Ratings
 # ----------------------------
 ratings_data = [
-  { food_drink: fd_pizza,  user: user,  score: 5, comment: "Pizza ngon tuyệt vời!" },
+  { food_drink: fd_pizza,  user: user,  score: 1, comment: "Pizza ngon tuyệt vời!" },
   { food_drink: fd_pizza,  user: admin, score: 4, comment: "Pizza ổn, có thể thêm phô mai." },
   { food_drink: fd_coffee, user: user,  score: 4, comment: "Cà phê thơm, ngon." },
   { food_drink: fd_coffee, user: admin, score: 3, comment: "Cà phê hơi đắng." },

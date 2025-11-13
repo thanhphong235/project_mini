@@ -12,34 +12,33 @@
 
 <!-- Thanh công cụ: thêm mới, tìm kiếm, sắp xếp -->
 <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
-    <!-- Nút thêm mới -->
     <div class="mb-2">
         <%= link_to "Thêm mới", new_admin_food_drink_path, class: "btn btn-success me-2" %>
         <%= link_to "Làm mới", admin_food_drinks_path, class: "btn btn-outline-secondary" %>
     </div>
 
-    <!-- Thanh tìm kiếm -->
     <div class="d-flex align-items-center mb-2">
         <%= form_with url: admin_food_drinks_path, method: :get, local: true, class: "d-flex" do |f| %>
         <%= f.text_field :query, value: params[:query], placeholder: "🔍 Tìm kiếm món ăn hoặc thức uống...", class: "form-control me-2" %>
         <%= f.select :sort, options_for_select([
-        ['Mới nhất', 'newest'],
-        ['Tên A → Z', 'name_asc'],
-        ['Tên Z → A', 'name_desc'],
-        ['Giá tăng dần', 'price_asc'],
-        ['Giá giảm dần', 'price_desc']
-      ], params[:sort]), {}, class: "form-select me-2" %>
+          ['Mới nhất', 'newest'],
+          ['Tên A → Z', 'name_asc'],
+          ['Tên Z → A', 'name_desc'],
+          ['Giá tăng dần', 'price_asc'],
+          ['Giá giảm dần', 'price_desc']
+        ], params[:sort]), {}, class: "form-select me-2" %>
         <%= f.submit "Lọc", class: "btn btn-primary" %>
         <% end %>
     </div>
 </div>
 
-<!-- Nút chọn tất cả và form xóa nhiều món -->
+<!-- Nút chọn tất cả -->
 <div class="mb-3">
     <button type="button" id="select_all_btn" class="btn btn-warning me-2">Chọn tất cả món ăn</button>
 </div>
 
-<%= form_with url: bulk_delete_admin_food_drinks_path, method: :delete, data: { turbo_confirm: "Bạn có chắc chắn muốn xóa các món đã chọn?" } do %>
+<!-- Form xóa nhiều món -->
+<%= form_with url: bulk_delete_admin_food_drinks_path, method: :delete, local: true, data: { turbo_confirm: "Bạn có chắc chắn muốn xóa các món đã chọn?" } do %>
 <table class="table table-striped align-middle">
     <thead>
         <tr>
@@ -65,7 +64,7 @@
             <td><%= number_to_currency(fd.price, unit: "₫") %></td>
             <td><%= fd.category&.name || "Chưa phân loại" %></td>
 
-            <!-- Cập nhật số lượng inline -->
+            <!-- Inline cập nhật số lượng -->
             <td>
                 <%= form_with model: [:admin, fd], method: :patch, local: true do |sf| %>
                 <div class="d-flex">
@@ -115,7 +114,7 @@
         const checkboxes = document.querySelectorAll(".food-drink-checkbox");
 
         if (selectAllBtn) {
-            let allSelected = false; // trạng thái hiện tại
+            let allSelected = false;
 
             selectAllBtn.addEventListener("click", () => {
                 allSelected = !allSelected;

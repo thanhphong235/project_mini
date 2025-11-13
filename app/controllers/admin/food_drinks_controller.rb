@@ -74,7 +74,8 @@ class Admin::FoodDrinksController < ApplicationController
 
   # DELETE /admin/food_drinks/bulk_delete
   def bulk_delete
-    ids = params[:food_drink_ids] || []
+    ids = params.dig(:food_drink, :food_drink_ids) || []
+
     if ids.any?
       FoodDrink.where(id: ids).destroy_all
       redirect_to admin_food_drinks_path, notice: "Đã xoá các món đã chọn."
@@ -84,6 +85,7 @@ class Admin::FoodDrinksController < ApplicationController
   rescue ActiveRecord::InvalidForeignKey
     redirect_to admin_food_drinks_path, alert: "Không thể xoá vì một số món đang có đơn hàng liên quan."
   end
+
 
   private
 

@@ -17,22 +17,19 @@ class Admin::FoodDrinksController < ApplicationController
       @food_drinks = @food_drinks.where("name ILIKE ?", keyword)
     end
 
-    # Sắp xếp theo tên (A–Z hoặc Z–A)
+    # Sắp xếp
     case params[:sort]
-      when "name_asc"
-        @food_drinks = @food_drinks.order(name: :asc)
-      when "name_desc"
-        @food_drinks = @food_drinks.order(name: :desc)
-      when "price_asc"
-        @food_drinks = @food_drinks.order(price: :asc)
-      when "price_desc"
-        @food_drinks = @food_drinks.order(price: :desc)
-      else
-        @food_drinks = @food_drinks.order(created_at: :desc) # mặc định
-    end 
-    
-
-    @food_drinks = @food_drinks.order(created_at: :desc)
+    when "name_asc"
+      @food_drinks = @food_drinks.order(name: :asc)
+    when "name_desc"
+      @food_drinks = @food_drinks.order(name: :desc)
+    when "price_asc"
+      @food_drinks = @food_drinks.order(price: :asc)
+    when "price_desc"
+      @food_drinks = @food_drinks.order(price: :desc)
+    else
+      @food_drinks = @food_drinks.order(created_at: :desc)
+    end
   end
 
   def new
@@ -73,6 +70,19 @@ class Admin::FoodDrinksController < ApplicationController
         end
       end
     end
+  end
+
+  # DELETE /admin/food_drinks/bulk_delete
+  def bulk_delete
+    ids = params[:food_drink_ids] || []
+    if ids.any?
+      FoodDrink.where(id: ids).destroy_all
+      redirect_to admin_food_drinks_path, notice: "Đã xoá các món đã chọn."
+    else
+      redirect_to admin_food_drinks_path, alert: "Bạn chưa chọn món nào để xoá."
+    end
+  rescue ActiveRecord::InvalidForeignKey
+    redirect_to admin_food_drinks_path, alert: "Không thể xoá vì một số món đang có đơn hàng liên quan."
   end
 
   private

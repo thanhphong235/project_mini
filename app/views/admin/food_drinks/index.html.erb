@@ -23,22 +23,27 @@
         <%= form_with url: admin_food_drinks_path, method: :get, local: true, class: "d-flex" do |f| %>
         <%= f.text_field :query, value: params[:query], placeholder: "🔍 Tìm kiếm món ăn hoặc thức uống...", class: "form-control me-2" %>
         <%= f.select :sort, options_for_select([
-            ['Mới nhất', 'newest'],
-            ['Tên A → Z', 'name_asc'],
-            ['Tên Z → A', 'name_desc'],
-            ['Giá tăng dần', 'price_asc'],
-            ['Giá giảm dần', 'price_desc']
-          ], params[:sort]),
-          {}, class: "form-select me-2" %>
+        ['Mới nhất', 'newest'],
+        ['Tên A → Z', 'name_asc'],
+        ['Tên Z → A', 'name_desc'],
+        ['Giá tăng dần', 'price_asc'],
+        ['Giá giảm dần', 'price_desc']
+      ], params[:sort]), {}, class: "form-select me-2" %>
         <%= f.submit "Lọc", class: "btn btn-primary" %>
         <% end %>
     </div>
 </div>
 
-<!-- Bảng danh sách -->
+<!-- Nút chọn tất cả và form xóa nhiều món -->
+<div class="mb-3">
+    <button type="button" id="select_all_btn" class="btn btn-warning me-2">Chọn tất cả món ăn</button>
+</div>
+
+<%= form_with url: bulk_delete_admin_food_drinks_path, method: :delete, data: { turbo_confirm: "Bạn có chắc chắn muốn xóa các món đã chọn?" } do %>
 <table class="table table-striped align-middle">
     <thead>
         <tr>
+            <th></th>
             <th>#</th>
             <th>Tên</th>
             <th>Giá</th>
@@ -49,10 +54,12 @@
             <th>Hành động</th>
         </tr>
     </thead>
-
     <tbody>
         <% @food_drinks.each_with_index do |fd, index| %>
         <tr id="food_drink_<%= fd.id %>">
+            <td>
+                <%= check_box_tag "food_drink[food_drink_ids][]", fd.id, false, class: "form-check-input food-drink-checkbox" %>
+            </td>
             <td><%= index + 1 %></td>
             <td><%= fd.name %></td>
             <td><%= number_to_currency(fd.price, unit: "₫") %></td>
@@ -60,10 +67,10 @@
 
             <!-- Cập nhật số lượng inline -->
             <td>
-                <%= form_with model: [:admin, fd], method: :patch, local: true do |f| %>
+                <%= form_with model: [:admin, fd], method: :patch, local: true do |sf| %>
                 <div class="d-flex">
-                    <%= f.number_field :stock, value: fd.stock, class: "form-control form-control-sm me-1", min: 0 %>
-                    <%= f.submit "Cập nhật", class: "btn btn-sm btn-primary" %>
+                    <%= sf.number_field :stock, value: fd.stock, class: "form-control form-control-sm me-1", min: 0 %>
+                    <%= sf.submit "Cập nhật", class: "btn btn-sm btn-primary" %>
                 </div>
                 <% end %>
             </td>
@@ -81,16 +88,40 @@
             <td>
                 <%= link_to "Sửa", edit_admin_food_drink_path(fd), class: "btn btn-warning btn-sm me-1" %>
                 <%= link_to "Xóa", admin_food_drink_path(fd),
-              data: { turbo_method: :delete, turbo_confirm: fd.order_items.any? ?
-                "⚠️ Món ăn này đang có đơn hàng. Bạn chắc chắn muốn xoá?" :
-                "Bạn có chắc chắn muốn xoá món ăn/thức uống này?" },
-              class: "btn btn-danger btn-sm" %>
+                        data: { turbo_method: :delete,
+                                turbo_confirm: fd.order_items.any? ? 
+                                  "⚠️ Món ăn này đang có đơn hàng. Bạn chắc chắn muốn xoá?" :
+                                  "Bạn có chắc chắn muốn xoá món ăn/thức uống này?" },
+                        class: "btn btn-danger btn-sm" %>
             </td>
         </tr>
         <% end %>
     </tbody>
 </table>
 
+<div class="mb-3">
+    <%= submit_tag "Xóa các món đã chọn", class: "btn btn-danger" %>
+</div>
+<% end %>
+
 <% if @food_drinks.empty? %>
 <p class="text-center text-muted mt-3">Không tìm thấy món ăn/thức uống nào phù hợp.</p>
 <% end %>
+
+<!-- JS chọn/bỏ chọn tất cả -->
+<script>
+    document.addEventListener("turbo:load", () => {
+        const selectAllBtn = document.querySelector("#select_all_btn");
+        const checkboxes = document.querySelectorAll(".food-drink-checkbox");
+
+        if (selectAllBtn) {
+            let allSelected = false; // trạng thái hiện tại
+
+            selectAllBtn.addEventListener("click", () => {
+                allSelected = !allSelected;
+                checkboxes.forEach(cb => cb.checked = allSelected);
+                selectAllBtn.textContent = allSelected ? "Bỏ chọn tất cả" : "Chọn tất cả món ăn";
+            });
+        }
+    });
+</script>

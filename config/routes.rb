@@ -27,14 +27,17 @@ Rails.application.routes.draw do
 
     resources :users
     resources :categories
-    resources :food_drinks, except: [:show]
+    resources :food_drinks, except: [:show] do
+      collection do
+        delete :bulk_delete
+      end
+    end
     resources :orders, only: [:index, :show, :update, :destroy]
     resources :suggestions, only: [:index, :show, :edit, :update, :destroy]
 
     get "order_statistics", to: "dashboard#order_statistics", as: "order_statistics"
     post "send_monthly_report", to: "dashboard#send_monthly_report", as: "send_monthly_report"
   end
-
   # ======================
   # Khu vực USER
   # ======================

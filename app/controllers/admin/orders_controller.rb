@@ -14,13 +14,47 @@ class Admin::OrdersController < ApplicationController
   def show
   end
 
-  def update
+def update
+  respond_to do |format|
     if @order.update(order_params)
-      redirect_to admin_orders_path, notice: "Cập nhật trạng thái đơn hàng thành công."
+      notice = "Cập nhật trạng thái đơn hàng thành công."
+
+      format.html { redirect_to admin_orders_path, notice: notice }
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.update(
+            "flash_messages",
+            "<div class='alert alert-success alert-dismissible fade show mt-2' role='alert'>
+              #{notice}
+              <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Đóng'></button>
+            </div>".html_safe
+          ),
+          turbo_stream.replace(
+            "order_#{@order.id}",
+            partial: "admin/orders/order_row",
+            locals: { order: @order, index: @order.id } # index có thể tự tính trong partial
+          )
+        ]
+      end
     else
-      redirect_to admin_orders_path, alert: "Không thể cập nhật đơn hàng."
+      alert = "Không thể cập nhật đơn hàng."
+
+      format.html { redirect_to admin_orders_path, alert: alert }
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.update(
+          "flash_messages",
+          "<div class='alert alert-danger alert-dismissible fade show mt-2' role='alert'>
+            #{alert}
+            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Đóng'></button>
+          </div>".html_safe
+        )
+      end
     end
   end
+end
+
+
+
 
   def destroy
     @order.destroy

@@ -21,11 +21,9 @@ class OrdersController < ApplicationController
     end
 
     total_price = cart_items.sum { |item| item.food_drink.price * item.quantity }
-
     order = nil
 
     begin
-      # Transaction chỉ dùng cho DB operations
       ActiveRecord::Base.transaction do
         order = current_user.orders.create!(total_price: total_price, status: "pending")
 
@@ -40,16 +38,13 @@ class OrdersController < ApplicationController
         cart_items.destroy_all
       end
 
-      # Redirect ngay khi order tạo thành công
-      redirect_to order_path(order), notice: "Đặt hàng thành công! Đơn hàng đã được lưu."
-
-      # Gửi mail và job ngoài transaction, async để không phá flow
+      # Mail xác nhận user và thông báo admin, chạy async
       send_order_notifications(order)
 
+      redirect_to order_path(order), notice: "Đặt hàng thành công! Email xác nhận đã được gửi."
     rescue ActiveRecord::RecordInvalid => e
       redirect_to cart_path, alert: "Đặt hàng thất bại: #{e.record.errors.full_messages.join(', ')}"
     rescue => e
-      # Log lỗi để debug production, vẫn redirect về cart
       Rails.logger.error("[OrderCreateError] #{e.class} - #{e.message}")
       redirect_to cart_path, alert: "Đặt hàng thất bại, vui lòng thử lại sau."
     end
@@ -58,14 +53,12 @@ class OrdersController < ApplicationController
   private
 
   def send_order_notifications(order)
-    # Deliver_later để gửi mail async
-    AdminMailer.with(order: order).new_order.deliver_later
+    # Gửi mail xác nhận user
     OrderMailer.with(order: order).new_order.deliver_later
 
-    # Job khác, ví dụ notification, chat
-    SystemNotifierJob.perform_later(order.id)
+    # Gửi mail thông báo admin
+    AdminMailer.with(order: order).new_order.deliver_later
   rescue => e
     Rails.logger.error("[OrderNotificationError] #{e.class} - #{e.message}")
-    # Không raise, tránh phá flow
   end
 end

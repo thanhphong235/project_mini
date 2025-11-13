@@ -80,6 +80,8 @@ fd_pizza  = FoodDrink.find_by(name: "Pizza")
 fd_burger = FoodDrink.find_by(name: "Burger")
 fd_coffee = FoodDrink.find_by(name: "Coffee")
 fd_tea    = FoodDrink.find_by(name: "Tea")
+fd_latte = FoodDrink.find_by(name: "Latte")
+
 
 order1 = Order.find_or_initialize_by(user: user, status: :pending)
 order1.update!(total_price: fd_pizza.price + fd_coffee.price)
@@ -91,7 +93,8 @@ order2.update!(total_price: fd_burger.price + fd_tea.price)
   { order: order1, food_drink: fd_pizza, quantity: 1 },
   { order: order1, food_drink: fd_coffee, quantity: 1 },
   { order: order2, food_drink: fd_burger, quantity: 1 },
-  { order: order2, food_drink: fd_tea, quantity: 1 }
+  { order: order2, food_drink: fd_tea, quantity: 1 },
+  { order: order2, food_drink: fd_latte, quantity: 1 },
 ].each do |oi_data|
   oi = OrderItem.find_or_initialize_by(order: oi_data[:order], food_drink: oi_data[:food_drink])
   oi.update!(quantity: oi_data[:quantity], price: oi_data[:food_drink].price)

@@ -1,11 +1,17 @@
 <%= turbo_stream.replace "user_rating_form" do %>
-  <%= render "ratings/form", rating: @rating, food_drink: @food_drink %>
+  <%# ✅ Reset form rỗng mới cho user sau khi xoá %>
+  <%= render "ratings/form",
+             rating: @food_drink.ratings.new(user: current_user),
+             food_drink: @food_drink %>
 <% end %>
 
 <%= turbo_stream.replace "ratings_list" do %>
-  <%= render "ratings/list", ratings: @food_drink.ratings.includes(:user) %>
+  <%# ✅ Cập nhật lại danh sách đánh giá sau khi xoá %>
+  <%= render "ratings/list",
+             ratings: @food_drink.ratings.includes(:user).order(created_at: :desc) %>
 <% end %>
 
 <%= turbo_stream.replace "flash_messages" do %>
-  <%= render "shared/flash" %>
+  <%# ✅ Hiển thị flash thông báo %>
+  <%= render "shared/flash", notice: "Đánh giá đã được xóa." %>
 <% end %>

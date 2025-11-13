@@ -55,10 +55,24 @@ class RatingsController < ApplicationController
   # PATCH /food_drinks/:food_drink_id/ratings/:id
   def update
     if @rating.update(rating_params)
-      @rating_form = @food_drink.ratings.new(user: current_user)
+      @new_rating = @food_drink.ratings.new(user: current_user)
 
       respond_to do |format|
-        format.turbo_stream
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace(
+              "user_rating_form",
+              partial: "ratings/form",
+              locals: { food_drink: @food_drink, rating: @new_rating }
+            ),
+            turbo_stream.replace(
+              "ratings_list",
+              partial: "ratings/list",
+              locals: { ratings: @food_drink.ratings.includes(:user).order(created_at: :desc) }
+            )
+          ]
+        end
+
         format.html { redirect_to @food_drink, notice: "Đánh giá đã được cập nhật." }
       end
     else
@@ -74,6 +88,7 @@ class RatingsController < ApplicationController
       end
     end
   end
+
 
   # DELETE /food_drinks/:food_drink_id/ratings/:id
   def destroy

@@ -61,7 +61,7 @@
         <div id="user_rating_form_placeholder">
             <%= link_to "Cập nhật đánh giá",
                         edit_food_drink_rating_path(@food_drink, user_rating),
-                        data: { turbo_frame: "user_rating_form" },
+                        data: { turbo_frame: "user_rating_form",turbo_prefetch: false },
                         class: "btn btn-sm btn-outline-primary" %>
         </div>
         <% end %>

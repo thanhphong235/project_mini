@@ -9,6 +9,11 @@
     <% end %>
 </div>
 
+<!-- Flash messages -->
+<%= turbo_frame_tag "flash_messages" do %>
+<%= render "shared/flash" %>
+<% end %>
+
 <!-- Thanh công cụ -->
 <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
     <div class="mb-2">
@@ -18,7 +23,7 @@
 
     <!-- Form tìm kiếm & filter với Turbo Frame -->
     <div class="d-flex align-items-center mb-2">
-        <%= form_with url: admin_food_drinks_path, method: :get, local: true, class: "d-flex", data: { turbo_frame: "food_drinks_list" } do |f| %>
+        <%= form_with url: admin_food_drinks_path, method: :get, local: false, data: { turbo_frame: "food_drinks_list" }, class: "d-flex" do |f| %>
         <%= f.text_field :query, value: params[:query], placeholder: "🔍 Tìm kiếm món ăn hoặc thức uống...", class: "form-control me-2" %>
         <%= f.select :sort, options_for_select([
         ['Mới nhất', 'newest'],
@@ -39,7 +44,7 @@
 
 <!-- Turbo Frame chứa bảng món ăn -->
 <%= turbo_frame_tag "food_drinks_list" do %>
-<%= form_with url: bulk_delete_admin_food_drinks_path, method: :delete, local: true, data: { turbo_confirm: "Bạn có chắc chắn muốn xóa các món đã chọn?" } do %>
+<%= form_with url: bulk_delete_admin_food_drinks_path, method: :delete, local: false, data: { turbo_confirm: "Bạn có chắc chắn muốn xóa các món đã chọn?" } do %>
 <%= render partial: "list", locals: { food_drinks: @food_drinks } %>
 <div class="mb-3">
     <%= submit_tag "Xóa các món đã chọn", class: "btn btn-danger" %>
@@ -51,49 +56,30 @@
 <p class="text-center text-muted mt-3">Không tìm thấy món ăn/thức uống nào phù hợp.</p>
 <% end %>
 
-<!-- JS chọn/bỏ chọn tất cả -->
+<!-- JS chọn/bỏ chọn tất cả + Auto search -->
 <script>
     document.addEventListener("turbo:load", () => {
+        // Chọn / bỏ chọn tất cả
         const selectAllBtn = document.querySelector("#select_all_btn");
-        const checkboxes = document.querySelectorAll(".food-drink-checkbox");
-
         if (selectAllBtn) {
             let allSelected = false;
             selectAllBtn.addEventListener("click", () => {
                 allSelected = !allSelected;
-                checkboxes.forEach(cb => cb.checked = allSelected);
+                document.querySelectorAll(".food-drink-checkbox").forEach(cb => cb.checked = allSelected);
                 selectAllBtn.textContent = allSelected ? "Bỏ chọn tất cả" : "Chọn tất cả món ăn";
             });
         }
-    });
-    document.addEventListener("turbo:load", () => {
+
+        // Auto search
         const searchInput = document.querySelector('input[name="query"]');
-        if (!searchInput) return;
-
-        let timeout = null;
-
-        searchInput.addEventListener("input", () => {
-            clearTimeout(timeout);
-
-            timeout = setTimeout(() => {
-                const form = searchInput.closest("form");
-
-                // Submit form bằng Turbo (chỉ update frame)
-                Turbo.renderStreamMessage(new URLSearchParams(new FormData(form)).toString());
-                form.requestSubmit(); // submit form mà không reload page
-            }, 300); // 300ms debounce
-        });
-
-        // Chọn / bỏ chọn tất cả
-        const selectAllBtn = document.querySelector("#select_all_btn");
-        const checkboxes = document.querySelectorAll(".food-drink-checkbox");
-
-        if (selectAllBtn) {
-            let allSelected = false;
-            selectAllBtn.addEventListener("click", () => {
-                allSelected = !allSelected;
-                checkboxes.forEach(cb => cb.checked = allSelected);
-                selectAllBtn.textContent = allSelected ? "Bỏ chọn tất cả" : "Chọn tất cả món ăn";
+        if (searchInput) {
+            let timeout = null;
+            searchInput.addEventListener("input", () => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    const form = searchInput.closest("form");
+                    form.requestSubmit(); // submit form bằng Turbo, update frame food_drinks_list
+                }, 300); // 300ms debounce
             });
         }
     });

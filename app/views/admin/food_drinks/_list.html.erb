@@ -41,11 +41,11 @@
             <td>
                 <%= link_to "Sửa", edit_admin_food_drink_path(fd), class: "btn btn-warning btn-sm me-1" %>
                 <%= link_to "Xóa", admin_food_drink_path(fd),
-                      data: { turbo_method: :delete,
-                              turbo_confirm: fd.order_items.any? ?
-                                "⚠️ Món ăn này đang có đơn hàng. Bạn chắc chắn muốn xoá?" :
-                                "Bạn có chắc chắn muốn xoá món ăn/thức uống này?" },
-                      class: "btn btn-danger btn-sm" %>
+              data: { turbo_method: :delete,
+                      turbo_confirm: fd.order_items.any? ?
+                        "⚠️ Món ăn này đang có đơn hàng. Bạn chắc chắn muốn xoá?" :
+                        "Bạn có chắc chắn muốn xoá món ăn/thức uống này?" },
+              class: "btn btn-danger btn-sm" %>
             </td>
         </tr>
         <% end %>

@@ -1,0 +1,9 @@
+<%# Replace form với một model mới, để reset tất cả input %>
+<%= turbo_stream.replace "food_drink_form" do %>
+  <%= render partial: "form", locals: { food_drink: FoodDrink.new } %>
+<% end %>
+
+<%# Update flash messages ngay lập tức %>
+<%= turbo_stream.replace "flash_messages" do %>
+  <%= render "shared/flash" %>
+<% end %>

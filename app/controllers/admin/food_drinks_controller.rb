@@ -3,7 +3,6 @@ class Admin::FoodDrinksController < ApplicationController
   before_action :require_admin
   before_action :set_food_drink, only: [:edit, :update, :destroy]
 
-  # GET /admin/food_drinks
   def index
     @food_drinks = FoodDrink.all
 
@@ -31,11 +30,6 @@ class Admin::FoodDrinksController < ApplicationController
     else
       @food_drinks = @food_drinks.order(created_at: :desc)
     end
-
-    respond_to do |format|
-      format.html
-      format.turbo_stream # hỗ trợ live update với auto search
-    end
   end
 
   def new
@@ -44,12 +38,23 @@ class Admin::FoodDrinksController < ApplicationController
 
   def create
     @food_drink = FoodDrink.new(food_drink_params)
+
     if @food_drink.save
-      redirect_to admin_food_drinks_path, notice: "Món ăn/thức uống đã được tạo."
+      flash.now[:notice] = "Thêm món ăn thành công!"
+
+      respond_to do |format|
+        format.turbo_stream # sẽ dùng create.turbo_stream.erb
+        format.html { redirect_to admin_food_drinks_path, notice: "Thêm món ăn thành công!" }
+      end
     else
-      render :new, status: :unprocessable_entity
+      respond_to do |format|
+        format.turbo_stream # render lại form với @food_drink chứa lỗi
+        format.html { render :new, status: :unprocessable_entity }
+      end
     end
   end
+
+
 
   def edit; end
 
@@ -61,22 +66,27 @@ class Admin::FoodDrinksController < ApplicationController
     end
   end
 
-  def destroy
-    begin
-      @food_drink.destroy
-      respond_to do |format|
-        format.html { redirect_to admin_food_drinks_path, notice: "Đã xoá món ăn/thức uống." }
-        format.turbo_stream
-      end
-    rescue ActiveRecord::InvalidForeignKey
-      respond_to do |format|
-        format.html { redirect_to admin_food_drinks_path, alert: "Không thể xoá món ăn/thức uống vì đang có đơn hàng liên quan." }
-        format.turbo_stream do
-          render turbo_stream: turbo_stream.alert("Không thể xoá món ăn/thức uống vì đang có đơn hàng liên quan.")
-        end
+def destroy
+  begin
+    @food_drink.destroy
+    respond_to do |format|
+      format.html { redirect_to admin_food_drinks_path, notice: "Đã xoá món ăn/thức uống." }
+      format.turbo_stream
+    end
+  rescue ActiveRecord::InvalidForeignKey
+    respond_to do |format|
+      format.html { redirect_to admin_food_drinks_path, alert: "Không thể xoá món ăn/thức uống vì đang có đơn hàng liên quan." }
+      format.turbo_stream do
+        flash.now[:alert] = "Không thể xoá món ăn/thức uống vì đang có đơn hàng liên quan."
+        render turbo_stream: [
+          turbo_stream.replace("flash_messages", partial: "shared/flash"),
+          turbo_stream.remove(dom_id(@food_drink)) # nếu bạn muốn xóa row khỏi table
+        ]
       end
     end
   end
+end
+
 
   # DELETE /admin/food_drinks/bulk_delete
   def bulk_delete
@@ -91,6 +101,7 @@ class Admin::FoodDrinksController < ApplicationController
   rescue ActiveRecord::InvalidForeignKey
     redirect_to admin_food_drinks_path, alert: "Không thể xoá vì một số món đang có đơn hàng liên quan."
   end
+
 
   private
 

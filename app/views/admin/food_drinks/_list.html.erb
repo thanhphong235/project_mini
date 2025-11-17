@@ -1,7 +1,7 @@
 <table class="table table-striped align-middle">
     <thead>
         <tr>
-            <th></th>
+            <th><input type="checkbox" id="select_all_checkbox" /></th>
             <th>#</th>
             <th>Tên</th>
             <th>Giá</th>
@@ -14,9 +14,9 @@
     </thead>
     <tbody>
         <% food_drinks.each_with_index do |fd, index| %>
-        <tr id="food_drink_<%= fd.id %>">
+        <tr id="<%= dom_id(fd) %>">
             <td>
-                <%= check_box_tag "food_drink[food_drink_ids][]", fd.id, false, class: "form-check-input food-drink-checkbox big-checkbox" %>
+                <%= check_box_tag "food_drink[food_drink_ids][]", fd.id, false, class: "form-check-input food-drink-checkbox" %>
             </td>
             <td><%= index + 1 %></td>
             <td><%= fd.name %></td>
@@ -41,13 +41,25 @@
             <td>
                 <%= link_to "Sửa", edit_admin_food_drink_path(fd), class: "btn btn-warning btn-sm me-1" %>
                 <%= link_to "Xóa", admin_food_drink_path(fd),
-              data: { turbo_method: :delete,
-                      turbo_confirm: fd.order_items.any? ?
-                        "⚠️ Món ăn này đang có đơn hàng. Bạn chắc chắn muốn xoá?" :
-                        "Bạn có chắc chắn muốn xoá món ăn/thức uống này?" },
-              class: "btn btn-danger btn-sm" %>
+                data: { turbo_method: :delete,
+                        turbo_confirm: fd.order_items.any? ?
+                          "⚠️ Món ăn này đang có đơn hàng. Bạn chắc chắn muốn xoá?" :
+                          "Bạn có chắc chắn muốn xoá món ăn/thức uống này?" },
+                class: "btn btn-danger btn-sm" %>
             </td>
         </tr>
         <% end %>
     </tbody>
 </table>
+
+<script>
+    document.addEventListener("turbo:load", () => {
+        // Chọn / bỏ chọn tất cả checkbox
+        const selectAllCheckbox = document.getElementById("select_all_checkbox");
+        if (selectAllCheckbox) {
+            selectAllCheckbox.addEventListener("change", () => {
+                document.querySelectorAll(".food-drink-checkbox").forEach(cb => cb.checked = selectAllCheckbox.checked);
+            });
+        }
+    });
+</script>

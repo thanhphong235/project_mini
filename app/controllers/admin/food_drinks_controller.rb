@@ -71,7 +71,7 @@ def destroy
     @food_drink.destroy
     respond_to do |format|
       format.html { redirect_to admin_food_drinks_path, notice: "Đã xoá món ăn/thức uống." }
-      format.turbo_stream
+      format.turbo_stream # render destroy.turbo_stream.erb
     end
   rescue ActiveRecord::InvalidForeignKey
     respond_to do |format|
@@ -80,12 +80,13 @@ def destroy
         flash.now[:alert] = "Không thể xoá món ăn/thức uống vì đang có đơn hàng liên quan."
         render turbo_stream: [
           turbo_stream.replace("flash_messages", partial: "shared/flash"),
-          turbo_stream.remove(dom_id(@food_drink)) # nếu bạn muốn xóa row khỏi table
+          turbo_stream.remove(dom_id(@food_drink))
         ]
       end
     end
   end
 end
+
 
 
   # DELETE /admin/food_drinks/bulk_delete
@@ -94,7 +95,7 @@ end
 
     if ids.any?
       FoodDrink.where(id: ids).destroy_all
-      redirect_to admin_food_drinks_path, notice: "Đã xoá các món đã chọn."
+      redirect_to admin_food_drinks_path
     else
       redirect_to admin_food_drinks_path, alert: "Bạn chưa chọn món nào để xoá."
     end

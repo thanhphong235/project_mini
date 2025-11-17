@@ -46,14 +46,15 @@
 <%= turbo_frame_tag "food_drinks_list" do %>
 <%= form_with url: bulk_delete_admin_food_drinks_path, method: :delete, local: false, data: { turbo_confirm: "Bạn có chắc chắn muốn xóa các món đã chọn?" } do %>
 <%= render partial: "list", locals: { food_drinks: @food_drinks } %>
+
 <div class="mb-3">
     <%= submit_tag "Xóa các món đã chọn", class: "btn btn-danger" %>
 </div>
 <% end %>
-<% end %>
 
 <% if @food_drinks.empty? %>
 <p class="text-center text-muted mt-3">Không tìm thấy món ăn/thức uống nào phù hợp.</p>
+<% end %>
 <% end %>
 
 <!-- JS chọn/bỏ chọn tất cả + Auto search -->

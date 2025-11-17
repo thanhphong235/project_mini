@@ -1,7 +1,7 @@
 <%# Xóa row món ăn khỏi bảng %>
 <%= turbo_stream.remove dom_id(@food_drink) %>
 
-<%# Cập nhật flash_messages %>
+<%# Cập nhật flash_messages với thông báo xóa món ăn %>
 <%= turbo_stream.replace "flash_messages" do %>
-  <%= render "shared/flash" %>
+  <%= render "shared/flash", notice: "Đã xoá món ăn/thức uống." %>
 <% end %>

@@ -3,6 +3,7 @@ class Admin::FoodDrinksController < ApplicationController
   before_action :require_admin
   before_action :set_food_drink, only: [:edit, :update, :destroy]
 
+  # GET /admin/food_drinks
   def index
     @food_drinks = FoodDrink.all
 
@@ -29,6 +30,11 @@ class Admin::FoodDrinksController < ApplicationController
       @food_drinks = @food_drinks.order(price: :desc)
     else
       @food_drinks = @food_drinks.order(created_at: :desc)
+    end
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream # hỗ trợ live update với auto search
     end
   end
 
@@ -85,7 +91,6 @@ class Admin::FoodDrinksController < ApplicationController
   rescue ActiveRecord::InvalidForeignKey
     redirect_to admin_food_drinks_path, alert: "Không thể xoá vì một số món đang có đơn hàng liên quan."
   end
-
 
   private
 

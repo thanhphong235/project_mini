@@ -1,0 +1,53 @@
+<table class="table table-striped align-middle">
+    <thead>
+        <tr>
+            <th></th>
+            <th>#</th>
+            <th>Tên</th>
+            <th>Giá</th>
+            <th>Category</th>
+            <th>Số lượng</th>
+            <th>Mô tả</th>
+            <th>Ảnh</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% food_drinks.each_with_index do |fd, index| %>
+        <tr id="food_drink_<%= fd.id %>">
+            <td>
+                <%= check_box_tag "food_drink[food_drink_ids][]", fd.id, false, class: "form-check-input food-drink-checkbox big-checkbox" %>
+            </td>
+            <td><%= index + 1 %></td>
+            <td><%= fd.name %></td>
+            <td><%= number_to_currency(fd.price, unit: "₫") %></td>
+            <td><%= fd.category&.name || "Chưa phân loại" %></td>
+            <td>
+                <%= form_with model: [:admin, fd], method: :patch, local: true do |sf| %>
+                <div class="d-flex">
+                    <%= sf.number_field :stock, value: fd.stock, class: "form-control form-control-sm me-1", min: 0 %>
+                    <%= sf.submit "Cập nhật", class: "btn btn-sm btn-primary" %>
+                </div>
+                <% end %>
+            </td>
+            <td><%= truncate(fd.description, length: 50) %></td>
+            <td>
+                <% if fd.image.attached? %>
+                <%= image_tag fd.image, width: 80, height: 80, alt: fd.name, class: "rounded shadow-sm" %>
+                <% else %>
+                <span class="text-muted">Không có ảnh</span>
+                <% end %>
+            </td>
+            <td>
+                <%= link_to "Sửa", edit_admin_food_drink_path(fd), class: "btn btn-warning btn-sm me-1" %>
+                <%= link_to "Xóa", admin_food_drink_path(fd),
+                      data: { turbo_method: :delete,
+                              turbo_confirm: fd.order_items.any? ?
+                                "⚠️ Món ăn này đang có đơn hàng. Bạn chắc chắn muốn xoá?" :
+                                "Bạn có chắc chắn muốn xoá món ăn/thức uống này?" },
+                      class: "btn btn-danger btn-sm" %>
+            </td>
+        </tr>
+        <% end %>
+    </tbody>
+</table>

@@ -26,6 +26,22 @@ else
 end
 
 # ----------------------------
+# User thường (để dùng cho ratings + orders)
+# ----------------------------
+user = User.where.not(id: admin.id).first
+unless user
+  user = User.create!(
+    name: "Normal User",
+    email: "user_for_seed@example.com",
+    password: "123456",
+    password_confirmation: "123456",
+    role: "user",
+    confirmed_at: Time.current
+  )
+  puts "👤 User thường đã tạo!"
+end
+
+# ----------------------------
 # Categories
 # ----------------------------
 cat_food  = Category.find_or_create_by!(name: "Food")
@@ -50,22 +66,46 @@ default_foods_drinks.each do |fd_data|
     description: "Món #{fd_data[:name]} – hương vị hấp dẫn, phù hợp mọi khẩu vị."
   )
 end
+
+puts "🍔 Đã tạo 4 món mặc định!"
+
 # ----------------------------
-# Orders và Order Items
+# Thêm 20 món ăn/thức uống demo
 # ----------------------------
-# Lấy một user bất kỳ (không phải admin test) để seed orders
-user = User.where.not(id: admin.id).first
-unless user
-  user = User.create!(
-    name: "Normal User",
-    email: "user_for_seed@example.com",
-    password: "123456",
-    password_confirmation: "123456",
-    role: "user",
-    confirmed_at: Time.current
+extra_items = [
+  "Phở bò", "Bún chả", "Bún bò Huế", "Cơm tấm", "Bánh mì",
+  "Cháo gà", "Bánh cuốn", "Mì Quảng", "Bánh xèo", "Hủ tiếu",
+  "Sinh tố xoài", "Trà đào", "Trà sữa trân châu", "Nước cam",
+  "Soda chanh", "Cà phê đen", "Capuchino", "Latte đá",
+  "Pizza hải sản", "Hamburger gà"
+]
+
+extra_items.each do |name|
+  item = FoodDrink.find_or_initialize_by(name: name)
+
+  item.update!(
+    price: rand(20_000..120_000),
+    stock: rand(10..50),
+    category: [cat_food, cat_drink].sample,
+    description: "Món #{name} được chế biến theo công thức đặc biệt, phù hợp mọi khẩu vị."
   )
+
+  # Tạo ratings (3–5 đánh giá mỗi món)
+  rand(3..5).times do
+    Rating.create!(
+      food_drink: item,
+      user: [user, admin].sample,
+      score: rand(3..5),
+      comment: "Món #{name} rất ngon và đáng thử!"
+    )
+  end
 end
 
+puts "🍱 Đã tạo thêm 20 món ăn/thức uống + đánh giá!"
+
+# ----------------------------
+# Orders & Order Items (demo)
+# ----------------------------
 fd_pizza  = FoodDrink.find_by(name: "Pizza")
 fd_burger = FoodDrink.find_by(name: "Burger")
 fd_coffee = FoodDrink.find_by(name: "Coffee")
@@ -87,8 +127,10 @@ order2.update!(total_price: fd_burger.price + fd_tea.price)
   oi.update!(quantity: oi_data[:quantity], price: oi_data[:food_drink].price)
 end
 
+puts "🛒 Đã tạo Orders + Order Items mẫu!"
+
 # ----------------------------
-# Ratings
+# Ratings chi tiết cho 4 món mặc định
 # ----------------------------
 ratings_data = [
   { food_drink: fd_pizza,  user: user,  score: 1, comment: "Pizza ngon tuyệt vời!" },
@@ -106,8 +148,9 @@ ratings_data.each do |data|
   r.update!(score: data[:score], comment: data[:comment])
 end
 
-puts "✅ Seed database hoàn tất!"
+puts "⭐ Đã tạo đánh giá cho các món mặc định!"
 puts "--------------------------------------------"
+puts "🎉 Seed database hoàn tất!"
 puts "👨‍💻 Admin test account:"
 puts "   Email: #{admin.email}"
 puts "   Password: #{admin_password}"

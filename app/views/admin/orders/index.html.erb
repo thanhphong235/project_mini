@@ -1,26 +1,36 @@
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <%= link_to "Quay lại", admin_dashboard_path, class: "btn btn-outline-secondary" %>
-    <h1 class="text-center flex-grow-1 mb-0">Danh sách Đơn hàng</h1>
+<div class="card orders-card">
+
+    <!-- Header -->
+    <div class="orders-header d-flex justify-content-between align-items-center mb-3">
+        <%= link_to "← Quay lại", admin_dashboard_path, class: "btn btn-outline-secondary back-btn" %>
+        <h1 class="orders-title mb-0">Danh sách Đơn hàng</h1>
+        <div class="header-placeholder"></div>
+    </div>
+
+    <!-- Flash messages -->
+    <div id="flash_messages" class="flash-box mb-3"></div>
+
+    <!-- Table -->
+    <%= turbo_frame_tag "orders_table" do %>
+    <div class="table-container">
+        <table class="table table-hover align-middle mb-0 orders-table">
+            <thead class="table-primary">
+                <tr>
+                    <th class="col-index">#</th>
+                    <th>Người đặt</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                    <th>Ngày đặt</th>
+                    <th class="col-actions">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% @orders.each_with_index do |order, index| %>
+                <%= render partial: "order_row", locals: { order: order, index: index + 1 } %>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+    <% end %>
+
 </div>
-
-<div id="flash_messages"></div>
-
-<%= turbo_frame_tag "orders_table" do %>
-<table class="table table-striped table-hover align-middle mt-3">
-    <thead class="table-dark">
-        <tr>
-            <th>#</th>
-            <th>Người đặt</th>
-            <th>Tổng tiền</th>
-            <th>Trạng thái</th>
-            <th>Ngày đặt</th>
-            <th>Hành động</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% @orders.each_with_index do |order, index| %>
-        <%= render partial: "order_row", locals: { order: order, index: index + 1 } %>
-        <% end %>
-    </tbody>
-</table>
-<% end %>

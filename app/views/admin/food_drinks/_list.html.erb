@@ -1,4 +1,4 @@
-<table class="table table-striped align-middle">
+<table class="table table-striped align-middle w-100">
     <thead>
         <tr>
             <th></th>
@@ -12,6 +12,7 @@
             <th>Hành động</th>
         </tr>
     </thead>
+
     <tbody>
         <% food_drinks.each_with_index do |fd, index| %>
         <tr id="<%= dom_id(fd) %>">
@@ -38,23 +39,32 @@
                 <span class="text-muted">Không có ảnh</span>
                 <% end %>
             </td>
-            <td>
-                <%= link_to "Sửa", edit_admin_food_drink_path(fd), class: "btn btn-warning btn-sm me-1" %>
-                <%= link_to "Xóa", admin_food_drink_path(fd),
-                data: { turbo_method: :delete,
-                        turbo_confirm: fd.order_items.any? ?
-                          "⚠️ Món ăn này đang có đơn hàng. Bạn chắc chắn muốn xoá?" :
-                          "Bạn có chắc chắn muốn xoá món ăn/thức uống này?" },
-                class: "btn btn-danger btn-sm" %>
+            <td class="actions-column">
+                <div class="action-buttons">
+                    <%= link_to "Sửa", edit_admin_food_drink_path(fd),
+                        class: "btn btn-warning btn-sm",
+                        data: { turbo_frame: "_top" } %>
+
+                    <%= link_to "Xóa", admin_food_drink_path(fd),
+                        data: {
+                            turbo_method: :delete,
+                            turbo_confirm: fd.order_items.any? ?
+                                "⚠️ Món ăn này đang có đơn hàng. Bạn chắc chắn muốn xoá?" :
+                                "Bạn có chắc chắn muốn xoá món ăn/thức uống này?"
+                        },
+                        class: "btn btn-danger btn-sm" %>
+                </div>
             </td>
+
+
         </tr>
         <% end %>
     </tbody>
 </table>
 
+<!-- JS chọn / bỏ chọn tất cả -->
 <script>
     document.addEventListener("turbo:load", () => {
-        // Chọn / bỏ chọn tất cả checkbox
         const selectAllCheckbox = document.getElementById("select_all_checkbox");
         if (selectAllCheckbox) {
             selectAllCheckbox.addEventListener("change", () => {

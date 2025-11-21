@@ -1,75 +1,35 @@
-<h1>Trang quản trị</h1>
+<h1 class="mb-4 text-center text-primary">🛠️ Trang Quản Trị</h1>
 
-<p>Chào <%= current_user.name || current_user.email %>!</p>
-<p>Bạn đang đăng nhập với quyền: <strong><%= current_user.admin? ? "Admin" : "User" %></strong></p>
+<p class="text-center lead">
+    Chào <strong><%= current_user.name || current_user.email %></strong>!
+    Bạn đang đăng nhập với quyền:
+    <span class="badge bg-<%= current_user.admin? ? 'danger' : 'secondary' %>">
+        <%= current_user.admin? ? "Admin" : "User" %>
+    </span>
+</p>
 
-<hr>
+<hr class="my-4">
 
-<div class="row">
-    <!-- Quản lý người dùng -->
-    <div class="col-md-3 mb-3">
-        <div class="card h-100">
-            <div class="card-body">
-                <h5 class="card-title">Người dùng</h5>
-                <p class="card-text">Quản lý tất cả người dùng của hệ thống</p>
-                <%= link_to "Quản lý người dùng", admin_users_path, class: "btn btn-outline-primary" %>
+<div class="row g-4 justify-content-center">
+    <% admin_sections = [
+    {title: "Người dùng", text: "Quản lý tất cả người dùng của hệ thống", path: admin_users_path, icon: "bi-people"},
+    {title: "Danh mục", text: "Quản lý tất cả danh mục sản phẩm", path: admin_categories_path, icon: "bi-list-ul"},
+    {title: "Sản phẩm", text: "Quản lý tất cả món ăn & thức uống, kèm hình ảnh", path: admin_food_drinks_path, icon: "bi-basket"},
+    {title: "Đơn hàng", text: "Xem và quản lý tất cả đơn hàng của khách", path: admin_orders_path, icon: "bi-receipt"},
+    {title: "Góp ý", text: "Xem, duyệt và quản lý các góp ý từ người dùng", path: admin_suggestions_path, icon: "bi-chat-left-text"},
+    {title: "Thống kê đơn hàng", text: "Xem thống kê đơn hàng tính đến hôm nay", path: admin_order_statistics_path, icon: "bi-bar-chart"}
+  ] %>
+
+    <% admin_sections.each do |section| %>
+    <div class="col-sm-6 col-md-4 col-lg-3">
+        <div class="card h-100 shadow-sm border-0 hover-shadow">
+            <div class="card-body text-center">
+                <i class="bi <%= section[:icon] %> display-4 text-primary mb-3"></i>
+                <h5 class="card-title mb-2"><%= section[:title] %></h5>
+                <p class="card-text text-muted mb-3"><%= section[:text] %></p>
+                <%= link_to section[:title], section[:path], class: "btn btn-outline-primary w-100" %>
             </div>
         </div>
     </div>
-
-    <!-- Quản lý danh mục -->
-    <div class="col-md-3 mb-3">
-        <div class="card h-100">
-            <div class="card-body">
-                <h5 class="card-title">Danh mục</h5>
-                <p class="card-text">Quản lý tất cả danh mục sản phẩm</p>
-                <%= link_to "Quản lý danh mục", admin_categories_path, class: "btn btn-outline-primary" %>
-            </div>
-        </div>
-    </div>
-
-    <!-- Quản lý sản phẩm -->
-    <div class="col-md-3 mb-3">
-        <div class="card h-100">
-            <div class="card-body">
-                <h5 class="card-title">Sản phẩm</h5>
-                <p class="card-text">Quản lý tất cả món ăn & thức uống, kèm hình ảnh</p>
-                <%= link_to "Quản lý sản phẩm", admin_food_drinks_path, class: "btn btn-outline-primary" %>
-            </div>
-        </div>
-    </div>
-
-    <!-- Quản lý đơn hàng -->
-    <div class="col-md-3 mb-3">
-        <div class="card h-100">
-            <div class="card-body">
-                <h5 class="card-title">Đơn hàng</h5>
-                <p class="card-text">Xem và quản lý tất cả đơn hàng của khách</p>
-                <%= link_to "Quản lý đơn hàng", admin_orders_path, class: "btn btn-outline-primary" %>
-            </div>
-        </div>
-    </div>
-
-    <!-- Quản lý góp ý -->
-    <div class="col-md-3 mb-3">
-        <div class="card h-100">
-            <div class="card-body">
-                <h5 class="card-title">Góp ý</h5>
-                <p class="card-text">Xem, duyệt và quản lý các góp ý từ người dùng</p>
-                <%= link_to "Quản lý góp ý", admin_suggestions_path, class: "btn btn-outline-primary" %>
-            </div>
-        </div>
-    </div>
-    <!-- Thống kê đơn hàng -->
-    <div class="col-md-3 mb-3">
-        <div class="card h-100">
-            <div class="card-body">
-                <h5 class="card-title">Thống kê đơn hàng</h5>
-                <p class="card-text">Xem thống kê đơn hàng tính đến hôm nay</p>
-                <%= link_to "Xem thống kê đơn hàng", admin_order_statistics_path, class: "btn btn-outline-primary" %>
-
-            </div>
-        </div>
-    </div>
-
+    <% end %>
 </div>

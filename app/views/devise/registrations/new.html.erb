@@ -1,99 +1,105 @@
 <% provide(:title, "Sign up") %>
 
 <div class="row justify-content-center mt-5">
-    <div class="col-md-6 col-lg-5">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h2 class="card-title text-center mb-4">Sign up</h2>
+    <div class="col-md-5">
+        <div class="card shadow-lg border-0 rounded-4 p-4">
 
-                <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-                <!-- Hiện lỗi tổng -->
-                <% if resource.errors.any? %>
-                <div class="alert alert-danger">
-                    <h5 class="mb-2">
-                        <%= pluralize(resource.errors.count, "error") %> prohibited this user from being saved:
-                    </h5>
-                    <ul class="mb-0">
-                        <% resource.errors.full_messages.each do |message| %>
-                        <li><%= message %></li>
-                        <% end %>
-                    </ul>
-                </div>
-                <% end %>
-
-                <!-- Name -->
-                <div class="mb-3">
-                    <%= f.label :name, class: "form-label" %>
-                    <%= f.text_field :name,
-                  required: true,
-                  class: "form-control #{'is-invalid' if resource.errors[:name].any?}",
-                  placeholder: "Enter your name" %>
-                    <% if resource.errors[:name].any? %>
-                    <div class="invalid-feedback">
-                        <%= resource.errors[:name].first %>
-                    </div>
-                    <% end %>
-                </div>
-
-                <!-- Email -->
-                <div class="mb-3">
-                    <%= f.label :email, class: "form-label" %>
-                    <%= f.email_field :email,
-                  required: true,
-                  class: "form-control #{'is-invalid' if resource.errors[:email].any?}",
-                  placeholder: "Enter your email" %>
-                    <% if resource.errors[:email].any? %>
-                    <div class="invalid-feedback">
-                        <%= resource.errors[:email].first %>
-                    </div>
-                    <% end %>
-                </div>
-
-                <!-- Password -->
-                <div class="mb-3">
-                    <%= f.label :password, class: "form-label" %>
-                    <%= f.password_field :password,
-                  required: true,
-                  class: "form-control #{'is-invalid' if resource.errors[:password].any?}",
-                  placeholder: "Enter your password" %>
-                    <% if resource.errors[:password].any? %>
-                    <div class="invalid-feedback">
-                        <%= resource.errors[:password].first %>
-                    </div>
-                    <% end %>
-                </div>
-
-                <!-- Password confirmation -->
-                <div class="mb-3">
-                    <%= f.label :password_confirmation, class: "form-label" %>
-                    <%= f.password_field :password_confirmation,
-                  required: true,
-                  class: "form-control #{'is-invalid' if resource.errors[:password_confirmation].any?}",
-                  placeholder: "Confirm your password" %>
-                    <% if resource.errors[:password_confirmation].any? %>
-                    <div class="invalid-feedback">
-                        <%= resource.errors[:password_confirmation].first %>
-                    </div>
-                    <% end %>
-                </div>
-
-                <!-- Submit button -->
-                <div class="d-grid">
-                    <%= f.submit "Sign up", class: "btn btn-primary" %>
-                </div>
-                <% end %>
-
-                <hr>
-
-                <p class="text-center mb-0">
-                    Already have an account? <%= link_to "Log in", new_user_session_path %>
-                </p>
+            <!-- Title -->
+            <div class="text-center mb-4">
+                <h2 class="fw-bold">Create Account</h2>
+                <p class="text-muted">Join us today</p>
             </div>
+
+            <!-- Errors -->
+            <% if resource.errors.any? %>
+            <div class="alert alert-danger">
+                <h5 class="mb-2"><%= pluralize(resource.errors.count, "error") %> prohibited this user from being saved:</h5>
+                <ul class="mb-0">
+                    <% resource.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                    <% end %>
+                </ul>
+            </div>
+            <% end %>
+
+            <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+
+            <!-- Name -->
+            <div class="mb-3">
+                <%= f.label :name, class: "form-label fw-semibold" %>
+                <%= f.text_field :name,
+                required: true,
+                class: "form-control form-control-lg rounded-3 #{'is-invalid' if resource.errors[:name].any?}",
+                placeholder: "Enter your name" %>
+
+                <% if resource.errors[:name].any? %>
+                <div class="invalid-feedback"><%= resource.errors[:name].first %></div>
+                <% end %>
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+                <%= f.label :email, class: "form-label fw-semibold" %>
+                <%= f.email_field :email,
+                required: true,
+                class: "form-control form-control-lg rounded-3 #{'is-invalid' if resource.errors[:email].any?}",
+                placeholder: "Enter your email" %>
+
+                <% if resource.errors[:email].any? %>
+                <div class="invalid-feedback"><%= resource.errors[:email].first %></div>
+                <% end %>
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3">
+                <%= f.label :password, class: "form-label fw-semibold" %>
+                <%= f.password_field :password,
+                required: true,
+                class: "form-control form-control-lg rounded-3 #{'is-invalid' if resource.errors[:password].any?}",
+                placeholder: "Enter your password" %>
+
+                <% if resource.errors[:password].any? %>
+                <div class="invalid-feedback"><%= resource.errors[:password].first %></div>
+                <% end %>
+            </div>
+
+            <!-- Password Confirmation -->
+            <div class="mb-4">
+                <%= f.label :password_confirmation, class: "form-label fw-semibold" %>
+                <%= f.password_field :password_confirmation,
+                required: true,
+                class: "form-control form-control-lg rounded-3 #{'is-invalid' if resource.errors[:password_confirmation].any?}",
+                placeholder: "Confirm your password" %>
+
+                <% if resource.errors[:password_confirmation].any? %>
+                <div class="invalid-feedback"><%= resource.errors[:password_confirmation].first %></div>
+                <% end %>
+            </div>
+
+            <!-- Submit -->
+            <div class="d-grid mb-3">
+                <%= f.submit "Sign up", class: "btn btn-primary btn-lg rounded-3 fw-bold" %>
+            </div>
+
+            <% end %>
+
+            <!-- Divider -->
+            <div class="position-relative text-center my-4">
+                <hr>
+                <span class="position-absolute top-50 start-50 translate-middle px-3 bg-white text-muted small">
+                    Already have an account?
+                </span>
+            </div>
+
+            <p class="text-center mb-0">
+                <%= link_to "Log in", new_user_session_path, class: "fw-semibold" %>
+            </p>
+
         </div>
     </div>
 </div>
 
-<!-- Optional: Kiểm tra form trống bằng JavaScript trước khi submit -->
+<!-- Optional: Validate empty fields -->
 <script>
     document.addEventListener("turbo:load", () => {
         const form = document.querySelector("form");
@@ -106,10 +112,10 @@
                     valid = false;
                     input.classList.add("is-invalid");
                     if (!input.nextElementSibling || !input.nextElementSibling.classList.contains("invalid-feedback")) {
-                        const errorDiv = document.createElement("div");
-                        errorDiv.classList.add("invalid-feedback");
-                        errorDiv.innerText = "This field can't be blank";
-                        input.insertAdjacentElement("afterend", errorDiv);
+                        const err = document.createElement("div");
+                        err.classList.add("invalid-feedback");
+                        err.innerText = "This field can't be blank";
+                        input.insertAdjacentElement("afterend", err);
                     }
                 }
             });

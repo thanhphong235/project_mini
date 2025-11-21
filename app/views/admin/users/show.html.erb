@@ -1,37 +1,45 @@
-<h1>Chi tiết Người dùng</h1>
+<h1 class="text-center text-primary mb-4">🧑‍💼 Chi tiết Người dùng</h1>
 
-<div class="row justify-content-center mt-4">
-    <div class="col-md-6 col-lg-5">
-
-        <div class="card shadow-sm">
+<div class="row justify-content-center mt-3">
+    <div class="col-sm-10 col-md-8 col-lg-6">
+        <div class="card shadow border-0 rounded">
             <div class="card-body">
-                <h3 class="card-title text-center mb-4"><%= @user.name.present? ? @user.name : @user.email %></h3>
+                <!-- Tên user + badge admin nếu có -->
+                <h3 class="card-title text-center mb-3">
+                    <%= @user.name.present? ? @user.name : @user.email %>
+                    <% if @user.admin? %>
+                    <% end %>
+                </h3>
 
-                <ul class="list-group list-group-flush mb-3">
-                    <li class="list-group-item">
-                        <strong>Email:</strong> <%= @user.email %>
+                <!-- Thông tin chi tiết -->
+                <ul class="list-group list-group-flush mb-4">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><strong>Email:</strong></span>
+                        <span class="text-truncate" style="max-width: 250px;"><%= @user.email %></span>
                     </li>
-                    <li class="list-group-item">
-                        <strong>Role:</strong> <%= @user.role %>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><strong>Role:</strong></span>
+                        <span class="badge bg-info text-dark"><%= @user.role %></span>
                     </li>
-                    <li class="list-group-item">
-                        <strong>Ngày tạo:</strong> <%= @user.created_at.strftime("%d/%m/%Y %H:%M") %>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span><strong>Ngày tạo:</strong></span>
+                        <span><%= @user.created_at.strftime("%d/%m/%Y %H:%M") %></span>
                     </li>
-                    <li class="list-group-item">
-                        <strong>Ngày cập nhật:</strong> <%= @user.updated_at.strftime("%d/%m/%Y %H:%M") %>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span><strong>Ngày cập nhật:</strong></span>
+                        <span><%= @user.updated_at.strftime("%d/%m/%Y %H:%M") %></span>
                     </li>
                 </ul>
 
+                <!-- Buttons -->
                 <div class="d-flex justify-content-between">
-                    <%= link_to "Quay lại", admin_users_path, class: "btn btn-outline-secondary" %>
+                    <%= link_to "← Quay lại", admin_users_path, class: "btn btn-outline-secondary w-45" %>
                     <%= link_to "Xóa người dùng", admin_user_path(@user),
-                      method: :delete,
-                      data: { turbo_confirm: "Bạn có chắc chắn muốn xóa người dùng này?" },
-                      class: "btn btn-outline-danger" %>
+              method: :delete,
+              data: { turbo_confirm: "Bạn có chắc chắn muốn xóa người dùng này?" },
+              class: "btn btn-outline-danger w-45" %>
                 </div>
-
             </div>
         </div>
-
     </div>
 </div>

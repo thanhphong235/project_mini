@@ -1,61 +1,66 @@
-<h1 class="text-center flex-grow-1 mb-0">Quản lý Món ăn & Thức uống</h1>
+<!-- Header: nút quay lại + title -->
+<div class="food-drinks-header mb-3 d-flex align-items-center">
+    <div class="back-button">
+        <%= link_to "Quay lại", admin_dashboard_path, class: "btn btn-secondary" %>
+    </div>
+    <h1 class="flex-grow-1 text-center mb-0">Quản lý Món ăn & Thức uống</h1>
+</div>
 
-<!-- Nút điều hướng -->
-<div class="mb-3">
-    <%= link_to "Quay lại", admin_dashboard_path, class: "btn btn-secondary me-2" %>
-    <%= link_to "Tất cả", admin_food_drinks_path, class: "btn btn-secondary me-2" %>
+<!-- Nút category -->
+<div class="category-buttons mb-3">
+    <%= link_to "Tất cả", admin_food_drinks_path, class: "btn btn-secondary me-2 mb-2" %>
     <% Category.all.each do |category| %>
-    <%= link_to category.name, admin_food_drinks_path(category_id: category.id), class: "btn btn-primary me-2" %>
+    <%= link_to category.name, admin_food_drinks_path(category_id: category.id), class: "btn btn-primary me-2 mb-2" %>
     <% end %>
 </div>
 
-<!-- Flash messages -->
-<%= turbo_frame_tag "flash_messages" do %>
-<%= render "shared/flash" %>
-<% end %>
-
-<!-- Thanh công cụ -->
-<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
-    <div class="mb-2">
-        <%= link_to "Thêm mới", new_admin_food_drink_path, class: "btn btn-success me-2" %>
-        <%= link_to "Làm mới", admin_food_drinks_path, class: "btn btn-outline-secondary" %>
+<!-- Toolbar chính -->
+<div class="toolbar-wrapper mb-3">
+    <!-- Left actions -->
+    <div class="left-actions">
+        <button type="button" id="select_all_btn" class="btn btn-warning">Chọn tất cả món ăn</button>
+        <div class="actions">
+            <%= link_to "Thêm mới", new_admin_food_drink_path, class: "btn btn-success" %>
+            <%= link_to "Làm mới", admin_food_drinks_path, class: "btn btn-outline-secondary" %>
+        </div>
     </div>
 
-    <!-- Form tìm kiếm & filter với Turbo Frame -->
-    <div class="d-flex align-items-center mb-2">
-        <%= form_with url: admin_food_drinks_path, method: :get, local: false, data: { turbo_frame: "food_drinks_list" }, class: "d-flex" do |f| %>
-        <%= f.text_field :query, value: params[:query], placeholder: "🔍 Tìm kiếm món ăn hoặc thức uống...", class: "form-control me-2" %>
+    <!-- Filter form -->
+    <div class="filter-form">
+        <%= form_with url: admin_food_drinks_path, method: :get, local: false, data: { turbo_frame: "food_drinks_list" }, class: "d-flex align-items-center gap-2" do |f| %>
+        <%= f.text_field :query, value: params[:query], placeholder: "🔍 Tìm kiếm...", class: "form-control" %>
         <%= f.select :sort, options_for_select([
         ['Mới nhất', 'newest'],
         ['Tên A → Z', 'name_asc'],
         ['Tên Z → A', 'name_desc'],
         ['Giá tăng dần', 'price_asc'],
         ['Giá giảm dần', 'price_desc']
-      ], params[:sort]), {}, class: "form-select me-2" %>
+      ], params[:sort]), {}, class: "form-select" %>
         <%= f.submit "Lọc", class: "btn btn-primary" %>
         <% end %>
     </div>
 </div>
 
-<!-- Nút chọn tất cả -->
-<div class="mb-3">
-    <button type="button" id="select_all_btn" class="btn btn-warning me-2">Chọn tất cả món ăn</button>
-</div>
 
-<!-- Turbo Frame chứa bảng món ăn -->
+<!-- Turbo Frame chứa bảng món ăn full màn hình -->
 <%= turbo_frame_tag "food_drinks_list" do %>
-<%= form_with url: bulk_delete_admin_food_drinks_path, method: :delete, local: false, data: { turbo_confirm: "Bạn có chắc chắn muốn xóa các món đã chọn?" } do %>
-<%= render partial: "list", locals: { food_drinks: @food_drinks } %>
+<%= form_with url: bulk_delete_admin_food_drinks_path, method: :delete, local: true, data: { turbo_confirm: "Bạn có chắc chắn muốn xóa các món đã chọn?" } do %>
+
+<div class="food-drinks-table table-responsive mb-3">
+    <%= render partial: "list", locals: { food_drinks: @food_drinks } %>
+</div>
 
 <div class="mb-3">
     <%= submit_tag "Xóa các món đã chọn", class: "btn btn-danger" %>
 </div>
+
 <% end %>
 
 <% if @food_drinks.empty? %>
 <p class="text-center text-muted mt-3">Không tìm thấy món ăn/thức uống nào phù hợp.</p>
 <% end %>
 <% end %>
+
 
 <!-- JS chọn/bỏ chọn tất cả + Auto search -->
 <script>

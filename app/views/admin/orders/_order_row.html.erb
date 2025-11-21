@@ -1,25 +1,25 @@
 <tr id="order_<%= order.id %>">
     <td><%= index %></td>
-    <td><%= order.user.name || order.user.email %></td>
+    <td><%= order.user&.name || order.user&.email || "N/A" %></td>
     <td><%= number_to_currency(order.total_price, unit: "₫") %></td>
     <td>
-        <%= turbo_frame_tag "order_#{order.id}" do %>
         <%= form_with model: [:admin, order], local: false, class: "d-flex align-items-center gap-2" do |f| %>
         <%= f.select :status,
-          Order.statuses.keys.map { |s| [Order.status_human_for(s), s] },
-          { selected: order.status },
-          class: "form-select form-select-sm" %>
+        Order.statuses.keys.map { |s| [Order.status_human_for(s), s] },
+        { selected: order.status },
+        class: "form-select form-select-sm" %>
         <%= f.submit "Cập nhật", class: "btn btn-sm btn-outline-success" %>
         <% end %>
-        <% end %>
     </td>
-
     <td><%= order.created_at.strftime("%d/%m/%Y %H:%M") %></td>
-    <td class="d-flex">
-        <%= link_to "Xem", admin_order_path(order), class: "btn btn-sm btn-outline-primary me-1" %>
-        <%= button_to "Xóa", admin_order_path(order),
-      method: :delete,
-      data: { turbo_confirm: "Bạn có chắc chắn muốn xóa đơn hàng này?" },
-      class: "btn btn-sm btn-outline-danger" %>
+    <td class="actions-column">
+        <div class="action-buttons">
+            <%= link_to "Xem", admin_order_path(order),class: "btn btn-sm btn-outline-primary me-1",data: { turbo: false } %>
+            <%= button_to "Xóa", admin_order_path(order),
+          method: :delete,
+          data: { turbo_confirm: "Bạn có chắc chắn muốn xóa đơn hàng này?" },
+          class: "btn btn-sm btn-outline-danger" %>
+        </div>
+
     </td>
 </tr>

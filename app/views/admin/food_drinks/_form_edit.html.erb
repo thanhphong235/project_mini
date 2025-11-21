@@ -1,0 +1,55 @@
+<%= form_with(model: [:admin, food_drink], local: false, html: { multipart: true, id: "food_drink_form" }) do |f| %>
+
+<% if food_drink.errors.any? %>
+<div class="alert alert-danger">
+    <h5><%= pluralize(food_drink.errors.count, "lỗi") %> xảy ra:</h5>
+    <ul class="mb-0">
+        <% food_drink.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+        <% end %>
+    </ul>
+</div>
+<% end %>
+
+<div class="row g-3">
+    <div class="col-md-6">
+        <%= f.label :name, "Tên", class: "form-label" %>
+        <%= f.text_field :name, class: "form-control", required: true %>
+    </div>
+
+    <div class="col-md-6">
+        <%= f.label :price, "Giá", class: "form-label" %>
+        <%= f.number_field :price, class: "form-control", min: 0, required: true %>
+    </div>
+
+    <div class="col-md-6">
+        <%= f.label :category_id, "Category", class: "form-label" %>
+        <%= f.collection_select :category_id, Category.all, :id, :name, { prompt: "Chọn loại" }, { class: "form-select", required: true } %>
+    </div>
+
+    <div class="col-md-6">
+        <%= f.label :stock, "Số lượng", class: "form-label" %>
+        <%= f.number_field :stock, class: "form-control", min: 0 %>
+    </div>
+
+    <div class="col-12">
+        <%= f.label :description, "Mô tả", class: "form-label" %>
+        <%= f.text_area :description, class: "form-control", rows: 3 %>
+    </div>
+
+    <div class="col-12">
+        <%= f.label :image, "Ảnh", class: "form-label" %>
+        <%= f.file_field :image, class: "form-control", accept: "image/*", onchange: "previewImage(event)" %>
+
+        <div class="mt-2">
+            <img id="image-preview" src="<%= url_for(food_drink.image) if food_drink.image.attached? %>" style="max-width: 200px; display: <%= food_drink.image.attached? ? 'block' : 'none' %>;" class="rounded shadow-sm" alt="Preview">
+        </div>
+    </div>
+</div>
+
+<div class="mt-4 d-flex gap-2">
+    <%= f.submit "Lưu", class: "btn btn-primary" %>
+    <%= link_to "quay lại", admin_food_drinks_path, class: "btn btn-secondary", data: { turbo: false } %>
+</div>
+
+<% end %>

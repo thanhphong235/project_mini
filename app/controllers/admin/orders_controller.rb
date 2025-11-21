@@ -19,9 +19,10 @@ def update
     if @order.update(order_params)
       notice = "Cập nhật trạng thái đơn hàng thành công."
 
-      format.html { redirect_to admin_orders_path, notice: notice }
+      format.html { redirect_to admin_order_path(@order), notice: notice }
       format.turbo_stream do
         render turbo_stream: [
+          # Cập nhật flash
           turbo_stream.update(
             "flash_messages",
             "<div class='alert alert-success alert-dismissible fade show mt-2' role='alert'>
@@ -29,17 +30,17 @@ def update
               <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Đóng'></button>
             </div>".html_safe
           ),
+          # Cập nhật status badge
           turbo_stream.replace(
-            "order_#{@order.id}",
-            partial: "admin/orders/order_row",
-            locals: { order: @order, index: @order.id } # index có thể tự tính trong partial
+            "order_status_#{@order.id}",
+            partial: "admin/orders/status_badge",
+            locals: { order: @order }
           )
         ]
       end
     else
       alert = "Không thể cập nhật đơn hàng."
-
-      format.html { redirect_to admin_orders_path, alert: alert }
+      format.html { redirect_to admin_order_path(@order), alert: alert }
       format.turbo_stream do
         render turbo_stream: turbo_stream.update(
           "flash_messages",
@@ -52,9 +53,6 @@ def update
     end
   end
 end
-
-
-
 
   def destroy
     @order.destroy

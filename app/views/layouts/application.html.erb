@@ -148,32 +148,38 @@
 
     <!-- Suggestion Modal -->
     <div class="modal fade" id="suggestionModal" tabindex="-1" aria-labelledby="suggestionModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="suggestionModalLabel">Góp ý món ăn / thức uống</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow-lg border-0">
+
+                <div class="modal-header bg-primary text-white border-0">
+                    <h5 class="modal-title" id="suggestionModalLabel">
+                        <i class="bi bi-envelope-fill me-2"></i> Góp ý món ăn / thức uống
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
                 </div>
-                <div class="modal-body">
+
+                <div class="modal-body p-4">
                     <%= form_with(model: Suggestion.new, url: suggestions_path, local: true) do |f| %>
                     <div class="mb-3">
-                        <%= f.label :title, "Tên món / thức uống", class: "form-label" %>
-                        <%= f.text_field :title, class: "form-control", required: true %>
+                        <%= f.label :title, "Tên món / thức uống", class: "form-label fw-semibold" %>
+                        <%= f.text_field :title, class: "form-control form-control-lg rounded-3", placeholder: "Nhập tên món ăn hoặc thức uống", required: true %>
                     </div>
 
                     <div class="mb-3">
-                        <%= f.label :content, "Mô tả / lý do đề xuất", class: "form-label" %>
-                        <%= f.text_area :content, class: "form-control", rows: 4, required: true %>
+                        <%= f.label :content, "Mô tả / lý do đề xuất", class: "form-label fw-semibold" %>
+                        <%= f.text_area :content, class: "form-control form-control-lg rounded-3", rows: 4, placeholder: "Nhập mô tả hoặc lý do đề xuất", required: true %>
                     </div>
 
                     <div class="text-end">
-                        <%= f.submit "Gửi góp ý", class: "btn btn-success" %>
+                        <%= f.submit "Gửi góp ý", class: "btn btn-gradient-success btn-lg px-4" %>
                     </div>
+
                     <% end %>
                 </div>
             </div>
         </div>
     </div>
+
     <% end %>
 </body>
 

@@ -1,55 +1,75 @@
-<%= form_with(model: [:admin, food_drink], html: { multipart: true, id: "food_drink_form" }) do |f| %>
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white">
+        <h3 class="mb-0">Thêm món ăn mới</h3>
+    </div>
 
-<% if food_drink.errors.any? %>
-<div class="alert alert-danger">
-    <h5><%= pluralize(food_drink.errors.count, "lỗi") %> xảy ra:</h5>
-    <ul>
-        <% food_drink.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
+    <div class="card-body">
+        <%= form_with(model: [:admin, food_drink], html: { multipart: true, id: "food_drink_form" }) do |f| %>
+
+        <% if food_drink.errors.any? %>
+        <div class="alert alert-danger">
+            <h5><%= pluralize(food_drink.errors.count, "lỗi") %> xảy ra:</h5>
+            <ul class="mb-0">
+                <% food_drink.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+                <% end %>
+            </ul>
+        </div>
         <% end %>
-    </ul>
+
+        <div class="row g-3">
+            <!-- Tên món -->
+            <div class="col-md-6">
+                <%= f.label :name, "Tên", class: "form-label" %>
+                <%= f.text_field :name, class: "form-control", required: true %>
+            </div>
+
+            <!-- Giá -->
+            <div class="col-md-6">
+                <%= f.label :price, "Giá", class: "form-label" %>
+                <%= f.number_field :price, class: "form-control", min: 0, required: true %>
+            </div>
+
+            <!-- Category -->
+            <div class="col-md-6">
+                <%= f.label :category_id, "Category", class: "form-label" %>
+                <%= f.collection_select :category_id, Category.all, :id, :name,
+                { prompt: "Chọn loại" },
+                { class: "form-select", required: true } %>
+            </div>
+
+            <!-- Số lượng -->
+            <div class="col-md-6">
+                <%= f.label :stock, "Số lượng", class: "form-label" %>
+                <%= f.number_field :stock, class: "form-control", min: 0 %>
+            </div>
+
+            <!-- Mô tả -->
+            <div class="col-12">
+                <%= f.label :description, "Mô tả", class: "form-label" %>
+                <%= f.text_area :description, class: "form-control", rows: 3 %>
+            </div>
+
+            <!-- Ảnh -->
+            <div class="col-12">
+                <%= f.label :image, "Ảnh", class: "form-label" %>
+                <%= f.file_field :image, class: "form-control", accept: "image/*", onchange: "previewImage(event)" %>
+
+                <div class="mt-2">
+                    <img id="image-preview" src="<%= url_for(food_drink.image) if food_drink.image.attached? %>" style="max-width: 200px; display: <%= food_drink.image.attached? ? 'block' : 'none' %>;" class="rounded shadow-sm" alt="Preview">
+                </div>
+            </div>
+        </div>
+
+        <!-- Nút hành động -->
+        <div class="mt-4 d-flex gap-2">
+            <%= f.submit "Lưu", class: "btn btn-primary" %>
+            <%= link_to "quay lại", admin_food_drinks_path, class: "btn btn-secondary", data: { turbo: false } %>
+        </div>
+
+        <% end %>
+    </div>
 </div>
-<% end %>
-
-<div class="mb-3">
-    <%= f.label :name, "Tên" %>
-    <%= f.text_field :name, class: "form-control", required: true %>
-</div>
-
-<div class="mb-3">
-    <%= f.label :price, "Giá" %>
-    <%= f.number_field :price, class: "form-control", min: 0, required: true %>
-</div>
-
-<div class="mb-3">
-    <%= f.label :category_id, "Category" %>
-    <%= f.collection_select :category_id, Category.all, :id, :name,
-        { prompt: "Chọn loại" },
-        { class: "form-select", required: true } %>
-</div>
-
-<div class="mb-3">
-    <%= f.label :description, "Mô tả" %>
-    <%= f.text_area :description, class: "form-control" %>
-</div>
-
-<div class="mb-3">
-    <%= f.label :stock, "Số lượng" %>
-    <%= f.number_field :stock, class: "form-control", min: 0 %>
-</div>
-
-<div class="mb-3">
-    <%= f.label :image, "Ảnh" %>
-    <%= f.file_field :image, class: "form-control", accept: "image/*", onchange: "previewImage(event)" %>
-
-    <br>
-    <img id="image-preview" src="<%= url_for(food_drink.image) if food_drink.image.attached? %>" style="<%= food_drink.image.attached? ? '' : 'display:none;' %> max-width:200px; margin-top:10px;">
-</div>
-
-<%= f.submit "Lưu", class: "btn btn-primary me-2" %>
-<%= link_to "Hủy", admin_food_drinks_path, class: "btn btn-secondary", data: { turbo: false } %>
-
-<% end %>
 
 <script>
     function previewImage(event) {
@@ -67,7 +87,7 @@
     // Reset form sau khi submit thành công với Turbo
     document.addEventListener("turbo:submit-end", (event) => {
         if (event.target.id === "food_drink_form" && event.detail.success) {
-            event.target.reset(); // reset tất cả input
+            event.target.reset();
             const preview = document.getElementById('image-preview');
             if (preview) preview.style.display = 'none';
         }

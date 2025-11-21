@@ -1,18 +1,33 @@
-<h2>Chi tiết Danh mục</h2>
+<h2 class="text-center text-primary mb-4">📂 Chi tiết Danh mục</h2>
 
-<div class="row justify-content-center mt-4">
-    <div class="col-md-6 col-lg-5">
-        <div class="card shadow-sm p-3">
-            <p><strong>Tên danh mục:</strong> <%= @category.name %></p>
-            <p><strong>Ngày tạo:</strong> <%= @category.created_at.strftime("%d/%m/%Y %H:%M") %></p>
-            <p><strong>Ngày cập nhật:</strong> <%= @category.updated_at.strftime("%d/%m/%Y %H:%M") %></p>
+<div class="row justify-content-center mt-3">
+    <div class="col-sm-10 col-md-7 col-lg-5">
+        <div class="card shadow border-0 rounded p-4">
 
-            <div class="d-flex justify-content-between mt-3">
-                <%= link_to "Quay lại", admin_categories_path, class: "btn btn-outline-secondary" %>
-                <%= link_to "Xóa", admin_category_path(@category), method: :delete,
-                    data: { turbo_confirm: "Bạn có chắc chắn muốn xóa danh mục này?" },
-                    class: "btn btn-outline-danger" %>
+            <!-- Thông tin danh mục -->
+            <ul class="list-group list-group-flush mb-4">
+                <li class="list-group-item d-flex justify-content-between">
+                    <strong>Tên danh mục:</strong>
+                    <span><%= @category.name %></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <strong>Ngày tạo:</strong>
+                    <span><%= @category.created_at.strftime("%d/%m/%Y %H:%M") %></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <strong>Ngày cập nhật:</strong>
+                    <span><%= @category.updated_at.strftime("%d/%m/%Y %H:%M") %></span>
+                </li>
+            </ul>
+
+            <!-- Buttons -->
+            <div class="d-flex justify-content-between flex-wrap gap-2">
+                <%= link_to "← Quay lại", admin_categories_path, class: "btn btn-outline-secondary w-45" %>
+                <%= link_to "Xóa danh mục", admin_category_path(@category), method: :delete,
+            data: { turbo_confirm: "Bạn có chắc chắn muốn xóa danh mục này?" },
+            class: "btn btn-outline-danger w-45" %>
             </div>
+
         </div>
     </div>
 </div>

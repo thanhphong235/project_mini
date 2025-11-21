@@ -1,60 +1,81 @@
-<!-- app/views/admin/orders/show.html.erb -->
-<h1>Chi tiết đơn hàng</h1>
+<%= turbo_frame_tag "order_show_#{@order.id}" do %>
 
-<p><strong>Người đặt:</strong> <%= @order.user.name || @order.user.email %></p>
-<p><strong>Ngày đặt:</strong> <%= @order.created_at.strftime("%d/%m/%Y %H:%M") %></p>
-<p><strong>Tổng tiền:</strong> <%= number_to_currency(@order.total_price, unit: "₫") %></p>
-<p><strong>Trạng thái hiện tại:</strong> <%= @order.status_human %></p>
+<div class="card order-detail-card">
 
-<hr>
+    <!-- Flash messages -->
+    <div id="flash_messages" class="mb-3"></div>
 
-<h3>Danh sách sản phẩm</h3>
-<table class="table table-bordered">
-    <thead class="table-light">
-        <tr>
-            <th>#</th>
-            <th>Tên sản phẩm</th>
-            <th>Số lượng</th>
-            <th>Đơn giá</th>
-            <th>Thành tiền</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% @order.order_items.each_with_index do |item, index| %>
-        <tr>
-            <td><%= index + 1 %></td>
-            <td><%= item.food_drink.name %></td>
-            <td><%= item.quantity %></td>
-            <td><%= number_to_currency(item.price, unit: "₫") %></td>
-            <td><%= number_to_currency(item.price * item.quantity, unit: "₫") %></td>
-        </tr>
-        <% end %>
-    </tbody>
-</table>
+    <!-- Header -->
+    <div class="order-header mb-4">
+        <h1 class="order-title">Chi tiết đơn hàng #<%= @order.id %></h1>
+        <div class="order-info">
+            <p><strong>Người đặt:</strong> <%= @order.user&.name || @order.user&.email %></p>
+            <p><strong>Ngày đặt:</strong> <%= @order.created_at.strftime("%d/%m/%Y %H:%M") %></p>
+            <p><strong>Tổng tiền:</strong> <%= number_to_currency(@order.total_price, unit: "₫") %></p>
+            <p><strong>Trạng thái:</strong>
+                <%= turbo_frame_tag "order_status_#{@order.id}" do %>
+                <%= render partial: "status_badge", locals: { order: @order } %>
+                <% end %>
+            </p>
 
-<hr>
+        </div>
+    </div>
 
-<h4>Cập nhật trạng thái</h4>
-<%= form_with(model: [:admin, @order], method: :patch, local: true) do |f| %>
-<div class="mb-3">
-    <%= f.label :status, "Trạng thái đơn hàng" %>
-    <%= f.select :status,
-  Order.statuses.keys.map { |key| [Order.new(status: key).status_human, key] },
-  { selected: @order.status },
-  class: "form-select" %>
+    <hr>
 
+    <!-- Danh sách sản phẩm -->
+    <h3 class="mb-3">Danh sách sản phẩm</h3>
+    <div class="table-responsive mb-4">
+        <table class="table table-bordered order-items-table">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Số lượng</th>
+                    <th>Đơn giá</th>
+                    <th>Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% @order.order_items.each_with_index do |item, index| %>
+                <tr>
+                    <td><%= index + 1 %></td>
+                    <td><%= item.food_drink.name %></td>
+                    <td><%= item.quantity %></td>
+                    <td><%= number_to_currency(item.price, unit: "₫") %></td>
+                    <td><%= number_to_currency(item.price * item.quantity, unit: "₫") %></td>
+                </tr>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
 
+    <hr>
+
+    <!-- Form cập nhật trạng thái -->
+    <h4 class="mb-3">Cập nhật trạng thái</h4>
+    <%= form_with(model: [:admin, @order], method: :patch, local: false, class: "update-status-form") do |f| %>
+    <div class="mb-3">
+        <%= f.label :status, "Trạng thái đơn hàng", class: "form-label" %>
+        <%= f.select :status,
+        Order.statuses.keys.map { |key| [Order.new(status: key).status_human, key] },
+        { selected: @order.status },
+        class: "form-select" %>
+    </div>
+    <%= f.submit "Cập nhật", class: "btn btn-success btn-update-status" %>
+    <% end %>
+
+    <hr>
+
+    <!-- Footer actions -->
+    <div class="d-flex gap-2">
+        <%= link_to "Quay lại", admin_orders_path, class: "btn btn-secondary", data: { turbo: false } %>
+        <%= button_to "Xóa đơn hàng", admin_order_path(@order),
+          method: :delete,
+          data: { turbo_confirm: "Bạn có chắc chắn muốn xóa đơn hàng này?" },
+          class: "btn btn-outline-danger" %>
+    </div>
 
 </div>
-<%= f.submit "Cập nhật", class: "btn btn-primary" %>
+
 <% end %>
-
-<hr>
-
-<div class="d-flex gap-2">
-    <%= link_to "Quay lại", admin_orders_path, class: "btn btn-secondary" %>
-    <%= button_to "Xóa đơn hàng", admin_order_path(@order),
-        method: :delete,
-        data: { turbo_confirm: "Bạn có chắc chắn muốn xóa đơn hàng này?" },
-        class: "btn btn-outline-danger" %>
-</div>

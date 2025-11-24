@@ -1,17 +1,12 @@
 #!/bin/bash
 set -e
 
-if [ "$1" = "rails" ] && [ "$2" = "server" ]; then
-  echo "🛠  Preparing database..."
-  ./bin/rails db:create db:migrate db:seed 2>/dev/null || true
-fi
+echo "📦 Preparing database..."
+
+# RUN MIGRATE + SEED EVERY START (SAFE)
+bundle exec rails db:migrate 2>/dev/null || true
+bundle exec rails db:seed 2>/dev/null || true
+
+echo "🚀 Starting application..."
 
 exec "$@"
-	#!/bin/bash -e
-
-# If running the rails server then create or migrate existing database
-if [ "${1}" == "./bin/rails" ] && [ "${2}" == "server" ]; then
-  ./bin/rails db:prepare
-fi
-
-exec "${@}"

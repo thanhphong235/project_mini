@@ -824,5 +824,537 @@ body.login-page {
     font-size: 0.85rem;
   }
 }
+// admin suggestion index
+/* ============================
+   🎨 Suggestions Table Styles
+   ============================ */
 
+.table {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.table thead {
+  font-size: 15px;
+  letter-spacing: 0.5px;
+}
+
+.table-dark th {
+  background: #212529 !important;
+  color: #fff !important;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #f4f4f4 !important;
+}
+
+.table td,
+.table th {
+  vertical-align: middle;
+  padding: 12px 14px;
+}
+
+/* Badge trạng thái */
+.badge {
+  padding: 6px 10px;
+  font-size: 12px;
+  border-radius: 6px;
+  text-transform: capitalize;
+}
+
+.badge.bg-success {
+  background-color: #28a745 !important;
+}
+
+.badge.bg-danger {
+  background-color: #dc3545 !important;
+}
+
+.badge.bg-secondary {
+  background-color: #6c757d !important;
+}
+
+/* Hành động */
+td:last-child {
+  white-space: nowrap;
+}
+
+.btn-sm {
+  padding: 6px 10px !important;
+  font-size: 13px;
+  border-radius: 6px;
+}
+
+.btn-info {
+  background-color: #0dcaf0;
+  color: #fff;
+  border: none;
+}
+
+.btn-info:hover {
+  background-color: #0bb3d6;
+}
+
+.btn-warning {
+  background-color: #ffc107;
+  border: none;
+  color: #000;
+}
+
+.btn-warning:hover {
+  background-color: #e0ac05;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  border: none;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+}
+
+/* Card-style container */
+.suggestions-wrapper {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Tiêu đề */
+h1.page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #222;
+}
+
+//admin suggestion show 
+.suggestion-detail {
+  background: #fff;
+  padding: 2rem;
+  max-width: 700px;
+  margin: 2rem auto;
+  border-radius: 16px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+
+  h2 {
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+  }
+
+  .detail-row {
+    display: flex;
+    margin-bottom: 1rem;
+
+    .label {
+      width: 150px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .value {
+      flex: 1;
+
+      p {
+        margin: 0;        // XÓA MARGIN CỦA simple_format
+        line-height: 1.6; // Đẹp chữ
+      }
+    }
+  }
+
+  hr {
+    margin: 2rem 0;
+  }
+
+  .detail-actions {
+    display: flex;
+    gap: 1rem;
+  }
+}
+//admin suggestion edit
+/* ==============================
+   Form cập nhật trạng thái góp ý
+   ============================== */
+.suggestion-detail {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  max-width: 700px;
+  margin: 2rem auto;
+  font-family: "Poppins", sans-serif;
+}
+
+.suggestion-detail h2 {
+  text-align: center;
+  color: #000;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.detail-row {
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+.detail-row .label {
+  width: 150px;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.detail-row .value {
+  flex: 1;
+  color: #374151;
+}
+
+.update-status-form .form-select {
+  width: 200px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  padding: 0.4rem 0.6rem;
+}
+
+.update-status-form .form-select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 0.2rem rgba(59,130,246,0.25);
+  outline: none;
+}
+
+.detail-actions {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 1rem;
+}
+
+.detail-actions .btn {
+  border-radius: 8px;
+  font-weight: 500;
+  padding: 0.5rem 1.25rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.detail-actions .btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn-success {
+  background-color: #10b981;
+  border-color: #10b981;
+}
+
+.btn-success:hover {
+  background-color: #059669;
+  border-color: #059669;
+}
+
+.btn-secondary {
+  background-color: #6b7280;
+  border-color: #6b7280;
+  color: #ffffff;
+}
+
+.btn-secondary:hover {
+  background-color: #4b5563;
+  border-color: #4b5563;
+}
+
+.me-2 {
+  margin-right: 0.5rem !important;
+}
+/* ============================
+   Thống kê đơn hàng - Admin
+   ============================ */
+
+.order-statistics {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  max-width: 1000px;
+  margin: 2rem auto;
+  font-family: "Poppins", sans-serif;
+  color: #374151;
+
+  h1 {
+    font-size: 1.8rem;
+    color: #000;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+  }
+
+  // .btn {
+  //   border-radius: 8px;
+  //   font-weight: 500;
+  //   padding: 0.5rem 1.25rem;
+  //   transition: all 0.2s ease-in-out;
+  // }
+
+  .btn:hover {
+    transform: translateY(-2px);
+  }
+
+  .btn-primary {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+    color: #fff;
+  }
+
+  .btn-primary:hover {
+    background-color: #2563eb;
+    border-color: #2563eb;
+  }
+
+  .btn-success {
+    background-color: #10b981;
+    border-color: #10b981;
+    color: #fff;
+  }
+
+  .btn-success:hover {
+    background-color: #059669;
+    border-color: #059669;
+  }
+
+  form {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+
+    label {
+      font-weight: 500;
+      margin-right: 0.5rem;
+    }
+
+    .form-select {
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      padding: 0.35rem 0.5rem;
+      min-width: 80px;
+    }
+
+    .form-select:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
+      outline: none;
+    }
+  }
+
+  p {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+
+    strong {
+      color: #111827;
+    }
+  }
+
+  table {
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    border-collapse: collapse;
+    margin-top: 1rem;
+
+    thead {
+      background-color: #1e3a8a;
+      color: #fff;
+    }
+
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #f3f4f6;
+    }
+
+    tbody tr:hover {
+      background-color: #e0f2fe;
+    }
+  }
+
+  .text-muted {
+    font-style: italic;
+    color: #6b7280;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .order-statistics {
+    padding: 1rem;
+
+    form {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+
+      .form-select {
+        width: 100% !important;
+      }
+    }
+
+    table th, table td {
+      font-size: 0.9rem;
+      padding: 0.5rem;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+
+//user suggestion index
+/* ================================
+   Card & Table Container
+   ================================ */
+/* ===== CARD WRAPPER ===== */
+.suggestions-card {
+  margin-top: 1rem;
+  background-color: #fff;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  overflow: hidden;
+
+  .card-body {
+    padding: 0;
+  }
+}
+
+/* ===== TABLE ===== */
+.suggestions-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+
+  th,
+  td {
+    vertical-align: middle;
+    text-align: center;
+    padding: 0.85rem 0.75rem;
+    word-break: break-word;
+  }
+
+  /* Header */
+  thead th {
+    background-color: #212529 !important;
+    color: #fff !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+
+  /* Hover row */
+  tbody tr:hover {
+    background-color: #f5f5f5 !important;
+  }
+
+  /* Cột hành động */
+  .col-actions {
+    width: 170px;
+    min-width: 170px;
+  }
+}
+
+/* ===== BADGES ===== */
+.badge {
+  padding: 0.45rem 0.7rem;
+  font-size: 0.75rem;
+  border-radius: 6px;
+}
+
+.badge.bg-warning {
+  background-color: #ffc107 !important;
+  color: #000 !important;
+}
+
+.badge.bg-success {
+  background-color: #28a745 !important;
+}
+
+.badge.bg-secondary {
+  background-color: #6c757d !important;
+}
+
+/* ===== ACTION BUTTONS ===== */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  flex-wrap: nowrap !important;
+  gap: 6px;
+
+  .btn {
+    font-size: 0.78rem;
+    border-radius: 6px;
+    padding: 0.35rem 0.55rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    min-width: 68px;
+  }
+
+  .btn-outline-info {
+    border-color: #0dcaf0;
+    color: #0dcaf0;
+  }
+
+  .btn-outline-info:hover {
+    background-color: #0dcaf0;
+    color: #fff;
+  }
+
+  .btn-outline-warning {
+    border-color: #ffc107;
+    color: #ffc107;
+  }
+
+  .btn-outline-warning:hover {
+    background-color: #ffc107;
+    color: #000;
+  }
+
+  .btn-outline-danger {
+    border-color: #dc3545;
+    color: #dc3545;
+  }
+
+  .btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: #fff;
+  }
+}
+
+/* ===== RESPONSIVE ===== */
+.table-responsive {
+  overflow-x: auto;
+}
+
+@media (max-width: 768px) {
+  .suggestions-table {
+    min-width: 650px;
+
+    th,
+    td {
+      padding: 0.55rem 0.35rem;
+      font-size: 0.82rem;
+    }
+
+    .action-buttons .btn {
+      min-width: 55px;
+      padding: 0.25rem 0.4rem;
+      font-size: 0.7rem;
+    }
+  }
+}
 

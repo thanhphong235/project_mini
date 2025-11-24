@@ -1,11 +1,32 @@
-<h2>Chi tiết Góp ý</h2>
+<div class="suggestion-detail">
 
-<p><strong>Người gửi:</strong> <%= @suggestion.user.name || @suggestion.user.email %></p>
-<p><strong>Tiêu đề:</strong> <%= @suggestion.title %></p>
-<p><strong>Nội dung:</strong></p>
-<p><%= simple_format(@suggestion.content) %></p>
-<p><strong>Trạng thái:</strong> <%= @suggestion.status || "pending" %></p>
+    <h2>Chi tiết Góp ý</h2>
 
-<hr>
-<%= link_to "Quay lại", admin_suggestions_path, class: "btn btn-secondary" %>
-<%= link_to "Sửa", edit_admin_suggestion_path(@suggestion), class: "btn btn-warning ms-2" %>
+    <div class="detail-row">
+        <span class="label">Người gửi:</span>
+        <span class="value"><%= @suggestion.user.name || @suggestion.user.email %></span>
+    </div>
+
+    <div class="detail-row">
+        <span class="label">Tiêu đề:</span>
+        <span class="value"><%= @suggestion.title %></span>
+    </div>
+
+    <div class="detail-row">
+        <span class="label">Nội dung:</span>
+        <span class="value"><%= simple_format(@suggestion.content) %></span>
+    </div>
+
+    <div class="detail-row">
+        <span class="label">Trạng thái:</span>
+        <span class="value"><%= @suggestion.status || "pending" %></span>
+    </div>
+
+    <hr>
+
+    <div class="detail-actions">
+        <%= link_to "Quay lại", admin_suggestions_path, class: "btn btn-secondary" %>
+        <%= link_to "Sửa", edit_admin_suggestion_path(@suggestion), class: "btn btn-warning" %>
+    </div>
+
+</div>

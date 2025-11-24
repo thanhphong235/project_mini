@@ -7,16 +7,13 @@ class Admin::FoodDrinksController < ApplicationController
   def index
     @food_drinks = FoodDrink.all
 
-    # Lọc theo category
     @food_drinks = @food_drinks.where(category_id: params[:category_id]) if params[:category_id].present?
 
-    # Tìm kiếm theo tên (không phân biệt hoa thường)
     if params[:query].present?
       keyword = "%#{params[:query].strip}%"
       @food_drinks = @food_drinks.where("name ILIKE ?", keyword)
     end
 
-    # Sắp xếp
     @food_drinks = case params[:sort]
                    when "name_asc" then @food_drinks.order(name: :asc)
                    when "name_desc" then @food_drinks.order(name: :desc)
@@ -35,17 +32,26 @@ class Admin::FoodDrinksController < ApplicationController
   def create
     @food_drink = FoodDrink.new(food_drink_params)
 
-    if @food_drink.save
-      flash.now[:notice] = "Thêm món ăn/thức uống thành công!"
-      respond_to do |format|
-        format.html { redirect_to admin_food_drinks_path, notice: flash[:notice] }
-        format.turbo_stream
-      end
-    else
-      respond_to do |format|
+    respond_to do |format|
+      if @food_drink.save
+        format.html { redirect_to new_admin_food_drink_path, notice: "Thêm món ăn/thức uống thành công!" }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace("food_drink_form", partial: "admin/food_drinks/form", locals: { food_drink: FoodDrink.new }),
+            turbo_stream.replace("flash_messages", partial: "shared/flash", locals: { notice: "Thêm món ăn/thức uống thành công!" })
+          ]
+        end
+      else
         format.html { render :new, status: :unprocessable_entity }
-        format.turbo_stream { render turbo_stream: turbo_stream.replace("food_drink_form", partial: "form", locals: { food_drink: @food_drink }) }
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(
+            "food_drink_form",
+            partial: "admin/food_drinks/form",
+            locals: { food_drink: @food_drink }
+          )
+        end
       end
+
     end
   end
 
@@ -53,44 +59,41 @@ class Admin::FoodDrinksController < ApplicationController
   def edit; end
 
   # PATCH/PUT /admin/food_drinks/:id
-def update
-  if @food_drink.update(food_drink_params)
-    flash.now[:notice] = "Món ăn/thức uống đã được cập nhật."
-
+  def update
     respond_to do |format|
-      format.turbo_stream do
-        render turbo_stream: [
-          turbo_stream.replace("flash_messages", partial: "shared/flash"),
-          turbo_stream.replace("food_drink_form", partial: "admin/food_drinks/form", locals: { food_drink: @food_drink })
-        ]
+      if @food_drink.update(food_drink_params)
+        format.html { redirect_to edit_admin_food_drink_path(@food_drink), notice: "Món ăn/thức uống đã được cập nhật." }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace("food_drink_form", partial: "admin/food_drinks/form", locals: { food_drink: @food_drink }),
+            turbo_stream.replace("flash_messages", partial: "shared/flash", locals: { notice: "Món ăn/thức uống đã được cập nhật." })
+          ]
+        end
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(
+            "food_drink_form",
+            partial: "admin/food_drinks/form",
+            locals: { food_drink: @food_drink }
+          )
+        end
       end
-      format.html { redirect_to edit_admin_food_drink_path(@food_drink), notice: "Món ăn/thức uống đã được cập nhật." }
-    end
-  else
-    respond_to do |format|
-      format.turbo_stream do
-        render turbo_stream: turbo_stream.replace(
-          "food_drink_form",
-          partial: "admin/food_drinks/form",
-          locals: { food_drink: @food_drink }
-        )
-      end
-      format.html { render :edit, status: :unprocessable_entity }
     end
   end
-end
+
   # DELETE /admin/food_drinks/:id
   def destroy
     if @food_drink.destroy
-      flash[:notice] = "Đã xoá món ăn/thức uống."
       respond_to do |format|
-        format.html { redirect_to admin_food_drinks_path }
+        format.html { redirect_to admin_food_drinks_path, notice: "Đã xoá món ăn/thức uống." }
         format.turbo_stream { render turbo_stream: turbo_stream.remove(@food_drink) }
       end
+    else
+      redirect_to admin_food_drinks_path, alert: "Không thể xoá món ăn/thức uống."
     end
   rescue ActiveRecord::InvalidForeignKey
-    flash[:alert] = "Không thể xoá món ăn/thức uống vì đang có đơn hàng liên quan."
-    redirect_to admin_food_drinks_path
+    redirect_to admin_food_drinks_path, alert: "Không thể xoá món ăn/thức uống vì đang có đơn hàng liên quan."
   end
 
   # DELETE /admin/food_drinks/bulk_delete
@@ -105,8 +108,7 @@ end
     end
     redirect_to admin_food_drinks_path
   rescue ActiveRecord::InvalidForeignKey
-    flash[:alert] = "Không thể xoá vì một số món đang có đơn hàng liên quan."
-    redirect_to admin_food_drinks_path
+    redirect_to admin_food_drinks_path, alert: "Không thể xoá vì một số món đang có đơn hàng liên quan."
   end
 
   private

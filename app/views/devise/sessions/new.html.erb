@@ -62,7 +62,7 @@
 
             <!-- Submit -->
             <div class="d-grid mb-3">
-                <%= f.submit "Log in", class: "btn btn-primary btn-lg rounded-3 fw-bold" %>
+                <%= f.submit "Log in", class: "btn btn-primary btn-lg rounded-3 w-100 d-flex align-items-center justify-content-center gap-2" %>
             </div>
             <% end %>
 
@@ -81,7 +81,7 @@
                     method: :post,
                     class: "btn btn-light border btn-lg rounded-3 w-100 d-flex align-items-center justify-content-center gap-2",
                     form: { data: { turbo: false } } do %>
-                <i class="bi bi-google fs-5"></i> Đăng nhập với Google
+                <i class="bi bi-google fs-5"></i> Sign in with Google
                 <% end %>
 
                 <%= button_to user_facebook_omniauth_authorize_path,

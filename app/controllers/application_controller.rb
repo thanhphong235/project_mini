@@ -24,4 +24,14 @@ class ApplicationController < ActionController::Base
   def after_sign_out_path_for(_resource_or_scope)
     root_path
   end
+  def run_seed
+    # Chỉ chạy trên production
+    if Rails.env.production?
+      # Chạy seed
+      output = `rails db:seed`  # chạy file db/seeds.rb
+      render plain: "✅ Seed đã chạy trên production!\n\n#{output}"
+    else
+      render plain: "❌ Chỉ có thể chạy trên production"
+    end
+  end
 end

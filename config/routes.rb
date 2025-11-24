@@ -58,4 +58,8 @@ Rails.application.routes.draw do
 
   # Đơn hàng
   resources :orders, only: [:index, :show, :update, :create]
+  if Rails.env.production?
+    get "/run_seed", to: "application#run_seed"
+  end
+
 end

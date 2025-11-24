@@ -25,13 +25,27 @@ class ApplicationController < ActionController::Base
     root_path
   end
   def run_seed
-    # Chỉ chạy trên production
     if Rails.env.production?
-      # Chạy seed
-      output = `rails db:seed`  # chạy file db/seeds.rb
-      render plain: "✅ Seed đã chạy trên production!\n\n#{output}"
+      begin
+        require 'active_record'
+
+        # ✅ Kiểm tra DB đã có bảng food_drinks chưa
+        if ActiveRecord::Base.connection.data_source_exists?('food_drinks')
+          # ✅ Chỉ chạy nếu chưa có món ăn nào
+          if FoodDrink.count == 0
+            load Rails.root.join("db/seeds.rb")
+            render plain: "✅ Seed database đã chạy trên production!"
+          else
+            render plain: "⚠️ Database đã có dữ liệu. Seed không chạy."
+          end
+        else
+          render plain: "❌ Database chưa sẵn sàng."
+        end
+      rescue => e
+        render plain: "❌ Lỗi khi chạy seed: #{e.message}"
+      end
     else
-      render plain: "❌ Chỉ có thể chạy trên production"
+      render plain: "❌ Chỉ chạy trên production"
     end
   end
 end

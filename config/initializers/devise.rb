@@ -62,5 +62,5 @@ Devise.setup do |config|
   # ==> Security & session cleanup
   # config.clean_up_csrf_token_on_authentication = true
   # config.expire_all_remember_me_on_sign_out = true
-  # config.reset_password_within = 6.hours
+  # config.reset_password_within = 1.minutes
 end

@@ -2,5 +2,39 @@
 vi:
   devise:
     sessions:
-      user:
-        invalid: "Email hoặc mật khẩu không đúng."
+      signed_in: "Đăng nhập thành công."
+      signed_out: "Đăng xuất thành công."
+      invalid: "Email hoặc mật khẩu không đúng."
+    registrations:
+      signed_up: "Đăng ký thành công. Chào mừng bạn!"
+      updated: "Tài khoản đã được cập nhật thành công."
+      destroyed: "Tài khoản đã bị xóa."
+      new:
+        submit: "Đăng ký"
+      edit:
+        submit: "Cập nhật"
+    passwords:
+      send_instructions:
+        subject: "Hướng dẫn đặt lại mật khẩu"
+      new:
+        submit: "Gửi hướng dẫn đặt lại mật khẩu"
+      edit:
+        submit: "Đặt lại mật khẩu"
+      updated:
+        notice: "Mật khẩu đã được cập nhật thành công."
+      expired: "Link đặt lại mật khẩu đã hết hạn. Vui lòng yêu cầu gửi lại email."
+      mailer:
+        reset_password_instructions:
+          subject: "Hướng dẫn đặt lại mật khẩu cho %{email}"
+          greeting: "Xin chào %{email},"
+          instructions: "Bạn nhận được email này vì chúng tôi nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn."
+          action: "Đặt lại mật khẩu"
+          farewell: "Nếu bạn không yêu cầu việc này, bạn có thể bỏ qua email này."
+    confirmations:
+      send_instructions:
+        subject: "Hướng dẫn xác nhận tài khoản"
+      confirmed: "Tài khoản đã được xác nhận thành công."
+    unlocks:
+      send_instructions:
+        subject: "Hướng dẫn mở khóa tài khoản"
+      unlocked: "Tài khoản đã được mở khóa thành công."

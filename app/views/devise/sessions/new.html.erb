@@ -39,7 +39,6 @@
             <div class="mb-3">
                 <div class="d-flex justify-content-between align-items-center">
                     <%= f.label :password, class: "form-label fw-semibold" %>
-                    <%= link_to "Forgot password?", new_user_password_path, class: "small text-primary" %>
                 </div>
 
                 <div class="input-group input-group-lg">
@@ -58,6 +57,7 @@
             <div class="form-check mb-3">
                 <%= f.check_box :remember_me, class: "form-check-input" %>
                 <%= f.label :remember_me, "Remember me", class: "form-check-label" %>
+                <%= link_to "Forgot password?", new_user_password_path, class: "small text-primary" %>
             </div>
 
             <!-- Submit -->

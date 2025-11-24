@@ -1,0 +1,89 @@
+<% provide(:title, "Đặt lại mật khẩu") %>
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card shadow-lg border-0 rounded-4 p-4">
+
+            <div class="text-center mb-4">
+                <h2 class="fw-bold">Đặt lại mật khẩu</h2>
+                <p class="text-muted">Nhập mật khẩu mới cho tài khoản của bạn.</p>
+            </div>
+
+            <!-- Hiển thị lỗi -->
+            <% if resource.errors.any? %>
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    <% resource.errors.full_messages.each do |msg| %>
+                    <li><%= msg %></li>
+                    <% end %>
+                </ul>
+            </div>
+            <% end %>
+
+            <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, class: "needs-validation" }) do |f| %>
+
+            <!-- Hidden token -->
+            <%= f.hidden_field :reset_password_token, value: params[:reset_password_token] %>
+
+            <!-- Email -->
+            <div class="mb-3">
+                <%= f.label :email, "Email", class: "form-label fw-semibold" %>
+                <%= f.email_field :email, required: true, autofocus: true, class: "form-control form-control-lg rounded-3", placeholder: "Nhập email của bạn" %>
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <%= f.label :password, "Mật khẩu mới", class: "form-label fw-semibold" %>
+                </div>
+
+                <div class="input-group input-group-lg">
+                    <%= f.password_field :password,
+                  required: true,
+                  class: "form-control rounded-start-3",
+                  placeholder: "Nhập mật khẩu mới",
+                  id: "password-field" %>
+                    <button class="btn btn-outline-secondary rounded-end-3" type="button" id="toggle-password">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Password confirmation -->
+            <div class="mb-3">
+                <%= f.label :password_confirmation, "Xác nhận mật khẩu", class: "form-label fw-semibold" %>
+                <%= f.password_field :password_confirmation, required: true, class: "form-control form-control-lg rounded-3", placeholder: "Nhập lại mật khẩu mới" %>
+            </div>
+
+            <!-- Submit -->
+            <div class="d-grid mb-3">
+                <%= f.submit "Cập nhật mật khẩu", class: "btn btn-primary btn-lg rounded-3 fw-bold" %>
+            </div>
+
+            <% end %>
+
+            <p class="text-center mt-3">
+                <%= link_to "Quay lại đăng nhập", new_session_path(resource_name), class: "text-primary fw-semibold" %>
+            </p>
+
+        </div>
+    </div>
+</div>
+
+<!-- Toggle password -->
+<script>
+    document.addEventListener("turbo:load", () => {
+        const btn = document.getElementById("toggle-password");
+        const pw = document.getElementById("password-field");
+        btn.addEventListener("click", () => {
+            const icon = btn.querySelector("i");
+            if (pw.type === "password") {
+                pw.type = "text";
+                icon.classList.replace("bi-eye", "bi-eye-slash");
+            } else {
+                pw.type = "password";
+                icon.classList.replace("bi-eye-slash", "bi-eye");
+            }
+        });
+    });
+</script>

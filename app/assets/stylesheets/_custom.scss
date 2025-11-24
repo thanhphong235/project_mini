@@ -719,25 +719,35 @@ body.login-page {
 }
 
 /* --- TABLE --- */
-.table-container {
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+.orders-wrapper {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  overflow: hidden;
+  padding: 1rem;
+
+  .orders-table {
+    width: 100%;
+    border-collapse: collapse;
+    
+    th, td {
+      text-align: center;
+      vertical-align: middle;
+      padding: 0.85rem 0.75rem;
+    }
+
+    thead th {
+      text-transform: uppercase;
+      font-weight: 600;
+      font-size: 0.9rem;
+      letter-spacing: 0.4px;
+    }
+
+    .col-index { width: 60px; }
+    .col-actions { width: 170px; min-width: 170px; }
+  }
 }
 
-.orders-table th,
-.orders-table td {
-    padding: 0.9rem 1rem !important;
-    vertical-align: middle;
-}
-
-.col-index {
-    width: 60px;
-}
-
-.col-actions {
-    width: 150px;
-}
 
 /* Button container trong cột Hành động */
 .action-buttons {
@@ -1357,5 +1367,4 @@ h1.page-title {
     }
   }
 }
-
 

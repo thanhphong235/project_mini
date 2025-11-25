@@ -6,7 +6,10 @@
 </div>
 
 <!-- Flash messages -->
-<div id="flash_messages" class="flash-box mb-3"></div>
+<%= turbo_frame_tag "flash_messages" do %>
+<%= render "shared/flash_messages" %>
+<% end %>
+
 
 <!-- Orders Table Wrapper giống Suggestions -->
 <div class="orders-wrapper table-responsive">

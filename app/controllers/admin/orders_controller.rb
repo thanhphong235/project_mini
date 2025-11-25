@@ -54,10 +54,28 @@ def update
   end
 end
 
-  def destroy
-    @order.destroy
-    redirect_to admin_orders_path, notice: "Đã xóa đơn hàng thành công."
+ def destroy
+  @order.destroy
+
+  respond_to do |format|
+    format.html { redirect_to admin_orders_path, notice: "Đã xóa đơn hàng thành công." }
+
+    format.turbo_stream do
+      render turbo_stream: [
+        # Xóa dòng trong bảng
+        turbo_stream.remove("order_#{@order.id}"),
+
+        # Cập nhật flash
+        turbo_stream.update(
+          "flash_messages",
+          partial: "shared/flash_messages",
+          locals: { notice: "Đã xóa đơn hàng thành công.", alert: nil }
+        )
+      ]
+    end
   end
+end
+
 
   # ======================
   # THỐNG KÊ ĐƠN HÀNG THEO THÁNG/NĂM

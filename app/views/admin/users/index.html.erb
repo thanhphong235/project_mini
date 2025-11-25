@@ -3,19 +3,9 @@
     <h1 class="text-center flex-grow-1 mb-0">Quản lý Người dùng</h1>
 </div>
 
-<!-- Hiển thị flash -->
-<% if flash[:notice] %>
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-    <%= flash[:notice] %>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-<% end %>
-
-<% if flash[:alert] %>
-<div class="alert alert-danger alert-dismissible fade show" role="alert">
-    <%= flash[:alert] %>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
+<!-- Flash messages trong Turbo Frame -->
+<%= turbo_frame_tag "flash_messages" do %>
+<%= render "shared/flash" %>
 <% end %>
 
 <div class="table-responsive shadow-sm rounded mt-3">
@@ -32,13 +22,9 @@
         </thead>
         <tbody>
             <% @users.each_with_index do |user, index| %>
-            <tr class="align-middle">
+            <tr id="<%= dom_id(user) %>" class="align-middle">
                 <td><%= index + 1 %></td>
-                <td>
-                    <%= user.name.present? ? user.name : user.email %>
-                    <% if user.admin? %>
-                    <% end %>
-                </td>
+                <td><%= user.name.presence || user.email %></td>
                 <td><%= user.email %></td>
                 <td>
                     <span class="badge bg-info text-dark"><%= user.role %></span>
@@ -48,12 +34,12 @@
                     <%= link_to admin_user_path(user), class: "btn btn-sm btn-outline-primary me-1", title: "Xem chi tiết" do %>
                     <i class="bi bi-eye"></i> Xem
                     <% end %>
+
                     <%= link_to admin_user_path(user),
-    data: { turbo_method: :delete, turbo_confirm: "Bạn có chắc chắn muốn xóa người dùng này?" },
-    class: "btn btn-sm btn-outline-danger", title: "Xóa người dùng" do %>
+                data: { turbo_method: :delete, turbo_confirm: "Bạn có chắc chắn muốn xóa người dùng này?" },
+                class: "btn btn-sm btn-outline-danger", title: "Xóa người dùng" do %>
                     <i class="bi bi-trash"></i> Xóa
                     <% end %>
-
                 </td>
             </tr>
             <% end %>

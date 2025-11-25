@@ -44,7 +44,7 @@
 
 <!-- Turbo Frame chứa bảng món ăn full màn hình -->
 <%= turbo_frame_tag "food_drinks_list" do %>
-<%= form_with url: bulk_delete_admin_food_drinks_path, method: :delete, local: true, data: { turbo_confirm: "Bạn có chắc chắn muốn xóa các món đã chọn?" } do %>
+<%= form_with url: bulk_delete_admin_food_drinks_path, method: :delete, local: false, data: { turbo_confirm: "Bạn có chắc chắn muốn xóa các món đã chọn?" } do %>
 
 <div class="food-drinks-table table-responsive mb-3">
     <%= render partial: "list", locals: { food_drinks: @food_drinks } %>

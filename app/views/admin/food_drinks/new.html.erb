@@ -1,7 +1,13 @@
-<%= turbo_frame_tag "food_drink_form" do %>
-<%= render "form", food_drink: @food_drink %>
-<% end %>
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white">
+        <h3 class="mb-0">Thêm món ăn mới</h3>
+    </div>
 
-<%= turbo_frame_tag "flash_messages" do %>
-<%= render "shared/flash" %>
-<% end %>
+    <div class="card-body">
+        <%= render "shared/flash" %>
+
+        <div id="food_drink_form">
+            <%= render "form", food_drink: @food_drink %>
+        </div>
+    </div>
+</div>

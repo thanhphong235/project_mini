@@ -1,3 +1,5 @@
+<%
+=begin%>
 <%= form_with(model: [:admin, food_drink], local: false, html: { multipart: true, id: "food_drink_form" }) do |f| %>
 
 <% if food_drink.errors.any? %>
@@ -53,3 +55,5 @@
 </div>
 
 <% end %>
+<%
+=end%>

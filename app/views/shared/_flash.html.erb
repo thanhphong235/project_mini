@@ -1,15 +1,15 @@
 <div id="flash_messages">
-    <% if notice %>
+    <% if notice.present? %>
     <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
         <%= notice %>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
     <% end %>
 
-    <% if alert %>
+    <% if alert.present? %>
     <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
         <%= alert %>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
     <% end %>
 </div>

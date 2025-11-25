@@ -1,77 +1,58 @@
-<div id="food_drink_form">
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-primary text-white">
-            <h3 class="mb-0"><%= food_drink.new_record? ? "Thêm món ăn mới" : "Chỉnh sửa món ăn" %></h3>
-        </div>
+<%= form_with(model: [:admin, food_drink], local: false, html: { multipart: true, id: "food_drink_form_inner" }) do |f| %>
 
-        <div class="card-body">
-            <%= form_with(model: [:admin, food_drink], html: { multipart: true, id: "food_drink_form_inner" }, local: false) do |f| %>
+<% if food_drink.errors.any? %>
+<div class="alert alert-danger">
+    <h5><%= pluralize(food_drink.errors.count, "lỗi") %> xảy ra:</h5>
+    <ul class="mb-0">
+        <% food_drink.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+        <% end %>
+    </ul>
+</div>
+<% end %>
 
-            <% if food_drink.errors.any? %>
-            <div class="alert alert-danger">
-                <h5><%= pluralize(food_drink.errors.count, "lỗi") %> xảy ra:</h5>
-                <ul class="mb-0">
-                    <% food_drink.errors.full_messages.each do |msg| %>
-                    <li><%= msg %></li>
-                    <% end %>
-                </ul>
-            </div>
-            <% end %>
+<div class="row g-3">
+    <div class="col-md-6">
+        <%= f.label :name, "Tên", class: "form-label" %>
+        <%= f.text_field :name, class: "form-control", required: true %>
+    </div>
 
-            <div class="row g-3">
-                <!-- Tên món -->
-                <div class="col-md-6">
-                    <%= f.label :name, "Tên", class: "form-label" %>
-                    <%= f.text_field :name, class: "form-control", required: true %>
-                </div>
+    <div class="col-md-6">
+        <%= f.label :price, "Giá", class: "form-label" %>
+        <%= f.number_field :price, id: "food_drink_price", class: "form-control", min: 0, step: "any", required: true %>
+    </div>
 
-                <!-- Giá -->
-                <div class="col-md-6">
-                    <%= f.label :price, "Giá", class: "form-label" %>
-                    <%= f.number_field :price, class: "form-control", min: 0, step: "any", required: true, oninput: "this.value = this.value.replace(/[^0-9.]/g,'');" %>
-                </div>
+    <div class="col-md-6">
+        <%= f.label :category_id, "Category", class: "form-label" %>
+        <%= f.collection_select :category_id, Category.all, :id, :name, { prompt: "Chọn loại" }, { class: "form-select", required: true } %>
+    </div>
 
-                <!-- Category -->
-                <div class="col-md-6">
-                    <%= f.label :category_id, "Category", class: "form-label" %>
-                    <%= f.collection_select :category_id, Category.all, :id, :name,
-                  { prompt: "Chọn loại" },
-                  { class: "form-select", required: true } %>
-                </div>
+    <div class="col-md-6">
+        <%= f.label :stock, "Số lượng", class: "form-label" %>
+        <%= f.number_field :stock, id: "food_drink_stock", class: "form-control", min: 0, step: 1 %>
+    </div>
 
-                <!-- Số lượng -->
-                <div class="col-md-6">
-                    <%= f.label :stock, "Số lượng", class: "form-label" %>
-                    <%= f.number_field :stock, class: "form-control", min: 0, step: "1", oninput: "this.value = this.value.replace(/[^0-9]/g,'');" %>
-                </div>
+    <div class="col-12">
+        <%= f.label :description, "Mô tả", class: "form-label" %>
+        <%= f.text_area :description, class: "form-control", rows: 3 %>
+    </div>
 
-                <!-- Mô tả -->
-                <div class="col-12">
-                    <%= f.label :description, "Mô tả", class: "form-label" %>
-                    <%= f.text_area :description, class: "form-control", rows: 3 %>
-                </div>
+    <div class="col-12">
+        <%= f.label :image, "Ảnh", class: "form-label" %>
+        <%= f.file_field :image, class: "form-control", accept: "image/*", onchange: "previewImage(event)" %>
 
-                <!-- Ảnh -->
-                <div class="col-12">
-                    <%= f.label :image, "Ảnh", class: "form-label" %>
-                    <%= f.file_field :image, class: "form-control", accept: "image/*", onchange: "previewImage(event)" %>
-
-                    <div class="mt-2">
-                        <img id="image-preview" src="<%= url_for(food_drink.image) if food_drink.image.attached? %>" style="max-width: 200px; display: <%= food_drink.image.attached? ? 'block' : 'none' %>;" class="rounded shadow-sm" alt="Preview">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Nút hành động -->
-            <div class="mt-4 d-flex gap-2">
-                <%= f.submit food_drink.new_record? ? "Lưu" : "Cập nhật", class: "btn btn-primary" %>
-                <%= link_to "Quay lại", admin_food_drinks_path, class: "btn btn-secondary", data: { turbo: false } %>
-            </div>
-
-            <% end %>
+        <div class="mt-2">
+            <img id="image-preview" src="<%= url_for(food_drink.image) if food_drink.image.attached? %>" style="max-width: 200px; display: <%= food_drink.image.attached? ? 'block' : 'none' %>;" class="rounded shadow-sm" alt="Preview">
         </div>
     </div>
 </div>
+
+<div class="mt-4 d-flex gap-2">
+    <%= f.submit food_drink.new_record? ? "Lưu" : "Cập nhật", class: "btn btn-primary" %>
+    <%= link_to "Quay lại", admin_food_drinks_path, class: "btn btn-secondary", data: { turbo: false } %>
+</div>
+
+<% end %>
 
 <script>
     function previewImage(event) {
@@ -86,12 +67,33 @@
         }
     }
 
-    // Reset form sau khi submit thành công với Turbo
-    document.addEventListener("turbo:submit-end", (event) => {
-        if (event.target.id === "food_drink_form_inner" && event.detail.success) {
-            event.target.reset();
-            const preview = document.getElementById('image-preview');
-            if (preview) preview.style.display = 'none';
+    document.addEventListener("turbo:load", () => {
+        // Chặn nhập chữ cho price và stock
+        function allowOnlyNumbers(input, allowDecimal = false) {
+            input.addEventListener("keypress", (e) => {
+                const char = String.fromCharCode(e.which);
+                const isNumber = /[0-9]/.test(char);
+                const isDot = char === "." && allowDecimal && !input.value.includes(".");
+                if (!isNumber && !isDot) e.preventDefault();
+            });
+        }
+
+        const priceInput = document.getElementById("food_drink_price");
+        if (priceInput) allowOnlyNumbers(priceInput, true);
+
+        const stockInput = document.getElementById("food_drink_stock");
+        if (stockInput) allowOnlyNumbers(stockInput, false);
+
+        // Reset form khi thêm mới (nếu new_record)
+        const form = document.getElementById("food_drink_form_inner");
+        if (form && < %= food_drink.new_record ? % > ) {
+            form.addEventListener("turbo:submit-end", (event) => {
+                if (event.detail.success) {
+                    form.reset();
+                    const preview = document.getElementById("image-preview");
+                    if (preview) preview.style.display = "none";
+                }
+            });
         }
     });
 </script>

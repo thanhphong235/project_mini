@@ -1,6 +1,6 @@
 class FoodDrink < ApplicationRecord
   belongs_to :category
-  has_one_attached :image
+  has_one_attached :image,dependent: :purge_later
 
   validates :name, presence: true
   validates :price, presence: true, numericality: true

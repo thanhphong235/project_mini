@@ -47,22 +47,19 @@
 
                     <%= link_to "Xóa", admin_food_drink_path(fd),
                         data: {
-                            turbo_method: :delete,
-                            turbo_confirm: fd.order_items.any? ?
-                                "⚠️ Món ăn này đang có đơn hàng. Bạn chắc chắn muốn xoá?" :
-                                "Bạn có chắc chắn muốn xoá món ăn/thức uống này?"
+                          turbo_method: :delete,
+                          turbo_confirm: fd.order_items.any? ?
+                            "⚠️ Món ăn này đang có đơn hàng. Bạn chắc chắn muốn xoá?" :
+                            "Bạn có chắc chắn muốn xoá món ăn/thức uống này?"
                         },
                         class: "btn btn-danger btn-sm" %>
                 </div>
             </td>
-
-
         </tr>
         <% end %>
     </tbody>
 </table>
 
-<!-- JS chọn / bỏ chọn tất cả -->
 <script>
     document.addEventListener("turbo:load", () => {
         const selectAllCheckbox = document.getElementById("select_all_checkbox");

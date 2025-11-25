@@ -87,29 +87,77 @@ class Admin::FoodDrinksController < ApplicationController
     if @food_drink.destroy
       respond_to do |format|
         format.html { redirect_to admin_food_drinks_path, notice: "Đã xoá món ăn/thức uống." }
-        format.turbo_stream { render turbo_stream: turbo_stream.remove(@food_drink) }
+        format.turbo_stream { render turbo_stream: turbo_stream.remove(helpers.dom_id(@food_drink)) }
       end
     else
-      redirect_to admin_food_drinks_path, alert: "Không thể xoá món ăn/thức uống."
+      respond_to do |format|
+        format.html { redirect_to admin_food_drinks_path, alert: "Không thể xoá món ăn/thức uống." }
+        format.turbo_stream do
+          flash.now[:alert] = "Không thể xoá món ăn/thức uống."
+          render turbo_stream: turbo_stream.replace("flash_messages", partial: "shared/flash")
+        end
+      end
     end
   rescue ActiveRecord::InvalidForeignKey
-    redirect_to admin_food_drinks_path, alert: "Không thể xoá món ăn/thức uống vì đang có đơn hàng liên quan."
+    respond_to do |format|
+      format.html { redirect_to admin_food_drinks_path, alert: "Không thể xoá món ăn/thức uống vì đang có đơn hàng liên quan." }
+      format.turbo_stream do
+        flash.now[:alert] = "Không thể xoá món ăn/thức uống vì đang có đơn hàng liên quan."
+        render turbo_stream: turbo_stream.replace("flash_messages", partial: "shared/flash")
+      end
+    end
   end
 
   # DELETE /admin/food_drinks/bulk_delete
-  def bulk_delete
-    ids = params.dig(:food_drink, :food_drink_ids) || []
+def bulk_delete
+  ids = params.dig(:food_drink, :food_drink_ids) || []
 
-    if ids.any?
-      FoodDrink.where(id: ids).destroy_all
-      flash[:notice] = "Đã xoá các món đã chọn."
-    else
-      flash[:alert] = "Bạn chưa chọn món nào để xoá."
+  if ids.blank?
+    respond_to do |format|
+      format.html do
+        redirect_to admin_food_drinks_path, alert: "Bạn chưa chọn món nào để xoá."
+      end
+
+      format.turbo_stream do
+        flash.now[:alert] = "Bạn chưa chọn món nào để xoá."
+        render turbo_stream: turbo_stream.replace("flash_messages", partial: "shared/flash")
+      end
     end
-    redirect_to admin_food_drinks_path
-  rescue ActiveRecord::InvalidForeignKey
-    redirect_to admin_food_drinks_path, alert: "Không thể xoá vì một số món đang có đơn hàng liên quan."
+    return
   end
+
+  begin
+    # Destroy each, collect DOM ids
+    deleted_ids = []
+    FoodDrink.where(id: ids).find_each do |fd|
+      if fd.destroy
+        deleted_ids << "food_drink_#{fd.id}" # <-- fix dom_id issue
+      end
+    end
+
+    respond_to do |format|
+      format.html do
+        flash[:notice] = "Đã xoá #{deleted_ids.size} món."
+        redirect_to admin_food_drinks_path
+      end
+
+      format.turbo_stream do
+        flash.now[:notice] = "Đã xoá #{deleted_ids.size} món."
+        streams = deleted_ids.map { |dom| turbo_stream.remove(dom) }
+        streams << turbo_stream.replace("flash_messages", partial: "shared/flash")
+        render turbo_stream: streams
+      end
+    end
+  rescue ActiveRecord::InvalidForeignKey
+    respond_to do |format|
+      format.html { redirect_to admin_food_drinks_path, alert: "Không thể xoá vì một số món đang có đơn hàng liên quan." }
+      format.turbo_stream do
+        flash.now[:alert] = "Không thể xoá vì một số món đang có đơn hàng liên quan."
+        render turbo_stream: turbo_stream.replace("flash_messages", partial: "shared/flash")
+      end
+    end
+  end
+end
 
   private
 

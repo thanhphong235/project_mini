@@ -93,9 +93,17 @@
     <!-- Main -->
     <main class="flex-grow-1" style="padding-top: 80px;">
         <div class="container mt-4">
+
+            <!-- FLASH for Turbo Stream -->
+            <%= turbo_frame_tag "flash_messages" do %>
+            <%= render "shared/flash" %>
+            <% end %>
+
             <%= yield %>
         </div>
     </main>
+
+
 
     <!-- Footer -->
     <footer class="bg-dark text-light py-3 mt-auto">

@@ -1,31 +1,13 @@
 <div class="card shadow-sm mb-4">
     <div class="card-header bg-primary text-white">
-        <h3 class="mb-0">Sửa Món ăn</h3>
+        <h3 class="mb-0">Chỉnh sửa món ăn</h3>
     </div>
 
     <div class="card-body">
-
-        <!-- Flash messages -->
         <%= render "shared/flash" %>
 
-        <!-- Form -->
-        <div id="food_drink_form_edit">
-            <%= render "form_edit", food_drink: @food_drink %>
+        <div id="food_drink_form">
+            <%= render "form", food_drink: @food_drink %>
         </div>
-
     </div>
 </div>
-
-<script>
-    function previewImage(event) {
-        const input = event.target;
-        const preview = document.getElementById('image-preview');
-        if (input.files && input.files[0]) {
-            preview.src = URL.createObjectURL(input.files[0]);
-            preview.style.display = 'block';
-        } else {
-            preview.src = '';
-            preview.style.display = 'none';
-        }
-    }
-</script>

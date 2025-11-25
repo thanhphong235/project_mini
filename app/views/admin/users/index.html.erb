@@ -49,10 +49,11 @@
                     <i class="bi bi-eye"></i> Xem
                     <% end %>
                     <%= link_to admin_user_path(user),
-                  data: { turbo_method: :delete, turbo_confirm: "Bạn có chắc chắn muốn xóa người dùng này?" },
-                  class: "btn btn-sm btn-outline-danger", title: "Xóa người dùng" do %>
+    data: { turbo_method: :delete, turbo_confirm: "Bạn có chắc chắn muốn xóa người dùng này?" },
+    class: "btn btn-sm btn-outline-danger", title: "Xóa người dùng" do %>
                     <i class="bi bi-trash"></i> Xóa
                     <% end %>
+
                 </td>
             </tr>
             <% end %>

@@ -1,1369 +1,263 @@
-// 🎨 Custom style for Foods & Drinks app
-
+/* ================================
+   Global Styles
+   ================================ */
 body {
   background-color: #fafafa;
   font-family: "Poppins", sans-serif;
   color: #333;
   display: flex;
   flex-direction: column;
-  min-height: 100vh; // Giữ footer luôn ở đáy
-}
-
-main {
-  flex: 1; // Giúp main chiếm hết chiều cao trống
-  padding-bottom: 3rem; // 🔹 Tạo khoảng trống giữa nội dung và footer
-}
-
-// ================================
-// Footer Styles
-// ================================
-footer, .app-footer {
-  background-color: #333;
-  color: #ccc; // 🔹 Sửa lại màu text cho dễ đọc
-  font-size: 0.85rem;
-  padding: 2rem 0; // 🔹 Tăng padding cho thoáng
-  line-height: 1.5;
-  margin-top: 3rem; // 🔹 Cách phần nội dung ra một đoạn
-
-  h5, h6 {
-    color: #fff;
-    font-size: 1rem;
-    margin-bottom: 0.75rem;
-  }
-
-  p, a {
-    font-size: 0.85rem;
-  }
-
-  a {
-    color: #bbb;
-    transition: color 0.2s ease, transform 0.2s ease;
-
-    &:hover {
-      color: #fff;
-      transform: translateY(-1px);
-      text-decoration: none;
-    }
-  }
-
-  ul {
-    padding-left: 0;
-    list-style: none;
-    margin-bottom: 0;
-
-    li {
-      margin-bottom: 0.4rem;
-    }
-  }
-
-  hr {
-    margin: 1rem 0;
-    border-color: #444;
-  }
-
-  .bi {
-    font-size: 1.1rem;
-  }
-
-  @media (max-width: 768px) {
-    .row {
-      text-align: center;
-      > div {
-        margin-bottom: 1rem;
-      }
-    }
-  }
-}
-
-// ================================
-// Navbar
-// ================================
-.navbar {
-  border-bottom: 2px solid #eee;
-
-  .navbar-brand {
-    font-weight: 600;
-    font-size: 1.3rem;
-  }
-
-  .nav-link {
-    color: #ddd !important;
-    &:hover {
-      color: #fff !important;
-    }
-  }
-}
-
-// ================================
-// Card
-// ================================
-.card {
-  border: none;
-  border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  transition: all 0.3s ease-in-out;
-
-  &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-  }
-
-  .card-body {
-    padding: 1.2rem;
-  }
-}
-
-// ================================
-// Buttons
-// ================================
-.btn {
-  border-radius: 30px;
-  font-weight: 500;
-  transition: all 0.2s;
-
-  &.btn-outline-primary:hover {
-    background-color: #0d6efd;
-    color: white;
-  }
-  &.btn-outline-success:hover {
-    background-color: #198754;
-    color: white;
-  }
-  &.btn-outline-danger:hover {
-    background-color: #dc3545;
-    color: white;
-  }
-}
-
-// ================================
-// Alerts
-// ================================
-.alert {
-  border-radius: 10px;
-}
-
-h1, h2, h3 {
-  font-weight: 600;
-}
-
-// ================================
-// Filter Buttons
-// ================================
-.filter-buttons {
-  text-align: center;
-  margin-bottom: 20px;
-
-  a {
-    margin: 0 5px;
-  }
-}
-
-// ================================
-// Login Page
-// ================================
-body.login-page {
-  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
-.login-card {
-  border-radius: 1rem;
-  padding: 2rem;
-  background-color: #ffffff;
-  box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.2);
+main { flex: 1; padding-bottom: 3rem; }
 
-  .form-control:focus {
-    border-color: #2575fc;
-    box-shadow: 0 0 0 0.2rem rgba(37,117,252,0.25);
-  }
+h1,h2,h3{ font-weight:600; }
 
-  .btn-primary {
-    background-color: #2575fc;
-    border-color: #2575fc;
-
-    &:hover {
-      background-color: #1356d6;
-      border-color: #1356d6;
-    }
-  }
-
-  h2.card-title {
-    font-weight: 600;
-    color: #333333;
-  }
-
-  small.form-text a {
-    color: #2575fc;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-}
-
-// ================================
-// Suggestion Floating Button
-// ================================
-#suggestion-button {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 1050;
-
-  .btn {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    font-size: 24px;
-  }
-}
-
-// ================================
-// Admin Order Statistics
-// ================================
-.order-statistics {
-  .container {
-    max-width: 900px;
-    margin: 30px auto;
-    background-color: #ffffff;
-    padding: 25px;
-    border-radius: 15px;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-  }
-
-  h1 {
-    text-align: center;
-    color: #2c3e50;
-    margin-bottom: 20px;
-    font-size: 28px;
-  }
-
-  p {
-    font-size: 16px;
-    margin-bottom: 10px;
-    color: #555;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-
-    th, td {
-      border: 1px solid #ddd;
-      padding: 12px 8px;
-      text-align: center;
-    }
-
-    th {
-      background-color: #3498db;
-      color: #fff;
-      font-weight: 600;
-    }
-
-    tr:nth-child(even) {
-      background-color: #f7f7f7;
-    }
-
-    tr:hover {
-      background-color: #e6f0ff;
-    }
-  }
-
-  .summary {
-    margin-top: 20px;
-    text-align: right;
-
-    p {
-      font-size: 18px;
-      font-weight: 600;
-      color: #2c3e50;
-    }
-  }
-}
-
-// ================================
-// Rating Form
-// ================================
-.rating-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-/* Thanh sao */
-#star-rating {
-  display: flex;
-  gap: 4px;
-  user-select: none;
-  margin-top: 0.4rem;
-
-  input {
-    display: none;
-  }
-
-  label {
-    font-size: 2.6rem;
-    color: #ddd;
-    cursor: pointer;
-    transition: all 0.25s ease;
-    text-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
-  }
-
-  /* Hover vàng cam */
-  label:hover,
-  label:hover ~ label {
-    color: #ffcc00;
-    text-shadow: 0 0 10px rgba(255, 204, 0, 0.8);
-    transform: scale(1.1);
-  }
-
-  /* Khi sao được chọn */
-  input:checked + label,
-  input:checked ~ label {
-    color: #ffb400;
-    text-shadow: 0 0 12px rgba(255, 165, 0, 0.9);
-    background: linear-gradient(180deg, #ffea00 10%, #ffb400 60%, #ff8800 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: shopee-pop 0.35s ease;
-  }
-}
-
-/* Hiệu ứng nảy */
-@keyframes shopee-pop {
-  0% { transform: scale(0.7) rotate(-10deg); }
-  50% { transform: scale(1.3) rotate(5deg); }
-  100% { transform: scale(1) rotate(0deg); }
-}
-
-/* Ô nhập điểm */
-.rating-input {
-  width: 6rem;
-  text-align: center;
-  margin-top: 0.3rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-weight: 500;
-  transition: box-shadow 0.2s ease, border-color 0.2s ease;
-
-  &:focus {
-    box-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
-    border-color: #ffcc00;
-    outline: none;
-  }
-}
-
-.food-drink-checkbox {
-  width: 20px;
-  height: 20px;
-  border: 0.5px solid #000;
- 
-}
-
-// /* Khi được chọn */
-// .food-drink-checkbox:checked {
-//   background-color: #0d6efd; /* màu xanh giống Bootstrap */
-//   border-color: #0d6efd;
-// }
-
-// /* Dấu tick */
-// .food-drink-checkbox:checked::after {
-//   content: "✔";
-//   color: white;
-//   font-size: 14px;
-//   position: absolute;
-//   top: -1px;
-//   left: 3px;
-// }
-// nút gửi góp ý
-.btn-gradient-success {
-  background: linear-gradient(135deg, #28a745, #198754);
-  color: #fff;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  border: none;
-  border-radius: 0.75rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-
-  &:hover {
-    background: linear-gradient(135deg, #198754, #28a745);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
-  }
-
-  &:active {
-    transform: translateY(0);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  }
-
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 0.3rem rgba(25,135,84,0.4);
-  }
-}
-
-//admin dashboard
-    .hover-shadow:hover {
-        transform: translateY(-5px);
-        transition: all 0.3s ease;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
-    }
-
-// admin user index
-    .table-hover tbody tr:hover {
-        background-color: rgba(0, 123, 255, 0.05);
-        transform: translateX(2px);
-        transition: all 0.2s ease-in-out;
-    }
-
-    .table-responsive {
-        background: #fff;
-        padding: 0.5rem;
-        border-radius: 0.5rem;
-    }
-
-    .badge {
-        font-size: 0.85em;
-        padding: 0.45em 0.6em;
-    }
-// admin user show
-    .w-45 {
-        width: 48%;
-    }
-
-    .card:hover {
-        transform: translateY(-3px);
-        transition: all 0.2s ease-in-out;
-    }
-//admin category
-    /* Hover row nhẹ */
-    .table-hover tbody tr:hover {
-        background-color: rgba(0, 123, 255, 0.05);
-        transform: translateX(2px);
-        transition: all 0.2s ease-in-out;
-    }
-
-    /* Shadow và padding bảng */
-    .table-responsive {
-        background-color: #fff;
-        padding: 0.5rem;
-        border-radius: 0.5rem;
-    }
-
-    /* Buttons nhỏ gọn, có icon */
-    .btn-sm i {
-        margin-right: 4px;
-    }
-// admin category show
-    .w-45 {
-        width: 48%;
-    }
-
-    .card:hover {
-        transform: translateY(-3px);
-        transition: all 0.2s ease-in-out;
-    }
-
-    .list-group-item {
-        font-size: 1rem;
-    }
-//admin category edit
-    .card:hover {
-        transform: translateY(-3px);
-        transition: all 0.2s ease-in-out;
-    }
-
-    .form-control {
-        border-radius: 0.375rem;
-    }
-
-    .flex-grow-1 {
-        flex-grow: 1;
-    }
-// admin category new 
-    .card:hover {
-        transform: translateY(-3px);
-        transition: all 0.2s ease-in-out;
-    }
-
-    .form-control {
-        border-radius: 0.375rem;
-    }
-
-    .flex-grow-1 {
-        flex-grow: 1;
-    }
 /* ================================
-   Food & Drinks Header
+   Footer
    ================================ */
-.food-drinks-header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-
-  .back-button {
-    flex: 0 0 auto;
-
-    a.btn {
-      border-radius: 30px;
-      font-weight: 500;
-      transition: all 0.2s ease;
-
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-      }
-    }
-  }
-
-  h1 {
-    flex-grow: 1;
-    text-align: center;
-    margin: 0;
-    font-size: 2rem;
-    font-weight: 700;
-    color: #000;
-  }
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    h1 {
-      margin-top: 0.5rem;
-    }
-    .back-button {
-      margin-bottom: 0.5rem;
-    }
-  }
+footer,.app-footer {
+  background:#333; color:#ccc; font-size:0.85rem; padding:2rem 0; line-height:1.5; margin-top:3rem;
 }
+footer h5,h6{ color:#fff; font-size:1rem; margin-bottom:0.75rem; }
+footer p,a{ font-size:0.85rem; }
+footer a{ color:#bbb; transition:.2s; }
+footer a:hover{ color:#fff; transform:translateY(-1px); text-decoration:none; }
+footer ul{ padding-left:0; list-style:none; margin-bottom:0; }
+footer ul li{ margin-bottom:0.4rem; }
+footer hr{ margin:1rem 0; border-color:#444; }
+footer .bi{ font-size:1.1rem; }
+@media (max-width:768px){ footer .row{text-align:center;} footer .row>div{margin-bottom:1rem;} }
+
+/* ================================
+   Navbar
+   ================================ */
+.navbar{ border-bottom:2px solid #eee; }
+.navbar-brand{ font-weight:600; font-size:1.3rem; }
+.nav-link{ color:#ddd !important; }
+.nav-link:hover{ color:#fff !important; }
+
+/* ================================
+   Cards
+   ================================ */
+.card{ border:none; border-radius:15px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.1); transition:all .3s; }
+.card:hover{ transform:translateY(-3px); box-shadow:0 8px 20px rgba(0,0,0,0.15); }
+.card-body{ padding:1.2rem; }
+
+/* ================================
+   Buttons
+   ================================ */
+.btn{ border-radius:30px; font-weight:500; transition:.2s; }
+.btn-outline-primary:hover{ background:#0d6efd; color:#fff; }
+.btn-outline-success:hover{ background:#198754; color:#fff; }
+.btn-outline-danger:hover{ background:#dc3545; color:#fff; }
+
+/* ================================
+   Alerts
+   ================================ */
+.alert{ border-radius:10px; }
+
+/* ================================
+   Filter Buttons
+   ================================ */
+.filter-buttons{ text-align:center; margin-bottom:20px; }
+.filter-buttons a{ margin:0 5px; }
+
+/* ================================
+   Login Page
+   ================================ */
+body.login-page{ background:linear-gradient(135deg,#6a11cb 0%,#2575fc 100%); display:flex; justify-content:center; align-items:center; }
+.login-card{ border-radius:1rem; padding:2rem; background:#fff; box-shadow:0 0.5rem 1.5rem rgba(0,0,0,0.2); }
+.login-card .form-control:focus{ border-color:#2575fc; box-shadow:0 0 0 0.2rem rgba(37,117,252,0.25); }
+.login-card .btn-primary{ background:#2575fc; border-color:#2575fc; }
+.login-card .btn-primary:hover{ background:#1356d6; border-color:#1356d6; }
+.login-card h2.card-title{ font-weight:600; color:#333; }
+.login-card small.form-text a{ color:#2575fc; }
+.login-card small.form-text a:hover{ text-decoration:underline; }
+
+/* ================================
+   Suggestion Floating Button
+   ================================ */
+#suggestion-button .btn{ width:60px; height:60px; border-radius:50%; box-shadow:0 4px 10px rgba(0,0,0,0.3); font-size:24px; }
+#suggestion-button{ position:fixed; bottom:20px; right:20px; z-index:1050; }
+
+/* ================================
+   Rating Form
+   ================================ */
+.rating-wrapper{ display:flex; flex-direction:column; align-items:flex-start; }
+#star-rating{ display:flex; gap:4px; user-select:none; margin-top:.4rem; }
+#star-rating input{ display:none; }
+#star-rating label{ font-size:2.6rem; color:#ddd; cursor:pointer; transition:.25s; text-shadow:0 0 3px rgba(0,0,0,.15); }
+#star-rating label:hover, #star-rating label:hover~label{ color:#ffcc00; transform:scale(1.1); }
+#star-rating input:checked+label, #star-rating input:checked~label{ color:#ffb400; background:linear-gradient(180deg,#ffea00 10%,#ffb400 60%,#ff8800 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation:shopee-pop .35s ease; }
+@keyframes shopee-pop{0%{transform:scale(0.7) rotate(-10deg);}50%{transform:scale(1.3) rotate(5deg);}100%{transform:scale(1) rotate(0deg);}}
+.rating-input{ width:6rem; text-align:center; margin-top:.3rem; border:1px solid #ccc; border-radius:8px; font-weight:500; transition:.2s; }
+.rating-input:focus{ box-shadow:0 0 8px rgba(255,215,0,.6); border-color:#ffcc00; outline:none; }
+
+/* ================================
+   Category & Food/Drink Header
+   ================================ */
+.food-drinks-header{ display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem; }
+.food-drinks-header h1{ flex-grow:1; text-align:center; font-size:2rem; font-weight:700; color:#000; margin:0; }
+.food-drinks-header .back-button a.btn{ border-radius:30px; font-weight:500; transition:.2s; }
+.food-drinks-header .back-button a.btn:hover{ transform:translateY(-2px); box-shadow:0 2px 6px rgba(0,0,0,.15); }
+@media(max-width:768px){ .food-drinks-header{ flex-direction:column; } .food-drinks-header h1{ margin-top:.5rem; } .food-drinks-header .back-button{ margin-bottom:.5rem; } }
 
 /* ================================
    Category Buttons
    ================================ */
-.category-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center; /* căn giữa */
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+.category-buttons{ display:flex; flex-wrap:wrap; justify-content:center; gap:.5rem; margin-bottom:1rem; }
+.category-buttons a.btn{ border-radius:30px; padding:.45rem 1rem; font-weight:500; transition:.2s; text-align:center; }
+.category-buttons a.btn:hover{ transform:translateY(-2px); box-shadow:0 2px 6px rgba(0,0,0,.15); }
+.category-buttons .btn-primary{ background:#0d6efd; color:#fff; }
+.category-buttons .btn-secondary{ background:#6c757d; color:#fff; }
 
-  a.btn {
+/* ================================
+   Toolbar
+   ================================ */
+.toolbar-wrapper{ display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; justify-content:flex-start; }
+.toolbar-wrapper .left-actions{ display:flex; gap:.5rem; flex-wrap:wrap; }
+.toolbar-wrapper .filter-form{ display:flex; gap:.5rem; align-items:center; margin-left:auto; }
+.toolbar-wrapper .filter-form .form-control,.toolbar-wrapper .filter-form .form-select{ min-width:180px; }
+@media(max-width:768px){
+  .toolbar-wrapper{ flex-direction:column; align-items:stretch; }
+  .toolbar-wrapper .filter-form{ margin-left:0; flex-direction:column; width:100%; }
+  .toolbar-wrapper .filter-form .form-control,.toolbar-wrapper .filter-form .form-select,.toolbar-wrapper .filter-form .btn-primary{ width:100%; }
+}
+
+/* ================================
+   Tables & Admin
+   ================================ */
+.table-hover tbody tr:hover{ background-color:rgba(0,123,255,.05); transform:translateX(2px); transition:.2s ease-in-out; }
+.table-responsive{ background:#fff; padding:.5rem; border-radius:.5rem; overflow-x:auto; }
+.table td.actions-column{ width:130px; white-space:nowrap; }
+.action-buttons{ display:flex; gap:8px; align-items:center; }
+.badge{ font-size:.85em; padding:.45em .6em; border-radius:6px; }
+
+/* ================================
+   Responsive Minor Fixes
+   ================================ */
+@media(max-width:768px){
+  .table th,.table td{ font-size:0.85rem; padding:.5rem; }
+  .suggestions-table{ min-width:650px; }
+  .action-buttons .btn{ min-width:55px; padding:.25rem .4rem; font-size:.7rem; }
+}
+
+/* ================================
+   Admin Order Statistics Page
+   ================================ */
+.order-statistics {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  margin-bottom: 3rem;
+
+  h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 1rem;
+  }
+
+  /* Nút bấm */
+  .btn {
     border-radius: 30px;
-    padding: 0.45rem 1rem;
     font-weight: 500;
-    transition: all 0.2s ease;
-    text-align: center;
+    transition: all 0.2s;
 
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    &.btn-outline-secondary:hover {
+      background-color: #6c757d;
+      color: #fff;
     }
 
     &.btn-primary {
       background-color: #0d6efd;
-      color: #fff;
-    }
-
-    &.btn-secondary {
-      background-color: #6c757d;
-      color: #fff;
-    }
-  }
-}
-
-/* ================================
-   Toolbar wrapper (Chọn tất cả + actions + filter)
-   ================================ */
-.toolbar-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start; // left-actions trái
-  flex-wrap: wrap;
-  gap: 0.5rem;
-
-  .left-actions {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-  }
-
-  .filter-form {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    margin-left: auto; // ép sang phải
-
-    .form-control,
-    .form-select {
-      min-width: 180px;
-    }
-
-    .btn-primary {
-      white-space: nowrap;
-    }
-  }
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: stretch;
-
-    .filter-form {
-      margin-left: 0; // bỏ margin-left trên mobile
-      flex-direction: column;
-      width: 100%;
-
-      .form-control,
-      .form-select,
-      .btn-primary {
-        width: 100%;
+      border-color: #0d6efd;
+      &:hover {
+        background-color: #0b5ed7;
+        border-color: #0a58ca;
       }
     }
 
-    .left-actions {
-      width: 100%;
-      justify-content: flex-start;
-      margin-bottom: 0.5rem;
-    }
-  }
-}
-
-
-
-/* ================================
-   Responsive
-   ================================ */
-@media (max-width: 768px) {
-  .toolbar-wrapper {
-    flex-direction: column;
-    align-items: stretch;
-
-    #select_all_btn {
-      width: 100%;
-      margin-bottom: 0.5rem;
-    }
-
-    .actions,
-    .filter-form {
-      width: 100%;
-      justify-content: center;
-    }
-
-    .filter-form {
-      flex-direction: column;
-      gap: 0.5rem;
-
-      .form-control,
-      .form-select,
-      .btn-primary {
-        width: 100%;
-      }
-    }
-  }
-}
-// admin foodDrink list
-/* Khóa độ rộng cột hành động */
-.table td.actions-column {
-    width: 130px; /* Bạn có thể tăng lên 140–150 nếu muốn */
-    white-space: nowrap; /* Ngăn xuống dòng */
-}
-
-/* Căn nút đều nhau */
-.action-buttons {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-}
-// admin order
-/* --- CARD --- */
-.orders-card {
-    padding: 24px;
-    margin-bottom: 24px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    border-radius: 12px;
-}
-
-/* --- HEADER --- */
-.orders-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 18px;
-}
-
-.back-btn {
-    padding-left: 16px;
-    padding-right: 16px;
-}
-
-.orders-title {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #000;
-    margin: 0;
-}
-
-.header-placeholder {
-    width: 120px;
-}
-
-/* --- FLASH --- */
-.flash-box {
-    margin-bottom: 10px;
-}
-
-/* --- TABLE --- */
-.orders-wrapper {
-  background: #fff;
-  border-radius: 14px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  overflow: hidden;
-  padding: 1rem;
-
-  .orders-table {
-    width: 100%;
-    border-collapse: collapse;
-    
-    th, td {
-      text-align: center;
-      vertical-align: middle;
-      padding: 0.85rem 0.75rem;
-    }
-
-    thead th {
-      text-transform: uppercase;
-      font-weight: 600;
-      font-size: 0.9rem;
-      letter-spacing: 0.4px;
-    }
-
-    .col-index { width: 60px; }
-    .col-actions { width: 170px; min-width: 170px; }
-  }
-}
-
-
-/* Button container trong cột Hành động */
-.action-buttons {
-    display: flex;
-    gap: 8px;
-    white-space: nowrap;
-}
-// admin order show
-/* Card chính */
-.order-detail-card {
-  padding: 2rem;
-  margin: 2rem auto;
-  max-width: 900px;
-  border-radius: 0.75rem;
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-  background-color: #fff;
-}
-
-/* Header */
-.order-header {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-
-  .order-info {
-    p {
-      margin: 0.2rem 0;
-      font-size: 1rem;
-      color: #333;
-    }
-
-    .status-badge {
-      display: inline-block;
-      padding: 0.25rem 0.6rem;
-      border-radius: 0.5rem;
-      font-weight: 500;
-      text-transform: capitalize;
-      color: #fff;
-
-      &.pending { background-color: #ffc107; }  // Vàng
-      &.confirmed { background-color: #0d6efd; } // Xanh dương
-      &.delivered { background-color: #198754; } // Xanh lá
-      &.cancelled { background-color: #dc3545; } // Đỏ
-    }
-  }
-}
-
-/* Table sản phẩm */
-.order-items-table {
-  th, td {
-    vertical-align: middle;
-    text-align: center;
-    font-size: 0.95rem;
-  }
-}
-
-/* Form cập nhật */
-.update-status-form {
-  .btn-update-status {
-    min-width: 120px;
-  }
-}
-
-/* Flash messages */
-#flash_messages {
-  .alert {
-    margin-bottom: 0;
-    font-size: 0.95rem;
-  }
-}
-
-/* Footer actions */
-.d-flex.gap-2 {
-  margin-top: 1rem;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .order-detail-card {
-    padding: 1rem;
-  }
-
-  .order-items-table {
-    font-size: 0.85rem;
-  }
-}
-// admin suggestion index
-/* ============================
-   🎨 Suggestions Table Styles
-   ============================ */
-
-.table {
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.table thead {
-  font-size: 15px;
-  letter-spacing: 0.5px;
-}
-
-.table-dark th {
-  background: #212529 !important;
-  color: #fff !important;
-  text-transform: uppercase;
-  font-weight: 600;
-}
-
-.table-hover tbody tr:hover {
-  background-color: #f4f4f4 !important;
-}
-
-.table td,
-.table th {
-  vertical-align: middle;
-  padding: 12px 14px;
-}
-
-/* Badge trạng thái */
-.badge {
-  padding: 6px 10px;
-  font-size: 12px;
-  border-radius: 6px;
-  text-transform: capitalize;
-}
-
-.badge.bg-success {
-  background-color: #28a745 !important;
-}
-
-.badge.bg-danger {
-  background-color: #dc3545 !important;
-}
-
-.badge.bg-secondary {
-  background-color: #6c757d !important;
-}
-
-/* Hành động */
-td:last-child {
-  white-space: nowrap;
-}
-
-.btn-sm {
-  padding: 6px 10px !important;
-  font-size: 13px;
-  border-radius: 6px;
-}
-
-.btn-info {
-  background-color: #0dcaf0;
-  color: #fff;
-  border: none;
-}
-
-.btn-info:hover {
-  background-color: #0bb3d6;
-}
-
-.btn-warning {
-  background-color: #ffc107;
-  border: none;
-  color: #000;
-}
-
-.btn-warning:hover {
-  background-color: #e0ac05;
-}
-
-.btn-danger {
-  background-color: #dc3545;
-  border: none;
-}
-
-.btn-danger:hover {
-  background-color: #c82333;
-}
-
-/* Card-style container */
-.suggestions-wrapper {
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-/* Tiêu đề */
-h1.page-title {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #222;
-}
-
-//admin suggestion show 
-.suggestion-detail {
-  background: #fff;
-  padding: 2rem;
-  max-width: 700px;
-  margin: 2rem auto;
-  border-radius: 16px;
-  box-shadow: 0 4px 18px rgba(0,0,0,0.08);
-
-  h2 {
-    font-weight: 600;
-    margin-bottom: 1.5rem;
-  }
-
-  .detail-row {
-    display: flex;
-    margin-bottom: 1rem;
-
-    .label {
-      width: 150px;
-      font-weight: 600;
-      color: #333;
-    }
-
-    .value {
-      flex: 1;
-
-      p {
-        margin: 0;        // XÓA MARGIN CỦA simple_format
-        line-height: 1.6; // Đẹp chữ
+    &.btn-success {
+      background-color: #198754;
+      border-color: #198754;
+      &:hover {
+        background-color: #157347;
+        border-color: #146c43;
       }
     }
   }
 
-  hr {
-    margin: 2rem 0;
-  }
-
-  .detail-actions {
-    display: flex;
-    gap: 1rem;
-  }
-}
-//admin suggestion edit
-/* ==============================
-   Form cập nhật trạng thái góp ý
-   ============================== */
-.suggestion-detail {
-  background-color: #ffffff;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  max-width: 700px;
-  margin: 2rem auto;
-  font-family: "Poppins", sans-serif;
-}
-
-.suggestion-detail h2 {
-  text-align: center;
-  color: #000;
-  margin-bottom: 1.5rem;
-  font-weight: 600;
-}
-
-.detail-row {
-  display: flex;
-  margin-bottom: 1rem;
-}
-
-.detail-row .label {
-  width: 150px;
-  font-weight: 500;
-  color: #1f2937;
-}
-
-.detail-row .value {
-  flex: 1;
-  color: #374151;
-}
-
-.update-status-form .form-select {
-  width: 200px;
-  border-radius: 8px;
-  border: 1px solid #d1d5db;
-  padding: 0.4rem 0.6rem;
-}
-
-.update-status-form .form-select:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 0.2rem rgba(59,130,246,0.25);
-  outline: none;
-}
-
-.detail-actions {
-  display: flex;
-  justify-content: flex-start;
-  margin-top: 1rem;
-}
-
-.detail-actions .btn {
-  border-radius: 8px;
-  font-weight: 500;
-  padding: 0.5rem 1.25rem;
-  transition: all 0.2s ease-in-out;
-}
-
-.detail-actions .btn:hover {
-  transform: translateY(-2px);
-}
-
-.btn-success {
-  background-color: #10b981;
-  border-color: #10b981;
-}
-
-.btn-success:hover {
-  background-color: #059669;
-  border-color: #059669;
-}
-
-.btn-secondary {
-  background-color: #6b7280;
-  border-color: #6b7280;
-  color: #ffffff;
-}
-
-.btn-secondary:hover {
-  background-color: #4b5563;
-  border-color: #4b5563;
-}
-
-.me-2 {
-  margin-right: 0.5rem !important;
-}
-/* ============================
-   Thống kê đơn hàng - Admin
-   ============================ */
-
-.order-statistics {
-  background-color: #ffffff;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  max-width: 1000px;
-  margin: 2rem auto;
-  font-family: "Poppins", sans-serif;
-  color: #374151;
-
-  h1 {
-    font-size: 1.8rem;
-    color: #000;
-    font-weight: 600;
-    margin-bottom: 1.5rem;
-  }
-
-  // .btn {
-  //   border-radius: 8px;
-  //   font-weight: 500;
-  //   padding: 0.5rem 1.25rem;
-  //   transition: all 0.2s ease-in-out;
-  // }
-
-  .btn:hover {
-    transform: translateY(-2px);
-  }
-
-  .btn-primary {
-    background-color: #3b82f6;
-    border-color: #3b82f6;
-    color: #fff;
-  }
-
-  .btn-primary:hover {
-    background-color: #2563eb;
-    border-color: #2563eb;
-  }
-
-  .btn-success {
-    background-color: #10b981;
-    border-color: #10b981;
-    color: #fff;
-  }
-
-  .btn-success:hover {
-    background-color: #059669;
-    border-color: #059669;
-  }
-
+  /* Form chọn tháng/năm */
   form {
-    display: flex;
-    align-items: center;
     gap: 1rem;
+    display: flex;
     flex-wrap: wrap;
+    align-items: center;
 
     label {
       font-weight: 500;
       margin-right: 0.5rem;
     }
 
-    .form-select {
-      border-radius: 8px;
-      border: 1px solid #d1d5db;
-      padding: 0.35rem 0.5rem;
+    select.form-select {
       min-width: 80px;
-    }
-
-    .form-select:focus {
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
-      outline: none;
     }
   }
 
-  p {
+  /* Thông tin tổng số đơn hàng và doanh thu */
+  .mb-3 p {
     font-size: 1rem;
+    font-weight: 500;
     margin-bottom: 0.5rem;
 
     strong {
-      color: #111827;
+      color: #0d6efd;
     }
   }
 
+  /* Bảng danh sách đơn hàng */
   table {
     width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
     border-radius: 12px;
     overflow: hidden;
-    border-collapse: collapse;
-    margin-top: 1rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
 
     thead {
-      background-color: #1e3a8a;
+      background: #0d6efd;
       color: #fff;
-    }
 
-    th, td {
-      padding: 0.75rem 1rem;
-      text-align: left;
-    }
-
-    tbody tr:nth-child(even) {
-      background-color: #f3f4f6;
-    }
-
-    tbody tr:hover {
-      background-color: #e0f2fe;
-    }
-  }
-
-  .text-muted {
-    font-style: italic;
-    color: #6b7280;
-  }
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .order-statistics {
-    padding: 1rem;
-
-    form {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.5rem;
-
-      .form-select {
-        width: 100% !important;
+      th {
+        font-weight: 600;
+        text-align: center;
       }
     }
 
-    table th, table td {
-      font-size: 0.9rem;
-      padding: 0.5rem;
+    tbody {
+      tr {
+        transition: all 0.2s;
+
+        &:hover {
+          background-color: rgba(13,110,253,0.1);
+          transform: translateX(2px);
+        }
+
+        td {
+          text-align: center;
+          vertical-align: middle;
+        }
+      }
     }
 
-    h1 {
-      font-size: 1.5rem;
-    }
-  }
-}
-
-
-//user suggestion index
-/* ================================
-   Card & Table Container
-   ================================ */
-/* ===== CARD WRAPPER ===== */
-.suggestions-card {
-  margin-top: 1rem;
-  background-color: #fff;
-  border-radius: 14px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  overflow: hidden;
-
-  .card-body {
-    padding: 0;
-  }
-}
-
-/* ===== TABLE ===== */
-.suggestions-table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: auto;
-
-  th,
-  td {
-    vertical-align: middle;
-    text-align: center;
-    padding: 0.85rem 0.75rem;
-    word-break: break-word;
-  }
-
-  /* Header */
-  thead th {
-    background-color: #212529 !important;
-    color: #fff !important;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
-    font-size: 0.9rem;
-    white-space: nowrap;
-  }
-
-  /* Hover row */
-  tbody tr:hover {
-    background-color: #f5f5f5 !important;
-  }
-
-  /* Cột hành động */
-  .col-actions {
-    width: 170px;
-    min-width: 170px;
-  }
-}
-
-/* ===== BADGES ===== */
-.badge {
-  padding: 0.45rem 0.7rem;
-  font-size: 0.75rem;
-  border-radius: 6px;
-}
-
-.badge.bg-warning {
-  background-color: #ffc107 !important;
-  color: #000 !important;
-}
-
-.badge.bg-success {
-  background-color: #28a745 !important;
-}
-
-.badge.bg-secondary {
-  background-color: #6c757d !important;
-}
-
-/* ===== ACTION BUTTONS ===== */
-.action-buttons {
-  display: flex;
-  justify-content: center;
-  flex-wrap: nowrap !important;
-  gap: 6px;
-
-  .btn {
-    font-size: 0.78rem;
-    border-radius: 6px;
-    padding: 0.35rem 0.55rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.25rem;
-    min-width: 68px;
-  }
-
-  .btn-outline-info {
-    border-color: #0dcaf0;
-    color: #0dcaf0;
-  }
-
-  .btn-outline-info:hover {
-    background-color: #0dcaf0;
-    color: #fff;
-  }
-
-  .btn-outline-warning {
-    border-color: #ffc107;
-    color: #ffc107;
-  }
-
-  .btn-outline-warning:hover {
-    background-color: #ffc107;
-    color: #000;
-  }
-
-  .btn-outline-danger {
-    border-color: #dc3545;
-    color: #dc3545;
-  }
-
-  .btn-outline-danger:hover {
-    background-color: #dc3545;
-    color: #fff;
-  }
-}
-
-/* ===== RESPONSIVE ===== */
-.table-responsive {
-  overflow-x: auto;
-}
-
-@media (max-width: 768px) {
-  .suggestions-table {
-    min-width: 650px;
-
-    th,
-    td {
-      padding: 0.55rem 0.35rem;
-      font-size: 0.82rem;
-    }
-
-    .action-buttons .btn {
-      min-width: 55px;
-      padding: 0.25rem 0.4rem;
-      font-size: 0.7rem;
+    /* Responsive */
+    @media(max-width:768px) {
+      font-size: 0.85rem;
+      td, th { padding: 0.4rem; }
     }
   }
 }

@@ -12,14 +12,23 @@ module Admin
       # Hiển thị chi tiết user
     end
 
-    def destroy
-      if @user.admin?
-        redirect_to admin_users_path, alert: "Không thể xóa admin."
-      else
-        @user.destroy
-        redirect_to admin_users_path, notice: "Người dùng đã bị xóa."
-      end
+def destroy
+  if @user.admin?
+    respond_to do |format|
+      format.html { redirect_to admin_users_path, alert: "Không thể xóa admin." }
+      format.turbo_stream { flash[:alert] = "Không thể xóa admin." }
     end
+    return
+  end
+
+  @user.destroy
+
+  respond_to do |format|
+    format.html { redirect_to admin_users_path, notice: "Người dùng đã bị xóa." }
+    format.turbo_stream { flash[:notice] = "Người dùng đã bị xóa." }
+  end
+end
+
 
 
     private

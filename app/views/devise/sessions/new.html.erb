@@ -11,11 +11,15 @@
             </div>
 
             <!-- Flash -->
+            <%
+=begin%>
             <% if alert.present? %>
             <div class="alert alert-danger"><%= alert %></div>
             <% elsif notice.present? %>
             <div class="alert alert-success"><%= notice %></div>
             <% end %>
+            <%
+=end%>
 
             <%= form_for(resource,
           as: resource_name,

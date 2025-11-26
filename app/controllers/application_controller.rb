@@ -15,9 +15,9 @@ class ApplicationController < ActionController::Base
     # root_path
      if resource.admin?
        admin_dashboard_path   # Admin → vào trang admin
-     else
-        root_path
-    #   food_drinks_path       # User → vào trang food & drinks
+     else 
+        # root_path
+      food_drinks_path       # User → vào trang food & drinks
      end
   end
 

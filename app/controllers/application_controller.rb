@@ -12,12 +12,13 @@ class ApplicationController < ActionController::Base
 
   # Sau khi đăng nhập, redirect theo loại user
   def after_sign_in_path_for(resource)
-    root_path
-    # if resource.admin?
-    #   admin_dashboard_path   # Admin → vào trang admin
-    # else
+    # root_path
+     if resource.admin?
+       admin_dashboard_path   # Admin → vào trang admin
+     else
+        root_path
     #   food_drinks_path       # User → vào trang food & drinks
-    # end
+     end
   end
 
   # Sau khi đăng xuất, quay về trang chủ

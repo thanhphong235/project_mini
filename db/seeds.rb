@@ -4,31 +4,28 @@
 puts "🚀 Seed database bắt đầu..."
 
 begin
-  # ----------------------------
-  # Admin test
-  # ----------------------------
+# Admin test
+# ----------------------------
   if ActiveRecord::Base.connection.data_source_exists?('users')
-    admin_email = ENV.fetch("ADMIN_EMAIL", "admin_test@example.com")
-    admin_password = ENV.fetch("ADMIN_PASSWORD", "123456")
+    admin_email = "admin_test@example.com"
+    admin_password = "123456"
 
-    admin = User.find_or_initialize_by(email: admin_email)
-    if admin.new_record?
-      admin.name = "Admin Test"
-      admin.role = "admin"
-      admin.password = admin_password
-      admin.password_confirmation = admin_password
-      admin.confirmed_at = Time.current if admin.respond_to?(:confirmed_at)
-      admin.save!
+    admin_test = User.find_or_initialize_by(email: admin_email)
+    if admin_test.new_record?
+      admin_test.name = "Admin Test"
+      admin_test.role = "admin"  # enum hoặc string role
+      admin_test.password = admin_password
+      admin_test.password_confirmation = admin_password
+      admin_test.confirmed_at = Time.current if admin_test.respond_to?(:confirmed_at)
+      admin_test.save!
       puts "✅ Admin test mới tạo thành công!"
     else
-      admin.password = admin_password
-      admin.password_confirmation = admin_password
-      admin.save!
-      puts "⚠️ Admin test đã tồn tại. Password đã reset!"
+      puts "⚠️ Admin test đã tồn tại, không thay đổi password"
     end
   else
     puts "⚠️ Table users chưa tồn tại, bỏ qua seed admin."
   end
+
 
   # ----------------------------
   # Categories
@@ -85,7 +82,7 @@ begin
   # Orders & OrderItems
   # ----------------------------
   if ActiveRecord::Base.connection.data_source_exists?('orders') && ActiveRecord::Base.connection.data_source_exists?('order_items')
-    user = User.where.not(id: admin.id).first || User.create!(
+    user = User.where.not(id: admin_test.id).first || User.create!(
       name: "Normal User",
       email: ENV.fetch("USER_EMAIL", "user_for_seed@example.com"),
       password: ENV.fetch("USER_PASSWORD", "123456"),
@@ -130,17 +127,17 @@ begin
   if ActiveRecord::Base.connection.data_source_exists?('ratings')
     ratings_data = [
       { food_drink: fd_pizza,  user: user,  score: 5, comment: "Pizza ngon tuyệt vời!" },
-      { food_drink: fd_pizza,  user: admin, score: 4, comment: "Pizza ổn, có thể thêm phô mai." },
+      { food_drink: fd_pizza,  user: admin_test, score: 4, comment: "Pizza ổn, có thể thêm phô mai." },
       { food_drink: fd_coffee, user: user,  score: 4, comment: "Cà phê thơm, ngon." },
-      { food_drink: fd_coffee, user: admin, score: 3, comment: "Cà phê hơi đắng." },
+      { food_drink: fd_coffee, user: admin_test, score: 3, comment: "Cà phê hơi đắng." },
       { food_drink: fd_burger, user: user,  score: 5, comment: "Burger mềm, thịt ngon." },
-      { food_drink: fd_burger, user: admin, score: 4, comment: "Burger ngon, hơi ít sốt." },
+      { food_drink: fd_burger, user: admin_test, score: 4, comment: "Burger ngon, hơi ít sốt." },
       { food_drink: fd_tea,    user: user,  score: 3, comment: "Trà bình thường." },
-      { food_drink: fd_tea,    user: admin, score: 4, comment: "Trà ngon, vị thanh nhẹ." },
+      { food_drink: fd_tea,    user: admin_test, score: 4, comment: "Trà ngon, vị thanh nhẹ." },
       { food_drink: fd_sushi,  user: user,  score: 5, comment: "Sushi tươi ngon, ăn là mê!" },
-      { food_drink: fd_sushi,  user: admin, score: 4, comment: "Sushi ổn, trang trí đẹp." },
+      { food_drink: fd_sushi,  user: admin_test, score: 4, comment: "Sushi ổn, trang trí đẹp." },
       { food_drink: fd_latte,  user: user,  score: 4, comment: "Latte thơm, uống rất thích." },
-      { food_drink: fd_latte,  user: admin, score: 3, comment: "Latte ngon nhưng hơi ngọt." }
+      { food_drink: fd_latte,  user: admin_test, score: 3, comment: "Latte ngon nhưng hơi ngọt." }
     ]
 
     ratings_data.each do |data|

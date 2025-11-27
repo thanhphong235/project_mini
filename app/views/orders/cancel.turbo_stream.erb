@@ -1,0 +1,7 @@
+<%= turbo_stream.replace "order_#{@order.id}" do %>
+  <%= render partial: "orders/order_row", locals: { order: @order } %>
+<% end %>
+
+<%= turbo_stream.update "flash_messages" do %>
+  <%= render "shared/flash_messages", notice: "Bạn đã hủy đơn hàng thành công." %>
+<% end %>

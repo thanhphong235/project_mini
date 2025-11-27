@@ -54,6 +54,19 @@ class OrdersController < ApplicationController
       redirect_to cart_path, alert: "Đặt hàng thất bại, vui lòng thử lại sau."
     end
   end
+    def cancel
+    @order = current_user.orders.find(params[:id])
+
+    if @order.status != "pending"
+      redirect_to orders_path, alert: "Đơn hàng đã được xử lý, không thể hủy."
+      return
+    end
+
+    @order.update(status: "cancelled")
+
+    redirect_to orders_path, notice: "Bạn đã hủy đơn hàng thành công."
+  end
+
 
   private
 

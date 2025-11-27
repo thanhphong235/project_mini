@@ -33,17 +33,19 @@ Rails.application.routes.draw do
         delete :bulk_delete
       end
     end
+
     resources :orders, only: [:index, :show, :update, :destroy]
     resources :suggestions, only: [:index, :show, :edit, :update, :destroy]
 
     get "order_statistics", to: "dashboard#order_statistics", as: "order_statistics"
     post "send_monthly_report", to: "dashboard#send_monthly_report", as: "send_monthly_report"
   end
+
   # ======================
   # Khu vực USER
   # ======================
   resources :food_drinks do
-    resources :ratings, only: [:edit, :create, :update, :destroy] # hoặc thêm :new nếu cần
+    resources :ratings, only: [:edit, :create, :update, :destroy]
   end
 
   # Giỏ hàng
@@ -56,10 +58,15 @@ Rails.application.routes.draw do
   # Góp ý
   resources :suggestions
 
-  # Đơn hàng
-  resources :orders, only: [:index, :show, :update, :create]
+  # Đơn hàng (USER)
+  resources :orders, only: [:index, :show, :update, :create] do
+    member do
+      patch :cancel  # /orders/:id/cancel
+    end
+  end
+
+  # Chạy seed trong production
   if Rails.env.production?
     get "/run_seed", to: "application#run_seed"
   end
-
 end

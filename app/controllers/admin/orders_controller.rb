@@ -54,30 +54,30 @@ def update
   end
 end
 
-  def destroy
-    if @order.status != "pending"
-      respond_to do |format|
-        format.html { redirect_to admin_orders_path, alert: "Đơn hàng đã xử lý, không thể xóa." }
-
-        format.turbo_stream do
-          render turbo_stream: turbo_stream.update(
-            "flash_messages",
-            partial: "shared/flash_messages",
-            locals: { notice: nil, alert: "Đơn hàng đã xử lý, không thể xóa." }
-          )
-        end
-      end
-      return
-    end
-
-    # Xóa nếu pending
-    @order.destroy
-
+def destroy
+  if @order.status != "pending"
     respond_to do |format|
-      format.html { redirect_to admin_orders_path, notice: "Đã xóa đơn hàng thành công." }
-      format.turbo_stream
+      format.html { redirect_to admin_orders_path, alert: "Đơn hàng đã xử lý, không thể xóa." }
+
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.update(
+          "flash_messages",
+          partial: "shared/flash_messages",
+          locals: { notice: nil, alert: "Đơn hàng đã xử lý, không thể xóa." }
+        )
+      end
     end
+    return
   end
+
+  # Xóa nếu pending
+  @order.destroy
+
+  respond_to do |format|
+    format.html { redirect_to admin_orders_path, notice: "Đã xóa đơn hàng thành công." }
+    format.turbo_stream
+  end
+end
 
 
 

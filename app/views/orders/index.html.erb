@@ -5,7 +5,7 @@
 
 <div class="card shadow-sm">
     <div class="card-body p-0">
-        <table class="table table-hover table-striped mb-0 align-middle">
+        <table class="table table-hover table-striped mb-0 align-middle text-center">
             <thead class="table-dark">
                 <tr>
                     <th scope="col">#</th>
@@ -18,7 +18,7 @@
             </thead>
             <tbody>
                 <% @orders.each_with_index do |order, index| %>
-                <tr class="align-middle">
+                <tr>
                     <th scope="row"><%= index + 1 %></th>
                     <td>#<%= order.id %></td>
                     <td><%= order.created_at.strftime("%d/%m/%Y %H:%M") %></td>
@@ -33,8 +33,18 @@
                  end %>
                         <span class="<%= status_class %>"><%= order.status_human %></span>
                     </td>
-                    <td>
+                    <td class="d-flex justify-content-center gap-2">
                         <%= link_to "Chi tiết", order_path(order), class: "btn btn-sm btn-outline-primary" %>
+
+                        <% if order.status == "pending" %>
+                        <%= link_to "Hủy đơn",
+                    cancel_order_path(order),
+                    method: :patch,
+                    data: { turbo_confirm: "Bạn có chắc chắn muốn hủy đơn hàng này?" },
+                    class: "btn btn-sm btn-outline-danger" %>
+                        <% else %>
+                        <span class="btn btn-sm btn-outline-secondary disabled">Không thể hủy</span>
+                        <% end %>
                     </td>
                 </tr>
                 <% end %>

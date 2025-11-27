@@ -63,7 +63,7 @@ def destroy
         render turbo_stream: turbo_stream.update(
           "flash_messages",
           partial: "shared/flash_messages",
-          locals: { notice: nil, alert: "Đơn hàng đã xử lý, không thể xóa." }
+          locals: { notice: nil, alert: " không thể xóa." }
         )
       end
     end

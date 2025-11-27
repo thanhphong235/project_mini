@@ -5,3 +5,9 @@
       notice: "Đã xóa đơn hàng thành công.",
       alert: nil %>
 <% end %>
+
+<%= turbo_stream.replace "order_show_#{@order.id}" do %>
+  <script>
+    Turbo.visit("<%= admin_orders_path %>");
+  </script>
+<% end %>

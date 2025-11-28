@@ -1,37 +1,193 @@
-<div class="suggestion-detail">
+<div class="suggestion-update-glass">
 
-    <h2>Cập nhật trạng thái góp ý</h2>
+    <!-- Header -->
+    <div class="header-glass">
+        <%= link_to "Quay lại", admin_suggestions_path, class: "btn-back-secondary-glass" %>
 
-    <div class="detail-row">
-        <span class="label">Người gửi:</span>
-        <span class="value"><%= @suggestion.user.name || @suggestion.user.email %></span>
+        <h1 class="update-title-glass">Cập nhật trạng thái góp ý</h1>
+        <div class="header-placeholder-glass"></div>
     </div>
 
-    <div class="detail-row">
-        <span class="label">Tiêu đề:</span>
-        <span class="value"><%= @suggestion.title %></span>
+    <!-- Detail Section -->
+    <div class="detail-box-glass">
+
+        <div class="detail-row-glass">
+            <div class="label-glass">Người gửi</div>
+            <div class="value-glass"><%= @suggestion.user.name || @suggestion.user.email %></div>
+        </div>
+
+        <div class="detail-row-glass">
+            <div class="label-glass">Tiêu đề</div>
+            <div class="value-glass"><%= @suggestion.title %></div>
+        </div>
+
+        <div class="detail-row-glass">
+            <div class="label-glass">Nội dung</div>
+            <div class="value-glass content-glass"><%= simple_format(@suggestion.content) %></div>
+        </div>
+
     </div>
 
-    <div class="detail-row">
-        <span class="label">Nội dung:</span>
-        <span class="value"><%= simple_format(@suggestion.content) %></span>
-    </div>
+    <hr class="glass-divider">
 
-    <hr>
-
-    <%= form_with model: [:admin, @suggestion], local: true, html: { class: "update-status-form" } do |f| %>
-    <div class="detail-row">
-        <span class="label">Trạng thái:</span>
-        <span class="value">
+    <!-- Form -->
+    <%= form_with model: [:admin, @suggestion], local: true, html: { class: "form-glass" } do |f| %>
+    <div class="detail-row-glass mb-4">
+        <div class="label-glass">Trạng thái</div>
+        <div class="value-glass">
             <%= f.select :status, [["Chờ duyệt", "pending"], ["Chấp nhận", "approved"], ["Từ chối", "rejected"]],
-          {}, class: "form-select" %>
-        </span>
+          {}, class: "select-glass" %>
+        </div>
     </div>
 
-    <div class="detail-actions mt-3">
-        <%= f.submit "Lưu", class: "btn btn-success me-2" %>
-        <%= link_to "Quay lại", admin_suggestions_path, class: "btn btn-secondary" %>
+    <div class="form-actions-glass">
+        <%= f.submit "Lưu", class: "btn-save-glass" %>
+
     </div>
     <% end %>
 
 </div>
+
+<style>
+    /* ===============================
+   GLASSMORPHISM PREMIUM FORM
+   =============================== */
+
+    .suggestion-update-glass {
+        background: rgba(255, 255, 255, 0.35);
+        border-radius: 24px;
+        padding: 40px;
+        backdrop-filter: blur(12px) saturate(180%);
+        -webkit-backdrop-filter: blur(12px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Header */
+    .header-glass {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 32px;
+    }
+
+    .update-title-glass {
+        flex-grow: 1;
+        text-align: center;
+        font-size: 2rem;
+        font-weight: 800;
+        color: #1f1f1f;
+        letter-spacing: -0.5px;
+    }
+
+    .btn-back-glass {
+        padding: 8px 16px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        background: rgba(255, 255, 255, 0.25);
+        color: #333;
+        font-weight: 500;
+        transition: 0.25s;
+    }
+
+    .btn-back-glass:hover {
+        background: rgba(255, 255, 255, 0.45);
+        transform: translateY(-1px);
+    }
+
+    .header-placeholder-glass {
+        width: 120px;
+    }
+
+    /* Detail Rows */
+    .detail-box-glass {
+        display: flex;
+        flex-direction: column;
+        gap: 1.8rem;
+    }
+
+    .detail-row-glass {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        gap: 20px;
+        align-items: center;
+    }
+
+    .label-glass {
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #6b7280;
+    }
+
+    .value-glass {
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: #1f2937;
+    }
+
+    .content-glass p {
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    /* Divider */
+    .glass-divider {
+        border: none;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.3);
+        margin: 32px 0;
+    }
+
+    /* Form Select */
+    .select-glass {
+        padding: 10px 14px;
+        border-radius: 12px;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        background: rgba(255, 255, 255, 0.6);
+        font-weight: 500;
+        transition: 0.25s;
+    }
+
+    .select-glass:focus {
+        border-color: #4f7cff;
+        box-shadow: 0 0 0 0.2rem rgba(79, 124, 255, 0.25);
+    }
+
+    /* Buttons */
+    .form-actions-glass {
+        display: flex;
+        gap: 16px;
+        margin-top: 24px;
+    }
+
+    .btn-save-glass {
+        padding: 12px 28px;
+        background: linear-gradient(135deg, #4f7cff, #3462f8);
+        border-radius: 14px;
+        font-weight: 700;
+        color: white;
+        box-shadow: 0 4px 18px rgba(52, 98, 248, 0.3);
+        transition: 0.25s;
+    }
+
+    .btn-save-glass:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 22px rgba(52, 98, 248, 0.35);
+    }
+
+    .btn-back-secondary-glass {
+        padding: 12px 28px;
+        border-radius: 14px;
+        font-weight: 500;
+        background: rgba(245, 245, 245, 0.7);
+        color: #333;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        transition: 0.25s;
+    }
+
+    .btn-back-secondary-glass:hover {
+        background: rgba(245, 245, 245, 0.85);
+        transform: translateY(-1px);
+    }
+</style>

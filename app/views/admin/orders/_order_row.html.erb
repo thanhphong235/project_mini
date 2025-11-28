@@ -1,34 +1,34 @@
-<tr id="order_<%= order.id %>">
+<%
+=begin%>
+<tr id="order_<%= order.id %>" class="text-center align-middle">
     <td><%= index %></td>
     <td><%= order.user&.name || order.user&.email || "N/A" %></td>
     <td><%= number_to_currency(order.total_price, unit: "₫") %></td>
-
     <td>
         <%= turbo_frame_tag "order_status_#{order.id}" do %>
-        <%= render "status_badge", order: order %>
+        <div class="d-flex justify-content-center">
+            <%= render "status_badge", order: order %>
+        </div>
         <% end %>
     </td>
-
     <td><%= order.created_at.strftime("%d/%m/%Y %H:%M") %></td>
-
     <td class="actions-column">
-        <div class="action-buttons d-flex">
-
-            <%= link_to "Xem", admin_order_path(order),
-          class: "btn btn-sm btn-outline-primary me-1",
-          data: { turbo: false } %>
-
+        <div class="d-flex justify-content-center gap-1">
+            <%= link_to "Xem", admin_order_path(order), 
+            class: "btn btn-sm btn-outline-primary", 
+            data: { turbo: false } %>
             <% if order.status == "pending" %>
-            <%= button_to "Xóa", admin_order_path(order),
-            method: :delete,
-            data: { turbo_confirm: "Bạn có chắc chắn muốn xóa đơn hàng này?" },
-            class: "btn btn-sm btn-outline-danger" %>
+            <%= button_to "Xóa", admin_order_path(order), 
+              method: :delete, 
+              data: { turbo_confirm: "Bạn có chắc chắn muốn xóa đơn hàng này?" }, 
+              class: "btn btn-sm btn-outline-danger" %>
             <% else %>
             <button class="btn btn-sm btn-outline-secondary" disabled>
                 Không thể xoá
             </button>
             <% end %>
-
         </div>
     </td>
 </tr>
+<%
+=end%>

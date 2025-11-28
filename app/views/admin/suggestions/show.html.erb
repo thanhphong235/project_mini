@@ -1,32 +1,195 @@
-<div class="suggestion-detail">
+<div class="suggestion-detail premium-container">
 
-    <h2>Chi tiết Góp ý</h2>
+    <!-- Header -->
+    <div class="header-wrapper">
+        <%= link_to admin_suggestions_path, class: "btn-back" do %>
+        <i class="bi bi-chevron-left"></i> Quay lại
+        <% end %>
 
-    <div class="detail-row">
-        <span class="label">Người gửi:</span>
-        <span class="value"><%= @suggestion.user.name || @suggestion.user.email %></span>
+        <h1 class="page-title">Chi tiết Góp ý</h1>
+
+        <div class="header-placeholder"></div>
     </div>
 
-    <div class="detail-row">
-        <span class="label">Tiêu đề:</span>
-        <span class="value"><%= @suggestion.title %></span>
+    <!-- Body -->
+    <div class="detail-box">
+
+        <div class="detail-row">
+            <div class="detail-label">Người gửi</div>
+            <div class="detail-value"><%= @suggestion.user.name || @suggestion.user.email %></div>
+        </div>
+
+        <div class="detail-row">
+            <div class="detail-label">Tiêu đề</div>
+            <div class="detail-value"><%= @suggestion.title %></div>
+        </div>
+
+        <div class="detail-row">
+            <div class="detail-label">Nội dung</div>
+            <div class="detail-value long-text">
+                <%= simple_format(@suggestion.content) %>
+            </div>
+        </div>
+
+        <div class="detail-row">
+            <div class="detail-label">Trạng thái</div>
+            <div class="detail-value">
+                <span class="status-chip <%= @suggestion.status %>">
+                    <%= {
+                        "pending"  => "Đang chờ xử lý",
+                        "approved" => "Đã duyệt",
+                        "rejected" => "Đã từ chối"
+                    }[@suggestion.status] %>
+                </span>
+            </div>
+        </div>
+
     </div>
 
-    <div class="detail-row">
-        <span class="label">Nội dung:</span>
-        <span class="value"><%= simple_format(@suggestion.content) %></span>
-    </div>
-
-    <div class="detail-row">
-        <span class="label">Trạng thái:</span>
-        <span class="value"><%= @suggestion.status || "pending" %></span>
-    </div>
-
-    <hr>
-
-    <div class="detail-actions">
-        <%= link_to "Quay lại", admin_suggestions_path, class: "btn btn-secondary" %>
-        <%= link_to "Sửa", edit_admin_suggestion_path(@suggestion), class: "btn btn-warning" %>
+    <div class="bottom-actions">
+        <%= link_to "Sửa", edit_admin_suggestion_path(@suggestion), class: "btn-primary-premium" %>
     </div>
 
 </div>
+
+
+<style>
+    /* ===========================
+   PREMIUM ADMIN UI (ULTRA)
+   =========================== */
+
+    .premium-container {
+        background: #fff;
+        border-radius: 22px;
+        padding: 40px;
+        border: 1px solid rgba(230, 230, 230, 0.7);
+        box-shadow:
+            0 4px 22px rgba(0, 0, 0, 0.04),
+            0 1px 4px rgba(0, 0, 0, 0.03);
+        backdrop-filter: blur(6px);
+    }
+
+    /* Header */
+    .header-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 32px;
+        position: relative;
+    }
+
+    .page-title {
+        flex-grow: 1;
+        text-align: center;
+        font-size: 2.1rem;
+        font-weight: 800;
+        color: #1b1d1f;
+        letter-spacing: -0.6px;
+    }
+
+    .btn-back {
+        padding: 8px 16px;
+        border-radius: 12px;
+        border: 1px solid #e4e4e4;
+        background: #fafafa;
+        font-weight: 500;
+        color: #444;
+        transition: 0.25s;
+    }
+
+    .btn-back:hover {
+        background: #f1f1f1;
+        transform: translateY(-1px);
+    }
+
+    .header-placeholder {
+        width: 120px;
+    }
+
+    /* Detail box */
+    .detail-box {
+        display: flex;
+        flex-direction: column;
+        gap: 1.9rem;
+    }
+
+    .detail-row {
+        display: grid;
+        grid-template-columns: 180px 1fr;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(230, 230, 230, 0.6);
+    }
+
+    .detail-label {
+        font-size: 0.92rem;
+        color: #909090;
+        font-weight: 600;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+    }
+
+    .detail-value {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #232323;
+    }
+
+    /* Long text */
+    .long-text p {
+        margin: 0;
+        line-height: 1.65;
+        font-weight: 500;
+    }
+
+    /* Status chip */
+    .status-chip {
+        padding: 8px 20px;
+        border-radius: 14px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        display: inline-block;
+        letter-spacing: 0.2px;
+        border: 1px solid transparent;
+    }
+
+    /* Premium gradient chips */
+    .status-chip.pending {
+        background: linear-gradient(135deg, #fff7dd, #ffe9ba);
+        color: #b46a00;
+        border-color: #f3d8a6;
+    }
+
+    .status-chip.approved {
+        background: linear-gradient(135deg, #e6fff0, #cbf5db);
+        color: #087a3e;
+        border-color: #b6ebcb;
+    }
+
+    .status-chip.rejected {
+        background: linear-gradient(135deg, #ffe8e8, #ffd4d4);
+        color: #b30d0d;
+        border-color: #efb3b3;
+    }
+
+    /* Action button */
+    .btn-primary-premium {
+        display: inline-block;
+        padding: 12px 28px;
+        background: linear-gradient(135deg, #4f7cff, #3462f8);
+        border-radius: 14px;
+        font-weight: 70;
+        color: white !important;
+        text-decoration: none;
+        box-shadow: 0 4px 14px rgba(52, 98, 248, 0.3);
+        transition: 0.25s;
+    }
+
+    .btn-primary-premium:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(52, 98, 248, 0.35);
+    }
+
+    .bottom-actions {
+        margin-top: 32px;
+    }
+</style>

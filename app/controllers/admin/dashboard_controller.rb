@@ -8,22 +8,21 @@ class Admin::DashboardController < ApplicationController
   # =========================
   # 📊 Thống kê đơn hàng
   # =========================
-  def order_statistics
-    # Lấy tháng và năm từ params hoặc dùng mặc định là tháng hiện tại
-    @month = (params[:month] || Date.current.month).to_i
-    @year = (params[:year] || Date.current.year).to_i
+def order_statistics
+  @month = params[:month]&.to_i || Time.current.month
+  @year  = params[:year]&.to_i  || Time.current.year
 
-    # Tạo khoảng thời gian từ đầu tháng đến cuối tháng được chọn
-    start_date = Date.new(@year, @month, 1).beginning_of_day
-    end_date = start_date.end_of_month.end_of_day
+  # Lấy tất cả đơn theo tháng/năm, preload user
+  @orders = Order.includes(:user)
+                 .where("extract(month from created_at) = ? AND extract(year from created_at) = ?", @month, @year)
+                 .order(created_at: :desc)
 
-    # Lọc đơn hàng theo khoảng thời gian
-    @orders = Order.includes(:user).where(created_at: start_date..end_date).order(created_at: :desc)
+  # Tổng số đơn
+  @total_orders = @orders.size
 
-    # Tính thống kê
-    @total_orders = @orders.count
-    @total_revenue = @orders.sum(:total_price)
-  end
+  # Tổng doanh thu: chỉ tính đơn completed
+  @total_revenue = @orders.select { |o| o.completed? }.sum(&:total_price)
+end
 
   # =========================
   # 📧 Gửi thống kê qua email

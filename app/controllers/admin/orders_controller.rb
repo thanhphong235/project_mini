@@ -85,20 +85,25 @@ end
   # ======================
   # THỐNG KÊ ĐƠN HÀNG THEO THÁNG/NĂM
   # ======================
-  def statistics
-    @month = (params[:month] || Time.current.month).to_i
-    @year  = (params[:year] || Time.current.year).to_i
+def order_statistics
+  @month = params[:month]&.to_i || Time.current.month
+  @year  = params[:year]&.to_i  || Time.current.year
 
-    # Lọc đơn hàng theo tháng và năm
-    if ActiveRecord::Base.connection.adapter_name.downcase.include?("mysql")
-      @orders = Order.where("MONTH(created_at) = ? AND YEAR(created_at) = ?", @month, @year)
-    else
-      @orders = Order.where("EXTRACT(MONTH FROM created_at) = ? AND EXTRACT(YEAR FROM created_at) = ?", @month, @year)
-    end
+  # Lấy tất cả đơn theo tháng/năm, preload user
+  @orders = Order.includes(:user)
+                 .where("extract(month from created_at) = ? AND extract(year from created_at) = ?", @month, @year)
+                 .order(created_at: :desc)
 
-    @total_orders  = @orders.count
-    @total_revenue = @orders.sum(:total_price)
-  end
+  # Tổng số đơn
+  @total_orders = @orders.size
+
+  # Tổng doanh thu: chỉ tính đơn completed
+  @total_revenue = @orders.select { |o| o.completed? }.sum(&:total_price)
+end
+
+
+
+
 
   private
 

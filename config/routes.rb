@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  get 'contacts/index'
+  get 'gallerys/index'
+  get 'events/index'
+  get 'abouts/index'
+  get 'about/index'
   # ======================
   # Sidekiq Web UI
   # ======================
@@ -58,10 +63,25 @@ Rails.application.routes.draw do
   # Góp ý
   resources :suggestions
 
+  # Chefs page
+  resources :chefs, only: [:index]
+
+  #Abouts 
+  resources :abouts,only: [:index]
+
+  #Events
+  resources :events, only: [:index]
+
+  #Gallerys
+  resources :gallerys, only: [:index]
+
+  #Contacts
+  resources :contacts, only: [:index, :create]
+
   # Đơn hàng (USER)
   resources :orders, only: [:index, :show, :update, :create] do
     member do
-      patch :cancel  # /orders/:id/cancel
+      patch :cancel
     end
   end
 

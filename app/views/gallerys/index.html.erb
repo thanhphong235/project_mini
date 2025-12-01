@@ -1,0 +1,86 @@
+<section id="events" class="events-section py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold" style="font-family: 'Poppins', sans-serif;">Gallery</h2>
+            <p class="lead text-muted" style="font-family: 'Poppins', sans-serif;">Check Our Gallery</p>
+        </div>
+
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+                <% events = [
+          "yummy/gallery/gallery-1.jpg",
+          "yummy/gallery/gallery-2.jpg",
+          "yummy/gallery/gallery-3.jpg",
+          "yummy/gallery/gallery-4.jpg",
+          "yummy/gallery/gallery-5.jpg",
+          "yummy/gallery/gallery-6.jpg",
+          "yummy/gallery/gallery-7.jpg",
+          "yummy/gallery/gallery-8.jpg"
+        ] %>
+
+                <% events.each do |img_path| %>
+                <div class="swiper-slide">
+                    <%= image_tag img_path, class: "gallery-img", alt: "Gallery image" %>
+                </div>
+                <% end %>
+            </div>
+
+            <div class="swiper-button-next text-dark"></div>
+            <div class="swiper-button-prev text-dark"></div>
+            <div class="swiper-pagination mt-4"></div>
+        </div>
+    </div>
+</section>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+    #events {
+        font-family: 'Poppins', sans-serif;
+        scroll-margin-top: 70px;
+    }
+
+    .gallery-img {
+        width: 200px;
+        height: 200px;
+        object-fit: cover;
+        border: 0 solid #dc3545;
+        box-sizing: border-box;
+        display: block;
+    }
+
+    .swiper-slide {
+        padding: 0 !important;
+        margin: 0 !important;
+        display: flex;
+        justify-content: center;
+    }
+
+    .swiper-slide-active .gallery-img {
+        border: 10px solid #dc3545;
+        /* chỉ ảnh giữa có viền đỏ */
+    }
+</style>
+
+<script>
+    document.addEventListener("turbo:load", () => {
+        new Swiper(".mySwiper", {
+            slidesPerView: 3,
+            spaceBetween: 0, // loại bỏ khoảng cách giữa các ảnh
+            centeredSlides: true, // ảnh giữa luôn ở trung tâm
+            loop: true,
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev"
+            }
+        });
+    });
+</script>

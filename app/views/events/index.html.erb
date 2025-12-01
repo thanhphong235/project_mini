@@ -1,0 +1,115 @@
+<section id="events" class="events-section py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">Our Events</h2>
+            <p class="lead text-muted">Stay updated with our latest food & drink events</p>
+        </div>
+
+        <!-- Swiper Carousel -->
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+                <% events = [
+          {img: "yummy/events-1.jpg", title: "Wine Tasting", date: "12 Dec", desc: "Enjoy premium wines from around the world."},
+          {img: "yummy/events-2.jpg", title: "Cooking Class", date: "18 Dec", desc: "Learn to cook delicious dishes."},
+          {img: "yummy/events-3.jpg", title: "Food Festival", date: "25 Dec", desc: "A celebration of flavors."},
+          {img: "yummy/events-4.jpg", title: "Chef Workshop", date: "05 Jan", desc: "Masterclass by top chefs."},
+          {img: "yummy/events-2.jpg", title: "Dessert Night", date: "15 Jan", desc: "Indulge in exquisite desserts."},
+          {img: "yummy/events-4.jpg", title: "Seafood Feast", date: "20 Jan", desc: "Fresh seafood from local markets."}
+        ] %>
+
+                <% events.each do |e| %>
+                <div class="swiper-slide">
+                    <div class="card rounded-4 overflow-hidden shadow-sm event-card position-relative text-white">
+                        <%= image_tag e[:img], class: "card-img-top", alt: e[:title] %>
+
+                        <!-- Overlay gradient -->
+                        <div class="overlay position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-end p-4">
+                            <div class="event-date bg-primary text-center fw-bold rounded-end px-2 py-1 mb-2" style="width: 60px;">
+                                <div class="fs-6"><%= e[:date].split(' ').last %></div>
+                                <div class="fs-5"><%= e[:date].split(' ').first %></div>
+                            </div>
+                            <h5 class="fw-bold"><%= e[:title] %></h5>
+                            <p class="mb-2"><%= e[:desc] %></p>
+                            <%= link_to "Learn More", "#", class: "btn btn-outline-light btn-sm rounded-pill" %>
+                        </div>
+                    </div>
+                </div>
+                <% end %>
+            </div>
+
+            <!-- Pagination + Navigation -->
+            <div class="swiper-button-next text-white"></div>
+            <div class="swiper-button-prev text-white"></div>
+            <div class="swiper-pagination mt-4"></div>
+        </div>
+    </div>
+</section>
+
+<style>
+    #events {
+        scroll-margin-top: 70px;
+    }
+
+    .event-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+    }
+
+    .event-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.3);
+    }
+
+    .card-img-top {
+        display: block;
+        width: 100%;
+        height: 500px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .event-card:hover .card-img-top {
+        transform: scale(1.05);
+    }
+
+    .overlay {
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.7) 100%);
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+
+    .event-date {
+        line-height: 1;
+    }
+</style>
+
+<script>
+    document.addEventListener("turbo:load", () => {
+        new Swiper(".mySwiper", {
+            slidesPerView: 1,
+            spaceBetween: 20,
+            loop: true,
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev"
+            },
+            breakpoints: {
+                768: {
+                    slidesPerView: 2
+                },
+                992: {
+                    slidesPerView: 3
+                }
+            }
+        });
+    });
+</script>

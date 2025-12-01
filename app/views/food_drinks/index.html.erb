@@ -61,7 +61,6 @@
     </div>
 
     <!-- Danh sách món ăn -->
-    <%= turbo_frame_tag "food_drinks_list" do %>
     <div class="row mt-3">
         <% @food_drinks.each do |fd| %>
         <div class="col-md-4 mb-3">
@@ -144,7 +143,7 @@
     <% if @food_drinks.empty? %>
     <p class="text-center text-muted mt-4">Không tìm thấy món nào phù hợp.</p>
     <% end %>
-    <% end %>
+
 
     <!-- ✅ kết thúc turbo_frame_tag -->
 </div>

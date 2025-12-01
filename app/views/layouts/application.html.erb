@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 
 <head>
+    <meta charset="UTF-8">
     <title>Foods & Drinks App</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -11,78 +12,77 @@
 
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 </head>
 
 <body class="d-flex flex-column min-vh-100">
-    <!-- Header -->
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm fixed-top">
-            <div class="container">
-                <%= link_to "Foods & Drinks App", root_path, class: "navbar-brand" %>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+    <!-- Navbar -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-custom shadow-sm sticky-top">
+            <div class="container">
+                <!-- Logo -->
+                <%= link_to "Foods & Drinks App", root_path, class: "navbar-brand fw-bold" %>
+
+                <!-- Toggler -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <!-- Menu links luôn hiển thị -->
+                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><%= link_to "Home", root_path, class: "nav-link" %></li>
+                        <li class="nav-item"><%= link_to "Menu", food_drinks_path, class: "nav-link" %></li>
+                        <li class="nav-item"><%= link_to "About", abouts_path, class: "nav-link" %></li>
+                        <li class="nav-item"><%= link_to "Events", events_path, class: "nav-link" %></li>
+                        <li class="nav-item"><%= link_to "Chefs", chefs_path, class: "nav-link" %></li>
+                        <li class="nav-item"><%= link_to "Gallery", gallerys_path, class: "nav-link" %></li>
+                        <li class="nav-item"><%= link_to "Contact", contacts_path, class: "nav-link" %></li>
+                    </ul>
+
+                    <!-- Right side: user / admin / guest menu -->
                     <ul class="navbar-nav ms-auto align-items-center">
                         <% if user_signed_in? %>
                         <% if current_user.admin? %>
-                        <!-- Admin dropdown -->
-                        <li class="nav-item dropdown ms-3">
-                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" data-bs-toggle="dropdown">
                                 <i class="bi bi-person-circle me-1"></i> <%= current_user.name || "Admin" %>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
-                                <li><%= link_to "Profile", edit_user_registration_path, class: "dropdown-item" %></li>
+                            <ul class="dropdown-menu dropdown-menu-end">
                                 <li><%= link_to "Dashboard", admin_dashboard_path, class: "dropdown-item" %></li>
+                                <li><%= link_to "Profile", edit_user_registration_path, class: "dropdown-item" %></li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
-                                <li>
-                                    <%= link_to "Đăng xuất", destroy_user_session_path,
-                                  data: { turbo_method: :delete, turbo_confirm: "Bạn chắc chắn muốn đăng xuất?" },
-                                  class: "dropdown-item text-danger" %>
-                                </li>
+                                <li><%= link_to "Đăng xuất", destroy_user_session_path, data: { turbo_method: :delete, turbo_confirm: "Bạn chắc chắn muốn đăng xuất?" }, class: "dropdown-item text-danger" %></li>
                             </ul>
                         </li>
                         <% else %>
-                        <!-- User icon giỏ hàng -->
-                        <li class="nav-item ms-3">
+                        <li class="nav-item me-3">
                             <%= turbo_frame_tag "cart-count" do %>
                             <%= render "shared/cart_icon" %>
                             <% end %>
                         </li>
-
-                        <!-- User dropdown -->
-                        <li class="nav-item dropdown ms-3">
-                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" data-bs-toggle="dropdown">
                                 <i class="bi bi-person-circle me-1"></i> <%= current_user.name || "Tài khoản" %>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <ul class="dropdown-menu dropdown-menu-end">
                                 <li><%= link_to "Profile", edit_user_registration_path, class: "dropdown-item" %></li>
-                                <li><%= link_to "Lịch sử đơn hàng", orders_path, class: "dropdown-item" %></li>
-                                <li><%= link_to "Góp ý của tôi", suggestions_path, class: "dropdown-item" %></li>
-                                <li><%= link_to "Shopping", food_drinks_path, class: "dropdown-item" %></li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
-                                <li>
-                                    <%= link_to "Đăng xuất", destroy_user_session_path,
-                                  data: { turbo_method: :delete, turbo_confirm: "Bạn chắc chắn muốn đăng xuất?" },
-                                  class: "dropdown-item text-danger" %>
-                                </li>
+                                <li><%= link_to "Đăng xuất", destroy_user_session_path, data: { turbo_method: :delete, turbo_confirm: "Bạn chắc chắn muốn đăng xuất?" }, class: "dropdown-item text-danger" %></li>
                             </ul>
                         </li>
                         <% end %>
                         <% else %>
-                        <!-- Guest -->
-                        <li class="nav-item">
-                            <%= link_to "Log in", new_user_session_path, class: "nav-link" %>
-                        </li>
-                        <li class="nav-item ms-2">
-                            <%= link_to "Sign up", new_user_registration_path, class: "nav-link" %>
-                        </li>
+                        <li class="nav-item"><%= link_to "Log in", new_user_session_path, class: "nav-link" %></li>
+                        <li class="nav-item"><%= link_to "Sign up", new_user_registration_path, class: "nav-link" %></li>
                         <% end %>
                     </ul>
                 </div>
@@ -90,32 +90,24 @@
         </nav>
     </header>
 
-    <!-- Main -->
+    <!-- Main content -->
     <main class="flex-grow-1" style="padding-top: 80px;">
         <div class="container mt-4">
-
-            <!-- FLASH for Turbo Stream -->
             <%= turbo_frame_tag "flash_messages" do %>
             <%= render "shared/flash" %>
             <% end %>
-
             <%= yield %>
         </div>
     </main>
 
-
-
-    <!-- Footer -->
+    <!-- Footer (giữ nguyên) -->
     <footer class="bg-dark text-light py-3 mt-auto">
         <div class="container">
             <div class="row text-center text-md-start">
                 <div class="col-md-4 mb-4">
                     <h5 class="fw-bold mb-3">🍴 Foods & Drinks App</h5>
-                    <p class="text-secondary">
-                        Ứng dụng giúp bạn khám phá, đặt món ăn và đồ uống yêu thích mọi lúc, mọi nơi.
-                    </p>
+                    <p class="text-secondary">Ứng dụng giúp bạn khám phá, đặt món ăn và đồ uống yêu thích mọi lúc, mọi nơi.</p>
                 </div>
-
                 <div class="col-md-4 mb-4">
                     <h6 class="fw-bold mb-3 text-uppercase">Liên kết nhanh</h6>
                     <ul class="list-unstyled">
@@ -125,13 +117,12 @@
                         <li><a href="#" class="text-secondary text-decoration-none d-block mb-2">Điều khoản sử dụng</a></li>
                     </ul>
                 </div>
-
                 <div class="col-md-4 mb-4 text-center text-md-start">
                     <h6 class="fw-bold mb-3 text-uppercase">Theo dõi chúng tôi</h6>
                     <div class="mb-3">
-                        <a href="https://www.facebook.com/sharer/sharer.php?u=<%= request.original_url %>" class="text-light fs-4 me-3"><i class="bi bi-facebook"></i></a>
-                        <a href="https://www.instagram.com/sharer/sharer.php?u=<%= request.original_url %>" class="text-light fs-4 me-3"><i class="bi bi-instagram"></i></a>
-                        <a href="https://twitter.com/intent/tweet?url=<%= request.original_url %>" class="text-light fs-4 me-3"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="text-light fs-4 me-3"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="text-light fs-4 me-3"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="text-light fs-4 me-3"><i class="bi bi-twitter"></i></a>
                     </div>
                     <p class="text-secondary small mb-0">Email: support@foodsdrinksapp.com</p>
                 </div>
@@ -158,37 +149,93 @@
     <div class="modal fade" id="suggestionModal" tabindex="-1" aria-labelledby="suggestionModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content rounded-4 shadow-lg border-0">
-
                 <div class="modal-header bg-primary text-white border-0">
                     <h5 class="modal-title" id="suggestionModalLabel">
                         <i class="bi bi-envelope-fill me-2"></i> Góp ý món ăn / thức uống
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
                 </div>
-
                 <div class="modal-body p-4">
                     <%= form_with(model: Suggestion.new, url: suggestions_path, local: true) do |f| %>
                     <div class="mb-3">
                         <%= f.label :title, "Tên món / thức uống", class: "form-label fw-semibold" %>
                         <%= f.text_field :title, class: "form-control form-control-lg rounded-3", placeholder: "Nhập tên món ăn hoặc thức uống", required: true %>
                     </div>
-
                     <div class="mb-3">
                         <%= f.label :content, "Mô tả / lý do đề xuất", class: "form-label fw-semibold" %>
                         <%= f.text_area :content, class: "form-control form-control-lg rounded-3", rows: 4, placeholder: "Nhập mô tả hoặc lý do đề xuất", required: true %>
                     </div>
-
                     <div class="text-end">
                         <%= f.submit "Gửi góp ý", class: "btn btn-gradient-success btn-lg px-4" %>
                     </div>
-
                     <% end %>
                 </div>
             </div>
         </div>
     </div>
-
     <% end %>
+
 </body>
 
 </html>
+
+<style>
+    /* Navbar background đen, chữ trắng */
+    .navbar-custom {
+        background-color: #000 !important;
+    }
+
+    .navbar-custom .nav-link,
+    .navbar-custom .navbar-brand {
+        color: #fff !important;
+        position: relative;
+        transition: color 0.3s;
+    }
+
+    /* Hiệu ứng underline đỏ khi hover */
+    .navbar-custom .nav-link::after {
+        content: "";
+        display: block;
+        width: 0;
+        height: 3px;
+        background: #dc3545;
+        /* màu đỏ */
+        transition: width 0.3s;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+    }
+
+    .navbar-custom .nav-link:hover::after {
+        width: 100%;
+    }
+
+    .navbar-custom .nav-link:hover {
+        color: #fff !important;
+    }
+
+    .navbar-custom .dropdown-menu {
+        background-color: #111;
+    }
+
+    .navbar-custom .dropdown-item {
+        color: #fff;
+    }
+
+    .navbar-custom .dropdown-item:hover {
+        background-color: #dc3545;
+        color: #fff;
+    }
+
+    .navbar-custom .btn-primary {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: #fff;
+    }
+
+    .navbar-custom .btn-primary:hover {
+        background-color: #b71c1c;
+        border-color: #b71c1c;
+        color: #fff;
+    }
+</style>

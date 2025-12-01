@@ -1,0 +1,134 @@
+<section id="contact" class="contact-section py-5">
+    <div class="container">
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold" style="font-family: 'Poppins', sans-serif;">Contact Us</h2>
+            <p class="lead text-muted" style="font-family: 'Poppins', sans-serif;">We'd love to hear from you!</p>
+        </div>
+
+        <!-- Map -->
+        <div class="mb-5 rounded-4 overflow-hidden shadow">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.1234567890!2d105.843423!3d21.028511!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab123456789%3A0xabcdef123456789!2sHanoi%2C%20Vietnam!5e0!3m2!1sen!2s!4v1234567890" width="100%" height="350" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+
+        <div class="row g-4">
+            <!-- Column 1 -->
+            <div class="col-lg-6 col-md-12">
+                <div class="mb-4">
+                    <div class="contact-info p-4 shadow-lg rounded-4 text-center h-100">
+                        <i class="bi bi-geo-alt-fill fs-2 text-danger"></i>
+                        <h6 class="mt-2 fw-bold">Address</h6>
+                        <p>123 Street, Hanoi, Vietnam</p>
+                    </div>
+                </div>
+                <div>
+                    <div class="contact-info p-4 shadow-lg rounded-4 text-center h-100">
+                        <i class="bi bi-telephone-fill fs-2 text-danger"></i>
+                        <h6 class="mt-2 fw-bold">Phone</h6>
+                        <p>+84 123 456 789</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Column 2 -->
+            <div class="col-lg-6 col-md-12">
+                <div class="mb-4">
+                    <div class="contact-info p-4 shadow-lg rounded-4 text-center h-100">
+                        <i class="bi bi-envelope-fill fs-2 text-danger"></i>
+                        <h6 class="mt-2 fw-bold">Email</h6>
+                        <p>info@example.com</p>
+                    </div>
+                </div>
+                <div>
+                    <div class="contact-info p-4 shadow-lg rounded-4 text-center h-100">
+                        <i class="bi bi-clock-fill fs-2 text-danger"></i>
+                        <h6 class="mt-2 fw-bold">Hours</h6>
+                        <p>Mon - Fri: 9:00 - 18:00</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Contact Form -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="contact-form p-4 shadow-lg rounded-4 h-100" style="background: #fff;">
+                    <%= form_with url: contacts_path, method: :post, local: true do |f| %>
+                    <div class="mb-3">
+                        <%= f.label :name, "Your Name", class: "form-label" %>
+                        <%= f.text_field :name, class: "form-control form-control-lg", required: true %>
+                    </div>
+                    <div class="mb-3">
+                        <%= f.label :email, "Your Email", class: "form-label" %>
+                        <%= f.email_field :email, class: "form-control form-control-lg", required: true %>
+                    </div>
+                    <div class="mb-3">
+                        <%= f.label :subject, "Subject", class: "form-label" %>
+                        <%= f.text_field :subject, class: "form-control form-control-lg", required: true %>
+                    </div>
+                    <div class="mb-3">
+                        <%= f.label :message, "Message", class: "form-label" %>
+                        <%= f.text_area :message, class: "form-control form-control-lg", rows: 5, required: true %>
+                    </div>
+                    <div class="mt-4 text-end">
+                        <%= f.submit "Send Message", class: "btn btn-danger btn-lg px-4" %>
+                    </div>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<style>
+    #contact {
+        font-family: 'Poppins', sans-serif;
+        scroll-margin-top: 70px;
+    }
+
+    .contact-info i {
+        color: #dc3545;
+    }
+
+    .contact-info h6 {
+        color: #333;
+    }
+
+    .contact-info p {
+        color: #555;
+        font-size: 0.95rem;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+        border-radius: 0.5rem;
+        transition: all 0.3s;
+    }
+
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+        border-color: #dc3545;
+        box-shadow: 0 0 10px rgba(220, 53, 69, 0.3);
+    }
+
+    .contact-form .btn-danger {
+        border-radius: 2rem;
+        padding: 0.6rem 2.5rem;
+        transition: all 0.3s;
+    }
+
+    .contact-form .btn-danger:hover {
+        background-color: #c82333;
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 767px) {
+
+        .contact-info,
+        .contact-form {
+            text-align: center;
+        }
+    }
+</style>

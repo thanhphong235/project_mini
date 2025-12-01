@@ -1,49 +1,102 @@
-<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
-    <%= link_to "Quay lại", admin_dashboard_path, class: "btn btn-outline-secondary mb-2" %>
-    <h1 class="text-center flex-grow-1 mb-0">Quản lý Danh mục</h1>
+<div class="categories-card shadow-lg rounded-4 p-4 animate-fade-in">
+
+    <!-- Header + Nút quay lại -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <%= link_to "Quay lại", admin_dashboard_path, class: "btn btn-outline-secondary btn-anim" %>
+        <h2 class="fw-bold mb-0 text-center flex-grow-1">Quản lý Danh mục</h2>
+        <div style="width: 120px;"></div> <!-- placeholder cân layout -->
+    </div>
+
+    <!-- Nút thêm mới -->
+    <div class="d-flex justify-content-end mb-3">
+        <%= link_to new_admin_category_path, class: "btn btn-success btn-anim" do %>
+        <i class="bi bi-plus-lg"></i> Thêm mới danh mục
+        <% end %>
+    </div>
+
+    <!-- Table danh mục -->
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered align-middle mb-0 text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th style="width:10%;">#</th>
+                    <th style="width:40%;" class="text-start">Tên danh mục</th>
+                    <th style="width:25%;">Ngày tạo</th>
+                    <th style="width:25%;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% @categories.each_with_index do |category, index| %>
+                <tr class="align-middle animate-row">
+                    <td><%= index + 1 %></td>
+                    <td class="text-start"><%= category.name %></td>
+                    <td><%= category.created_at.strftime("%d/%m/%Y") %></td>
+                    <td>
+                        <div class="d-flex justify-content-center flex-wrap gap-1">
+                            <%= link_to admin_category_path(category), class: "btn btn-sm btn-outline-primary btn-anim", title: "Xem chi tiết" do %>
+                            <i class="bi bi-eye"></i> Xem
+                            <% end %>
+
+                            <%= link_to edit_admin_category_path(category), class: "btn btn-sm btn-outline-warning btn-anim", title: "Chỉnh sửa danh mục" do %>
+                            <i class="bi bi-pencil"></i> Sửa
+                            <% end %>
+
+                            <%= link_to admin_category_path(category), data: { turbo_method: :delete, turbo_confirm: "Bạn có chắc chắn muốn xóa danh mục này?" }, class: "btn btn-sm btn-outline-danger btn-anim", title: "Xóa danh mục" do %>
+                            <i class="bi bi-trash"></i> Xóa
+                            <% end %>
+                        </div>
+                    </td>
+                </tr>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+
 </div>
 
-<div class="d-flex justify-content-end mb-3">
-    <%= link_to new_admin_category_path, class: "btn btn-success" do %>
-    <i class="bi bi-plus-lg"></i> Thêm mới danh mục
-    <% end %>
-</div>
+<style>
+    .categories-card {
+        border-radius: 18px;
+        border: 1px solid #e0e0e0;
+        padding: 1.5rem;
+        transition: 0.3s ease;
+        background-color: #fff;
+    }
 
-<div class="table-responsive shadow-sm rounded mt-3">
-    <table class="table table-hover align-middle mb-0">
-        <thead class="table-dark text-center">
-            <tr>
-                <th style="width:10%;">#</th>
-                <th style="width:40%;" class="text-start">Tên danh mục</th>
-                <th style="width:25%;">Ngày tạo</th>
-                <th style="width:25%;">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% @categories.each_with_index do |category, index| %>
-            <tr class="align-middle">
-                <td class="text-center"><%= index + 1 %></td>
-                <td class="text-start"><%= category.name %></td>
-                <td class="text-center"><%= category.created_at.strftime("%d/%m/%Y") %></td>
-                <td class="text-center">
-                    <div class="d-flex justify-content-center flex-wrap gap-1">
-                        <%= link_to admin_category_path(category), class: "btn btn-sm btn-outline-primary", title: "Xem chi tiết" do %>
-                        <i class="bi bi-eye"></i> Xem
-                        <% end %>
+    .categories-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
 
-                        <%= link_to edit_admin_category_path(category), class: "btn btn-sm btn-outline-warning", title: "Chỉnh sửa danh mục" do %>
-                        <i class="bi bi-pencil"></i> Sửa
-                        <% end %>
+    .btn-anim {
+        transition: 0.25s ease;
+    }
 
-                        <%= link_to admin_category_path(category),
-                    data: { turbo_method: :delete, turbo_confirm: "Bạn có chắc chắn muốn xóa danh mục này?" },
-                    class: "btn btn-sm btn-outline-danger", title: "Xóa danh mục" do %>
-                        <i class="bi bi-trash"></i> Xóa
-                        <% end %>
-                    </div>
-                </td>
-            </tr>
-            <% end %>
-        </tbody>
-    </table>
-</div>
+    .btn-anim:hover:not([disabled]) {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .animate-fade-in {
+        animation: fadeIn 0.5s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-row {
+        transition: 0.2s ease;
+    }
+
+    .animate-row:hover {
+        background-color: #f1f6ff;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+</style>

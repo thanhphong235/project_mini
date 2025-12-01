@@ -1,92 +1,131 @@
-<!-- Header: nút quay lại + title -->
-<div class="food-drinks-header mb-3 d-flex align-items-center">
-    <div class="back-button">
-        <%= link_to "Quay lại", admin_dashboard_path, class: "btn btn-outline-secondary" %>
+<div class="fooddinks-card shadow-lg rounded-4 p-4 animate-fade-in">
+
+    <!-- Header: nút quay lại + title -->
+    <div class="food-drinks-header mb-3 d-flex align-items-center">
+        <div class="back-button">
+            <%= link_to "Quay lại", admin_dashboard_path, class: "btn btn-outline-secondary btn-anim" %>
+        </div>
+        <h1 class="flex-grow-1 text-center mb-0">Quản lý Món ăn & Thức uống</h1>
     </div>
-    <h1 class="flex-grow-1 text-center mb-0">Quản lý Món ăn & Thức uống</h1>
-</div>
 
-<!-- Nút category -->
-<div class="category-buttons mb-3">
-    <%= link_to "Tất cả", admin_food_drinks_path, class: "btn btn-secondary me-2 mb-2" %>
-    <% Category.all.each do |category| %>
-    <%= link_to category.name, admin_food_drinks_path(category_id: category.id), class: "btn btn-primary me-2 mb-2" %>
-    <% end %>
-</div>
+    <!-- Nút category -->
+    <div class="category-buttons mb-3">
+        <%= link_to "Tất cả", admin_food_drinks_path, class: "btn btn-secondary btn-cat-anim me-2 mb-2" %>
+        <% Category.all.each do |category| %>
+        <%= link_to category.name, admin_food_drinks_path(category_id: category.id), class: "btn btn-primary btn-cat-anim me-2 mb-2" %>
+        <% end %>
+    </div>
 
-<!-- Toolbar chính -->
-<div class="toolbar-wrapper mb-3">
-    <!-- Left actions -->
-    <div class="left-actions">
-        <button type="button" id="select_all_btn" class="btn btn-warning">Chọn tất cả món ăn</button>
-        <div class="actions">
-            <%= link_to "Thêm mới", new_admin_food_drink_path, class: "btn btn-success" %>
-            <%= link_to "Làm mới", admin_food_drinks_path, class: "btn btn-outline-secondary" %>
+    <!-- Toolbar chính -->
+    <div class="toolbar-wrapper mb-3 d-flex justify-content-between flex-wrap align-items-center gap-2">
+        <!-- Left actions -->
+        <div class="left-actions d-flex gap-2 flex-wrap">
+            <button type="button" id="select_all_btn" class="btn btn-warning btn-anim">Chọn tất cả món ăn</button>
+            <%= link_to "Thêm mới", new_admin_food_drink_path, class: "btn btn-success btn-anim" %>
+            <%= link_to "Làm mới", admin_food_drinks_path, class: "btn btn-outline-secondary btn-anim" %>
+        </div>
+
+        <!-- Filter form -->
+        <div class="filter-form">
+            <%= form_with url: admin_food_drinks_path, method: :get, local: false, data: { turbo_frame: "food_drinks_list" }, class: "d-flex align-items-center gap-2" do |f| %>
+            <%= f.text_field :query, value: params[:query], placeholder: "🔍 Tìm kiếm...", class: "form-control search-input" %>
+            <%= f.select :sort, options_for_select([
+            ['Mới nhất', 'newest'],
+            ['Tên A → Z', 'name_asc'],
+            ['Tên Z → A', 'name_desc'],
+            ['Giá tăng dần', 'price_asc'],
+            ['Giá giảm dần', 'price_desc']
+          ], params[:sort]), {}, class: "form-select" %>
+            <%= f.submit "Lọc", class: "btn btn-primary btn-anim" %>
+            <% end %>
         </div>
     </div>
 
-    <!-- Filter form -->
-    <div class="filter-form">
-        <%= form_with url: admin_food_drinks_path, method: :get, local: false, data: { turbo_frame: "food_drinks_list" }, class: "d-flex align-items-center gap-2" do |f| %>
-        <%= f.text_field :query, value: params[:query], placeholder: "🔍 Tìm kiếm...", class: "form-control" %>
-        <%= f.select :sort, options_for_select([
-        ['Mới nhất', 'newest'],
-        ['Tên A → Z', 'name_asc'],
-        ['Tên Z → A', 'name_desc'],
-        ['Giá tăng dần', 'price_asc'],
-        ['Giá giảm dần', 'price_desc']
-      ], params[:sort]), {}, class: "form-select" %>
-        <%= f.submit "Lọc", class: "btn btn-primary" %>
-        <% end %>
+    <!-- Turbo Frame chứa bảng món ăn -->
+    <%= turbo_frame_tag "food_drinks_list" do %>
+    <%= form_with url: bulk_delete_admin_food_drinks_path, method: :delete, local: false, data: { turbo_confirm: "Bạn có chắc chắn muốn xóa các món đã chọn?" } do %>
+
+    <div class="food-drinks-table table-responsive mb-3">
+        <%= render partial: "list", locals: { food_drinks: @food_drinks } %>
     </div>
+
+    <div class="mb-3">
+        <%= submit_tag "Xóa các món đã chọn", class: "btn btn-danger btn-anim" %>
+    </div>
+
+    <% end %>
+
+    <% if @food_drinks.empty? %>
+    <p class="text-center text-muted mt-3">Không tìm thấy món ăn/thức uống nào phù hợp.</p>
+    <% end %>
+    <% end %>
 </div>
 
+<style>
+    /* Card + fade-in */
+    .fooddinks-card {
+        border-radius: 18px;
+        border: 1px solid #e0e0e0;
+        background-color: #fff;
+        padding: 1.5rem;
+        transition: 0.3s ease;
+    }
 
-<!-- Turbo Frame chứa bảng món ăn full màn hình -->
-<%= turbo_frame_tag "food_drinks_list" do %>
-<%= form_with url: bulk_delete_admin_food_drinks_path, method: :delete, local: false, data: { turbo_confirm: "Bạn có chắc chắn muốn xóa các món đã chọn?" } do %>
+    .fooddinks-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+    }
 
-<div class="food-drinks-table table-responsive mb-3">
-    <%= render partial: "list", locals: { food_drinks: @food_drinks } %>
-</div>
+    .animate-fade-in {
+        animation: fadeIn 0.6s ease forwards;
+        opacity: 0;
+    }
 
-<div class="mb-3">
-    <%= submit_tag "Xóa các món đã chọn", class: "btn btn-danger" %>
-</div>
+    /* Category button hover */
+    .btn-cat-anim {
+        transition: 0.25s ease;
+    }
 
-<% end %>
+    .btn-cat-anim:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
 
-<% if @food_drinks.empty? %>
-<p class="text-center text-muted mt-3">Không tìm thấy món ăn/thức uống nào phù hợp.</p>
-<% end %>
-<% end %>
+    /* Nút hover */
+    .btn-anim {
+        transition: 0.25s ease;
+    }
 
+    .btn-anim:hover:not([disabled]) {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
 
-<!-- JS chọn/bỏ chọn tất cả + Auto search -->
-<script>
-    document.addEventListener("turbo:load", () => {
-        // Chọn / bỏ chọn tất cả
-        const selectAllBtn = document.querySelector("#select_all_btn");
-        if (selectAllBtn) {
-            let allSelected = false;
-            selectAllBtn.addEventListener("click", () => {
-                allSelected = !allSelected;
-                document.querySelectorAll(".food-drink-checkbox").forEach(cb => cb.checked = allSelected);
-                selectAllBtn.textContent = allSelected ? "Bỏ chọn tất cả" : "Chọn tất cả món ăn";
-            });
+    /* Table row hover */
+    .food-drinks-table tbody tr {
+        transition: 0.25s ease, background-color 0.25s ease;
+    }
+
+    .food-drinks-table tbody tr:hover {
+        background-color: #f1f6ff !important;
+        transform: translateX(2px);
+    }
+
+    /* Input focus */
+    .search-input:focus {
+        box-shadow: 0 0 6px rgba(0, 123, 255, 0.5);
+        border-color: #80bdff;
+        outline: none;
+    }
+
+    /* Animations keyframes */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
         }
 
-        // Auto search
-        const searchInput = document.querySelector('input[name="query"]');
-        if (searchInput) {
-            let timeout = null;
-            searchInput.addEventListener("input", () => {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => {
-                    const form = searchInput.closest("form");
-                    form.requestSubmit(); // submit form bằng Turbo, update frame food_drinks_list
-                }, 300); // 300ms debounce
-            });
+        to {
+            opacity: 1;
         }
-    });
-</script>
+    }
+</style>

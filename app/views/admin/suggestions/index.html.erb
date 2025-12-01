@@ -1,60 +1,109 @@
-<!-- Header -->
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <%= link_to "Quay lại", admin_dashboard_path, class: "btn btn-outline-secondary" %>
-    <h1 class="page-title text-center flex-grow-1 mb-0">Danh sách góp ý</h1>
+<div class="suggestions-card shadow-lg rounded-4 p-4 animate-fade-in">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <%= link_to "Quay lại", admin_dashboard_path, class: "btn btn-outline-secondary btn-anim" %>
+        <h2 class="fw-bold text-center flex-grow-1 mb-0">Danh sách góp ý</h2>
+        <div style="width: 120px;"></div> <!-- placeholder cân layout -->
+    </div>
+
+    <!-- Table -->
+    <div class="table-responsive mt-3">
+        <table class="table table-hover table-bordered align-middle mb-0 text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th style="width:5%;">#</th>
+                    <th style="width:15%;">Người gửi</th>
+                    <th style="width:15%;">Tiêu đề</th>
+                    <th style="width:25%;">Nội dung</th>
+                    <th style="width:10%;">Trạng thái</th>
+                    <th style="width:15%;">Ngày gửi</th>
+                    <th style="width:15%;">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% @suggestions.each_with_index do |s, i| %>
+                <tr class="animate-row">
+                    <td><%= i + 1 %></td>
+                    <td class="text-start"><%= s.user.name || s.user.email %></td>
+                    <td class="text-start"><%= s.title %></td>
+                    <td class="text-start"><%= truncate(s.content, length: 50) %></td>
+                    <td>
+                        <span class="badge 
+              <%= case s.status
+                  when 'approved' then 'bg-success'
+                  when 'rejected' then 'bg-danger'
+                  else 'bg-secondary'
+              end %>">
+                            <%= case s.status
+                  when 'approved' then 'Đã duyệt'
+                  when 'rejected' then 'Từ chối'
+                  else 'Đang chờ'
+              end %>
+                        </span>
+                    </td>
+                    <td><%= s.created_at.strftime("%d/%m/%Y %H:%M") %></td>
+                    <td>
+                        <div class="d-flex justify-content-center gap-1 flex-wrap">
+                            <%= link_to "Xem", admin_suggestion_path(s), class: "btn btn-sm btn-info btn-anim" %>
+                            <%= link_to "Sửa", edit_admin_suggestion_path(s), class: "btn btn-sm btn-warning btn-anim" %>
+                            <%= link_to "Xóa", admin_suggestion_path(s), data: { turbo_method: :delete, turbo_confirm: "Xóa góp ý này?" }, class: "btn btn-sm btn-danger btn-anim" %>
+                        </div>
+                    </td>
+                </tr>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
 </div>
 
-<div class="suggestions-wrapper">
-    <table class="table table-striped table-hover align-middle">
-        <thead class="table-dark">
-            <tr>
-                <th>#</th>
-                <th>Người gửi</th>
-                <th>Tiêu đề</th>
-                <th>Nội dung</th>
-                <th>Trạng thái</th>
-                <th>Ngày gửi</th>
-                <th>Hành động</th>
-            </tr>
-        </thead>
+<style>
+    .suggestions-card {
+        border-radius: 18px;
+        border: 1px solid #e0e0e0;
+        background-color: #fff;
+        padding: 1.5rem;
+        transition: 0.3s ease;
+    }
 
-        <tbody>
-            <% @suggestions.each_with_index do |s, i| %>
-            <tr>
-                <td><%= i + 1 %></td>
-                <td><%= s.user.name || s.user.email %></td>
-                <td><%= s.title %></td>
-                <td><%= truncate(s.content, length: 50) %></td>
+    .suggestions-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+    }
 
-                <td>
-                    <span class="badge 
-                        <%= case s.status
-                            when 'approved' then 'bg-success'
-                            when 'rejected' then 'bg-danger'
-                            else 'bg-secondary'
-                        end %>">
-                        <%= case s.status
-                            when 'approved' then 'Đã duyệt'
-                            when 'rejected' then 'Từ chối'
-                            else 'Đang chờ'
-                        end %>
-                    </span>
-                </td>
+    .btn-anim {
+        transition: 0.25s ease;
+    }
 
+    .btn-anim:hover:not([disabled]) {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
 
-                <td><%= s.created_at.strftime("%d/%m/%Y %H:%M") %></td>
+    .animate-fade-in {
+        animation: fadeIn 0.6s ease forwards;
+        opacity: 0;
+    }
 
-                <td class="action-col">
-                    <%= link_to "Xem", admin_suggestion_path(s), class: "btn btn-sm btn-info me-1" %>
+    .animate-row {
+        transition: 0.25s ease, background-color 0.25s ease;
+    }
 
-                    <%= link_to "Sửa", edit_admin_suggestion_path(s), class: "btn btn-sm btn-warning me-1" %>
+    .animate-row:hover {
+        background-color: #f1f6ff !important;
+    }
 
-                    <%= link_to "Xóa", admin_suggestion_path(s),
-              data: { turbo_method: :delete, turbo_confirm: "Xóa góp ý này?" },
-              class: "btn btn-sm btn-danger" %>
-                </td>
-            </tr>
-            <% end %>
-        </tbody>
-    </table>
-</div>
+    .price-cell {
+        font-variant-numeric: tabular-nums;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+</style>

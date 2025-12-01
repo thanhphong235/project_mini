@@ -1,14 +1,27 @@
 <%= turbo_frame_tag "order_show_#{@order.id}" do %>
 
-<div class="card order-detail-card p-4">
+<div class="card order-detail-card p-4 shadow-lg rounded-4 animate-fade-in">
 
     <!-- Flash messages -->
     <div id="flash_messages" class="mb-3"></div>
 
     <!-- Header -->
-    <div class="order-header mb-4">
-        <h1 class="order-title">Chi tiết đơn hàng #<%= @order.id %></h1>
-        <div class="order-info">
+    <div class="order-header mb-4 animate-slide-down">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <!-- Nút Quay lại bên trái -->
+            <%= link_to "Quay lại", admin_orders_path, class: "btn btn-secondary btn-anim", data: { turbo: false } %>
+
+            <!-- Tiêu đề căn giữa -->
+            <h1 class="order-title fw-semibold text-center flex-grow-1 mb-0">
+                Chi tiết đơn hàng #<%= @order.id %>
+            </h1>
+
+            <!-- Placeholder bên phải để giữ tiêu đề luôn ở giữa -->
+            <div style="width: 100px;"></div>
+        </div>
+
+
+        <div class="order-info text-muted">
             <p><strong>Người đặt:</strong> <%= @order.user&.name || @order.user&.email %></p>
             <p><strong>Ngày đặt:</strong> <%= @order.created_at.strftime("%d/%m/%Y %H:%M") %></p>
             <p><strong>Tổng tiền:</strong> <%= number_to_currency(@order.total_price, unit: "₫") %></p>
@@ -17,7 +30,6 @@
                 <%= render partial: "status_badge", locals: { order: @order } %>
                 <% end %>
             </p>
-
         </div>
     </div>
 
@@ -25,7 +37,7 @@
 
     <!-- Danh sách sản phẩm -->
     <h3 class="mb-3">Danh sách sản phẩm</h3>
-    <div class="table-responsive mb-4">
+    <div class="table-responsive mb-4 animate-zoom-in">
         <table class="table table-bordered order-items-table">
             <thead class="table-light">
                 <tr>
@@ -53,29 +65,106 @@
     <hr>
 
     <!-- Form cập nhật trạng thái -->
-    <h4 class="mb-3">Cập nhật trạng thái</h4>
-    <%= form_with(model: [:admin, @order], method: :patch, local: false, class: "update-status-form") do |f| %>
-    <div class="mb-3">
-        <%= f.label :status, "Trạng thái đơn hàng", class: "form-label" %>
-        <%= f.select :status,
-        Order.statuses.keys.map { |key| [Order.new(status: key).status_human, key] },
-        { selected: @order.status },
-        class: "form-select" %>
-    </div>
-    <%= f.submit "Cập nhật", class: "btn btn-success btn-update-status" %>
-    <% end %>
+    <div class="animate-slide-up">
+        <h4 class="mb-3">Cập nhật trạng thái</h4>
+        <%= form_with(model: [:admin, @order], method: :patch, local: false, class: "update-status-form") do |f| %>
+        <div class="mb-3">
+            <%= f.label :status, "Trạng thái đơn hàng", class: "form-label" %>
+            <%= f.select :status,
+                    Order.statuses.keys.map { |key| [Order.new(status: key).status_human, key] },
+                    { selected: @order.status },
+                    class: "form-select shadow-sm" %>
+        </div>
+        <div class="d-flex gap-2 mt-3 animate-fade-in">
+            <%= f.submit "Cập nhật", class: "btn btn-success btn-update-status btn-anim" %>
+            <%= button_to "Xóa đơn hàng", admin_order_path(@order),
+            method: :delete,
+            data: { turbo_confirm: "Bạn có chắc chắn muốn xóa đơn hàng này?" },
+            class: "btn btn-outline-danger btn-anim" %>
+        </div>
 
+        <% end %>
+    </div>
     <hr>
-
-    <!-- Footer actions -->
-    <div class="d-flex gap-2">
-        <%= link_to "Quay lại", admin_orders_path, class: "btn btn-secondary", data: { turbo: false } %>
-        <%= button_to "Xóa đơn hàng", admin_order_path(@order),
-          method: :delete,
-          data: { turbo_confirm: "Bạn có chắc chắn muốn xóa đơn hàng này?" },
-          class: "btn btn-outline-danger" %>
-    </div>
 
 </div>
 
 <% end %>
+
+<style>
+    .animate-fade-in {
+        animation: fadeIn 0.5s ease forwards;
+        opacity: 0;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    .animate-slide-down {
+        animation: slideDown 0.5s ease-out;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-slide-up {
+        animation: slideUp 0.45s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-zoom-in {
+        animation: zoomIn 0.45s ease-out;
+    }
+
+    @keyframes zoomIn {
+        from {
+            opacity: 0;
+            transform: scale(0.97);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .btn-anim {
+        transition: 0.25s ease;
+    }
+
+    .btn-anim:hover:not([disabled]) {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .order-detail-card {
+        border-radius: 18px;
+    }
+</style>

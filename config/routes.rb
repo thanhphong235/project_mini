@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'menus/index'
   get 'contacts/index'
   get 'gallerys/index'
   get 'events/index'
@@ -77,6 +78,7 @@ Rails.application.routes.draw do
 
   #Contacts
   resources :contacts, only: [:index, :create]
+
 
   # Đơn hàng (USER)
   resources :orders, only: [:index, :show, :update, :create] do

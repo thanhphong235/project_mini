@@ -17,14 +17,352 @@
     <% end %>
 </div>
 
+<!-- ================= about ================= -->
+<div id="about" class="container py-5">
+    <div class="row align-items-start g-5">
+        <!-- Ảnh minh họa + Book a Table -->
+        <div class="col-md-6">
+            <%= image_tag "yummy/gallery/gallery-1.jpg", class: "img-fluid rounded-4 shadow mb-4", alt: "About Us" %>
+
+            <!-- Book a Table -->
+            <div class="p-4 rounded-4 shadow text-white 
+            d-flex flex-column justify-content-center align-items-center text-center" style="background: linear-gradient(135deg, #ff7e5f, #feb47b); min-height: 50px;">
+                <h3 class="mb-3">Book a Table</h3>
+                <p class="fs-5 mb-3">+1 5589 55488 55</p>
+            </div>
+
+        </div>
+
+        <!-- Nội dung About -->
+        <div class="col-md-6">
+            <h1 class="mb-3">About Us</h1>
+            <p class="lead mb-4">Learn More About Us</p>
+
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            </p>
+            <p>
+                Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit.
+            </p>
+            <p>
+                Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate trideta storacalaperda mastiro dolore eu fugiat nulla pariatur.
+            </p>
+            <p>
+                Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- ================= menu ================= -->
+<section id="menu" class="menu section py-5">
+    <div class="container">
+
+        <!-- ===== Title ===== -->
+        <div class="text-center mb-4">
+            <h2 class="display-5 fw-bold">Danh sách Món ăn & Thức uống</h2>
+            <div class="mt-auto pt-3 d-flex gap-2">
+            </div>
+
+            <!-- ===== Food List ===== -->
+            <div class="row gy-4">
+
+                <% @food_drinks.each do |fd| %>
+                <div class="col-lg-4 col-md-6">
+
+                    <div class="menu-item d-flex flex-column h-100 p-3 shadow-sm rounded-3">
+
+                        <div class="mb-3">
+                            <% if fd.image.attached? %>
+                            <%= image_tag fd.image,
+                    class: "img-fluid rounded-3 w-100",
+                    style: "height: 220px; object-fit: cover;" %>
+                            <% else %>
+                            <div class="bg-secondary text-white rounded-3 d-flex align-items-center justify-content-center" style="height: 220px;">Không có ảnh</div>
+                            <% end %>
+                        </div>
+
+                        <h4><%= fd.name %></h4>
+
+                        <!-- Rating -->
+                        <% avg_score = fd.ratings.average(:score)&.round(1) || 0 %>
+                        <% total_ratings = fd.ratings.count %>
+
+                        <div class="mb-2">
+                            <% 5.times do |i| %>
+                            <% if i < avg_score %>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <% else %>
+                            <i class="bi bi-star text-warning"></i>
+                            <% end %>
+                            <% end %>
+
+                            <span class="ms-2 text-muted">(<%= total_ratings %> đánh giá)</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-2">
+                            <span class="fw-bold text-danger"><%= number_to_currency(fd.price, unit: "₫") %></span>
+                            <small class="text-muted"><%= fd.category&.name %></small>
+                        </div>
+
+                        <!-- Buttons -->
+
+
+                    </div>
+                </div>
+                <% end %>
+
+            </div>
+
+            <% if @food_drinks.empty? %>
+            <p class="text-center text-muted mt-4">Không tìm thấy món nào phù hợp.</p>
+            <% end %>
+
+        </div>
+</section>
+
+
+<!-- ================= Chefs ================= -->
+<section id="chefs" class="py-5">
+    <div class="container">
+
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Our <span class="text-danger">Chefs</span></h2>
+            <p class="text-muted">Những đầu bếp tài năng của chúng tôi</p>
+        </div>
+
+        <div class="row g-4">
+
+            <!-- Chef 1 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                    <%= image_tag "yummy/chefs/chefs-1.jpg", class: "card-img-top", alt: "Chef 1" %>
+                    <div class="card-body text-center">
+                        <h5 class="fw-bold">Walter White</h5>
+                        <p class="text-muted small">Master Chef</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chef 2 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                    <%= image_tag "yummy/chefs/chefs-2.jpg", class: "card-img-top", alt: "Chef 2" %>
+                    <div class="card-body text-center">
+                        <h5 class="fw-bold">Sarah Johnson</h5>
+                        <p class="text-muted small">Patissier</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chef 3 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                    <%= image_tag "yummy/chefs/chefs-3.jpg", class: "card-img-top", alt: "Chef 3" %>
+                    <div class="card-body text-center">
+                        <h5 class="fw-bold">William Anderson</h5>
+                        <p class="text-muted small">Cook</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ================= Events ================= -->
+<section id="events" class="events-section py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">Our Events</h2>
+            <p class="lead text-muted">Stay updated with our latest food & drink events</p>
+        </div>
+
+        <!-- Swiper Carousel -->
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+                <% events = [
+          {img: "yummy/events-1.jpg", title: "Wine Tasting", date: "12 Dec", desc: "Enjoy premium wines from around the world."},
+          {img: "yummy/events-2.jpg", title: "Cooking Class", date: "18 Dec", desc: "Learn to cook delicious dishes."},
+          {img: "yummy/events-3.jpg", title: "Food Festival", date: "25 Dec", desc: "A celebration of flavors."},
+          {img: "yummy/events-4.jpg", title: "Chef Workshop", date: "05 Jan", desc: "Masterclass by top chefs."},
+          {img: "yummy/events-2.jpg", title: "Dessert Night", date: "15 Jan", desc: "Indulge in exquisite desserts."},
+          {img: "yummy/events-4.jpg", title: "Seafood Feast", date: "20 Jan", desc: "Fresh seafood from local markets."}
+        ] %>
+
+                <% events.each do |e| %>
+                <div class="swiper-slide">
+                    <div class="card rounded-4 overflow-hidden shadow-sm event-card position-relative text-white">
+                        <%= image_tag e[:img], class: "card-img-top", alt: e[:title] %>
+
+                        <!-- Overlay gradient -->
+                        <div class="overlay position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-end p-4">
+                            <div class="event-date bg-primary text-center fw-bold rounded-end px-2 py-1 mb-2" style="width: 60px;">
+                                <div class="fs-6"><%= e[:date].split(' ').last %></div>
+                                <div class="fs-5"><%= e[:date].split(' ').first %></div>
+                            </div>
+                            <h5 class="fw-bold"><%= e[:title] %></h5>
+                            <p class="mb-2"><%= e[:desc] %></p>
+                            <%= link_to "Learn More", "#", class: "btn btn-outline-light btn-sm rounded-pill" %>
+                        </div>
+                    </div>
+                </div>
+                <% end %>
+            </div>
+
+            <!-- Pagination + Navigation -->
+            <div class="swiper-button-next text-white"></div>
+            <div class="swiper-button-prev text-white"></div>
+            <div class="swiper-pagination mt-4"></div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= Contact ================= -->
+<section id="contact" class="contact-section py-5">
+    <div class="container">
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold" style="font-family: 'Poppins', sans-serif;">Contact Us</h2>
+            <p class="lead text-muted" style="font-family: 'Poppins', sans-serif;">We'd love to hear from you!</p>
+        </div>
+
+        <!-- Map -->
+        <div class="mb-5 rounded-4 overflow-hidden shadow">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.1234567890!2d105.843423!3d21.028511!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab123456789%3A0xabcdef123456789!2sHanoi%2C%20Vietnam!5e0!3m2!1sen!2s!4v1234567890" width="100%" height="350" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+
+        <div class="row g-4">
+            <!-- Column 1 -->
+            <div class="col-lg-6 col-md-12">
+                <div class="mb-4">
+                    <div class="contact-info p-4 shadow-lg rounded-4 text-center h-100">
+                        <i class="bi bi-geo-alt-fill fs-2 text-danger"></i>
+                        <h6 class="mt-2 fw-bold">Address</h6>
+                        <p>123 Street, Hanoi, Vietnam</p>
+                    </div>
+                </div>
+                <div>
+                    <div class="contact-info p-4 shadow-lg rounded-4 text-center h-100">
+                        <i class="bi bi-telephone-fill fs-2 text-danger"></i>
+                        <h6 class="mt-2 fw-bold">Phone</h6>
+                        <p>+84 123 456 789</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Column 2 -->
+            <div class="col-lg-6 col-md-12">
+                <div class="mb-4">
+                    <div class="contact-info p-4 shadow-lg rounded-4 text-center h-100">
+                        <i class="bi bi-envelope-fill fs-2 text-danger"></i>
+                        <h6 class="mt-2 fw-bold">Email</h6>
+                        <p>info@example.com</p>
+                    </div>
+                </div>
+                <div>
+                    <div class="contact-info p-4 shadow-lg rounded-4 text-center h-100">
+                        <i class="bi bi-clock-fill fs-2 text-danger"></i>
+                        <h6 class="mt-2 fw-bold">Hours</h6>
+                        <p>Mon - Fri: 9:00 - 18:00</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Contact Form -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="contact-form p-4 shadow-lg rounded-4 h-100" style="background: #fff;">
+                    <%= form_with url: contacts_path, method: :post, local: true do |f| %>
+                    <div class="mb-3">
+                        <%= f.label :name, "Your Name", class: "form-label" %>
+                        <%= f.text_field :name, class: "form-control form-control-lg", required: true %>
+                    </div>
+                    <div class="mb-3">
+                        <%= f.label :email, "Your Email", class: "form-label" %>
+                        <%= f.email_field :email, class: "form-control form-control-lg", required: true %>
+                    </div>
+                    <div class="mb-3">
+                        <%= f.label :subject, "Subject", class: "form-label" %>
+                        <%= f.text_field :subject, class: "form-control form-control-lg", required: true %>
+                    </div>
+                    <div class="mb-3">
+                        <%= f.label :message, "Message", class: "form-label" %>
+                        <%= f.text_area :message, class: "form-control form-control-lg", rows: 5, required: true %>
+                    </div>
+                    <div class="mt-4 text-end">
+                        <%= f.submit "Send Message", class: "btn btn-danger btn-lg px-4" %>
+                    </div>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ================= gallery ================= -->
+<section id="gallery" class="events-section py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold" style="font-family: 'Poppins', sans-serif;">Gallery</h2>
+            <p class="lead text-muted" style="font-family: 'Poppins', sans-serif;">Check Our Gallery</p>
+        </div>
+
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+                <% events = [
+          "yummy/gallery/gallery-1.jpg",
+          "yummy/gallery/gallery-2.jpg",
+          "yummy/gallery/gallery-3.jpg",
+          "yummy/gallery/gallery-4.jpg",
+          "yummy/gallery/gallery-5.jpg",
+          "yummy/gallery/gallery-6.jpg",
+          "yummy/gallery/gallery-7.jpg",
+          "yummy/gallery/gallery-8.jpg"
+        ] %>
+
+                <% events.each do |img_path| %>
+                <div class="swiper-slide">
+                    <%= image_tag img_path, class: "gallery-img", alt: "Gallery image" %>
+                </div>
+                <% end %>
+            </div>
+
+            <div class="swiper-button-next text-dark"></div>
+            <div class="swiper-button-prev text-dark"></div>
+            <div class="swiper-pagination mt-4"></div>
+        </div>
+    </div>
+</section>
+
 <!-- ================= Optional Image or Illustration ================= -->
 
 <style>
+    /* ================= Header & Main ================= */
+    header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 2000;
+    }
+
+    main {
+        padding-top: 120px;
+        /* khoảng cách từ header cố định xuống nội dung */
+    }
+
+    /* ================= Hero Section ================= */
     .hero-section {
         background: #fff8f0;
         border-radius: 20px;
         padding: 60px 30px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+        /* khoảng cách thêm so với header */
     }
 
     .hero-section h1 {
@@ -47,4 +385,193 @@
     .hero-section .btn-lg:hover {
         transform: translateY(-2px);
     }
+
+    /* ================= Scroll Anchor Fix ================= */
+    section,
+    #hero {
+        scroll-margin-top: 120px;
+        /* tránh bị header che khi click navbar anchor link */
+    }
+
+    /* ================= Sections khác ================= */
+    #events,
+    #menu,
+    #about,
+    #chefs,
+    #contact,
+    #gallery {
+        scroll-margin-top: 120px;
+        /* anchor link chuẩn */
+    }
+
+    /* ================= Optional: thêm khoảng cách giữa các section ================= */
+    section {
+        margin-bottom: 60px;
+        /* khoảng cách giữa các section */
+    }
+
+
+    #events {
+        scroll-margin-top: 70px;
+    }
+
+    .event-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+    }
+
+    .event-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.3);
+    }
+
+    .card-img-top {
+        display: block;
+        width: 100%;
+        height: 500px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .event-card:hover .card-img-top {
+        transform: scale(1.05);
+    }
+
+    .overlay {
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.7) 100%);
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+
+    .event-date {
+        line-height: 1;
+    }
+
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+    #events {
+        font-family: 'Poppins', sans-serif;
+        scroll-margin-top: 70px;
+    }
+
+    .gallery-img {
+        width: 200px;
+        height: 200px;
+        object-fit: cover;
+        border: 0 solid #dc3545;
+        box-sizing: border-box;
+        display: block;
+    }
+
+    .swiper-slide {
+        padding: 0 !important;
+        margin: 0 !important;
+        display: flex;
+        justify-content: center;
+    }
+
+    .swiper-slide-active .gallery-img {
+        border: 10px solid #dc3545;
+        /* chỉ ảnh giữa có viền đỏ */
+    }
+
+    #contact {
+        font-family: 'Poppins', sans-serif;
+        scroll-margin-top: 70px;
+    }
+
+    .contact-info i {
+        color: #dc3545;
+    }
+
+    .contact-info h6 {
+        color: #333;
+    }
+
+    .contact-info p {
+        color: #555;
+        font-size: 0.95rem;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+        border-radius: 0.5rem;
+        transition: all 0.3s;
+    }
+
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+        border-color: #dc3545;
+        box-shadow: 0 0 10px rgba(220, 53, 69, 0.3);
+    }
+
+    .contact-form .btn-danger {
+        border-radius: 2rem;
+        padding: 0.6rem 2.5rem;
+        transition: all 0.3s;
+    }
+
+    .contact-form .btn-danger:hover {
+        background-color: #c82333;
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 767px) {
+
+        .contact-info,
+        .contact-form {
+            text-align: center;
+        }
+    }
 </style>
+
+<script>
+    document.addEventListener("turbo:load", () => {
+        new Swiper(".mySwiper", {
+            slidesPerView: 1,
+            spaceBetween: 20,
+            loop: true,
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev"
+            },
+            breakpoints: {
+                768: {
+                    slidesPerView: 2
+                },
+                992: {
+                    slidesPerView: 3
+                }
+            }
+        });
+    });
+    document.addEventListener("turbo:load", () => {
+        new Swiper(".mySwiper", {
+            slidesPerView: 3,
+            spaceBetween: 0, // loại bỏ khoảng cách giữa các ảnh
+            centeredSlides: true, // ảnh giữa luôn ở trung tâm
+            loop: true,
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev"
+            }
+        });
+    });
+</script>

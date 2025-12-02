@@ -5,10 +5,19 @@
         <div class="card shadow-lg border-0 rounded-4 p-4">
 
             <!-- Title -->
-            <div class="text-center mb-4">
-                <h2 class="fw-bold">Create Account</h2>
-                <p class="text-muted">Join us today</p>
+            <div class="position-relative mb-4">
+                <!-- Nút quay lại ở góc trái -->
+                <%= link_to root_path, class: "btn btn-outline-secondary btn-sm position-absolute start-0" do %>
+                <i class="bi bi-arrow-left"></i>
+                <% end %>
+
+                <!-- Tiêu đề & mô tả căn giữa -->
+                <div class="text-center">
+                    <h2 class="fw-bold mb-0">Create Account</h2>
+                    <p class="text-muted mb-0">Join us today</p>
+                </div>
             </div>
+
 
             <!-- Errors -->
             <% if resource.errors.any? %>

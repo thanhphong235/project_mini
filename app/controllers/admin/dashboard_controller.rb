@@ -3,7 +3,35 @@ class Admin::DashboardController < Admin::BaseController
   before_action :require_admin
 
   def index
+    # Small boxes
+    @user_count       = User.count
+    @category_count   = Category.count
+    @food_count       = FoodDrink.count
+    @order_count      = Order.count
+    @suggestion_count = Suggestion.count
+
+    # Donut chart: số lượng sản phẩm theo category
+    @fooddrink_counts = FoodDrink.joins(:category)
+                                 .group('categories.name')
+                                 .count || {}
+
+    # Nếu chưa có dữ liệu, tạo test dữ liệu
+    if @fooddrink_counts.empty?
+      c = Category.first || Category.create(name: "Đồ ăn")
+      FoodDrink.create(name: "Phở", category: c)
+      @fooddrink_counts = FoodDrink.joins(:category)
+                                   .group('categories.name')
+                                   .count
+    end
+
+    # Thành viên mới
+    @new_users = User.order(created_at: :desc).limit(8)
+
+    # Đơn hàng gần đây
+    @recent_orders = Order.order(created_at: :desc).limit(10)
   end
+end
+
 
   # =========================
   # 📊 Thống kê đơn hàng
@@ -73,4 +101,4 @@ end
       redirect_to root_path, alert: "🚫 Bạn không có quyền truy cập trang này!"
     end
   end
-end
+

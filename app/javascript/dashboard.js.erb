@@ -1,0 +1,44 @@
+document.addEventListener("turbo:load", () => {
+  // ===== Line chart =====
+  const lineCtx = document.getElementById("lineChart");
+  if(lineCtx){
+    new Chart(lineCtx, {
+      type: "line",
+      data: { labels:["T1","T2","T3","T4","T5","T6","T7","T8","T9","T10","T11","T12"], datasets:[{ data:[12,19,3,5,8,13,12,19,3,5,5,8], borderColor:"#36A2EB", borderWidth:2, fill:false }] },
+      options:{ responsive:true }
+    });
+  }
+
+  // ===== Bar chart =====
+  const barCtx = document.getElementById("barChart");
+  if(barCtx){
+    new Chart(barCtx, {
+      type: "bar",
+      data: { labels:["T1","T2","T3","T4","T5","T6","T7","T8","T9","T10","T11","T12"], datasets:[{ data:[20,30,40,25,35,50,100,80,36,18,9,12], backgroundColor:"#FFCE56" }] },
+      options:{ responsive:true }
+    });
+  }
+
+  // ===== Donut chart =====
+  const donutCtx = document.getElementById("donutChart");
+  if(donutCtx){
+    const donutLabels = JSON.parse(donutCtx.dataset.labels || "[]");
+    const donutData   = JSON.parse(donutCtx.dataset.values || "[]");
+
+    console.log("Donut Labels:", donutLabels);
+    console.log("Donut Data:", donutData);
+
+    if(donutLabels.length > 0){
+      const colors = ["#FF6384","#36A2EB","#FFCE56","#4BC0C0","#9966FF","#FF9F40"];
+      const donutColors = donutLabels.map((_, i) => colors[i % colors.length]);
+
+      new Chart(donutCtx, {
+        type: "doughnut",
+        data: { labels: donutLabels, datasets:[{ data: donutData, backgroundColor: donutColors }] },
+        options:{ responsive:true }
+      });
+    } else {
+      console.warn("Donut chart không có dữ liệu!");
+    }
+  }
+});

@@ -5,9 +5,17 @@
             <p class="lead text-muted" style="font-family: 'Poppins', sans-serif;">Check Our Gallery</p>
         </div>
 
-        <div class="swiper mySwiper">
+        <div class="swiper mySwipers">
             <div class="swiper-wrapper">
                 <% events = [
+          "yummy/gallery/gallery-1.jpg",
+          "yummy/gallery/gallery-2.jpg",
+          "yummy/gallery/gallery-3.jpg",
+          "yummy/gallery/gallery-4.jpg",
+          "yummy/gallery/gallery-5.jpg",
+          "yummy/gallery/gallery-6.jpg",
+          "yummy/gallery/gallery-7.jpg",
+          "yummy/gallery/gallery-8.jpg",
           "yummy/gallery/gallery-1.jpg",
           "yummy/gallery/gallery-2.jpg",
           "yummy/gallery/gallery-3.jpg",
@@ -64,8 +72,8 @@
 
 <script>
     document.addEventListener("turbo:load", () => {
-        new Swiper(".mySwiper", {
-            slidesPerView: 3,
+        new Swiper(".mySwipers", {
+            slidesPerView: 5,
             spaceBetween: 0, // loại bỏ khoảng cách giữa các ảnh
             centeredSlides: true, // ảnh giữa luôn ở trung tâm
             loop: true,

@@ -6,7 +6,6 @@
     <% if user_signed_in? %>
     <p class="lead mb-4">Hello, <%= current_user.name.presence || current_user.email %>!</p>
     <div class="d-flex justify-content-center gap-2 flex-wrap">
-        <%= link_to "Xem Menu", food_drinks_path, class: "btn btn-primary btn-lg" %>
         <%= link_to "Đăng xuất", destroy_user_session_path, data: { turbo_method: :delete, turbo_confirm: "Bạn chắc chắn muốn đăng xuất?" }, class: "btn btn-outline-danger btn-lg" %>
     </div>
     <% else %>

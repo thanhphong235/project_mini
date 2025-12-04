@@ -1,4 +1,4 @@
-class Admin::SuggestionsController < ApplicationController
+class Admin::SuggestionsController < Admin::BaseController
   before_action :authenticate_user!
   before_action :check_admin
   before_action :set_suggestion, only: [:show, :edit, :update, :destroy]

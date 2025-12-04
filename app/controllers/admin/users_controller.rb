@@ -1,5 +1,5 @@
 module Admin
-  class UsersController < ApplicationController
+  class UsersController < Admin::BaseController
     before_action :authenticate_user!
     before_action :require_admin
     before_action :set_user, only: [:show, :destroy]

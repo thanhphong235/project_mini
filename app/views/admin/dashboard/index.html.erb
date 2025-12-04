@@ -1,35 +1,235 @@
-<h1 class="mb-4 text-center text-primary">🛠️ Trang Quản Trị</h1>
+<%
+=begin%>
+<div class="content-wrapper p-4" style="min-height: 100vh;">
 
-<p class="text-center lead">
-    Chào <strong><%= current_user.name || current_user.email %></strong>!
-    Bạn đang đăng nhập với quyền:
-    <span class="badge bg-<%= current_user.admin? ? 'danger' : 'secondary' %>">
-        <%= current_user.admin? ? "Admin" : "User" %>
-    </span>
-</p>
+    <!-- PAGE HEADER -->
+    <section class="content-header">
+        <h1 class="mb-4 text-center text-primary">🛠️ Trang Quản Trị</h1>
 
-<hr class="my-4">
+        <p class="text-center lead">
+            Chào <strong><%= current_user.name || current_user.email %></strong>!
+            Bạn đang đăng nhập với quyền:
+            <span class="badge bg-<%= current_user.admin? ? 'danger' : 'secondary' %>">
+                <%= current_user.admin? ? "Admin" : "User" %>
+            </span>
+        </p>
+    </section>
+    <%
+=end%>
 
-<div class="row g-4 justify-content-center">
-    <% admin_sections = [
-    {title: "Người dùng", text: "Quản lý tất cả người dùng của hệ thống", path: admin_users_path, icon: "bi-people"},
-    {title: "Danh mục", text: "Quản lý tất cả danh mục sản phẩm", path: admin_categories_path, icon: "bi-list-ul"},
-    {title: "Sản phẩm", text: "Quản lý tất cả món ăn & thức uống, kèm hình ảnh", path: admin_food_drinks_path, icon: "bi-basket"},
-    {title: "Đơn hàng", text: "Xem và quản lý tất cả đơn hàng của khách", path: admin_orders_path, icon: "bi-receipt"},
-    {title: "Góp ý", text: "Xem, duyệt và quản lý các góp ý từ người dùng", path: admin_suggestions_path, icon: "bi-chat-left-text"},
-    {title: "Thống kê đơn hàng", text: "Xem thống kê đơn hàng tính đến hôm nay", path: admin_order_statistics_path, icon: "bi-bar-chart"}
-  ] %>
+    <!-- ========================= MAIN CONTENT ========================= -->
+    <section class="content">
+        <div class="container-fluid">
 
-    <% admin_sections.each do |section| %>
-    <div class="col-sm-6 col-md-4 col-lg-3">
-        <div class="card h-100 shadow-sm border-0 hover-shadow">
-            <div class="card-body text-center">
-                <i class="bi <%= section[:icon] %> display-4 text-primary mb-3"></i>
-                <h5 class="card-title mb-2"><%= section[:title] %></h5>
-                <p class="card-text text-muted mb-3"><%= section[:text] %></p>
-                <%= link_to section[:title], section[:path], class: "btn btn-outline-primary w-100" %>
+            <!-- ===== ROW 1: Small boxes ===== -->
+            <div class="row">
+
+                <% small_boxes = [
+              {count: User.count, label: "Người dùng", icon: "fas fa-users", color: "info", path: admin_users_path},
+              {count: Category.count, label: "Danh mục", icon: "fas fa-list", color: "secondary", path: admin_categories_path},
+              {count: FoodDrink.count, label: "Sản phẩm", icon: "fas fa-utensils", color: "success", path: admin_food_drinks_path},
+              {count: Order.count, label: "Đơn hàng", icon: "fas fa-shopping-cart", color: "warning", path: admin_orders_path},
+              {count: Suggestion.count, label: "Góp ý", icon: "fas fa-comment-dots", color: "primary", path: admin_suggestions_path},
+              {count: Order.count, label: "Thống kê", icon: "fas fa-chart-line", color: "danger", path: admin_order_statistics_path}
+            ] %>
+
+                <% small_boxes.each do |box| %>
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-<%= box[:color] %>">
+                        <div class="inner">
+                            <h3><%= box[:count] %></h3>
+                            <p><%= box[:label] %></p>
+                        </div>
+                        <div class="icon">
+                            <i class="<%= box[:icon] %>"></i>
+                        </div>
+                        <%= link_to "Chi tiết", box[:path], class: "small-box-footer" %>
+                    </div>
+                </div>
+                <% end %>
+
             </div>
+
+            <!-- ===== ROW 2: CHARTS ===== -->
+            <div class="row">
+                <section class="col-lg-6 connectedSortable">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-chart-line"></i> Doanh thu</h3>
+                        </div>
+                        <div class="card-body"><canvas id="lineChart"></canvas></div>
+                    </div>
+                </section>
+
+                <section class="col-lg-6 connectedSortable">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-chart-bar"></i> Số đơn hàng</h3>
+                        </div>
+                        <div class="card-body"><canvas id="barChart"></canvas></div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- ===== ROW 3: DONUT + MEMBERS ===== -->
+            <div class="row">
+                <section class="col-lg-4">
+                    <div class="card card-danger">
+                        <div class="card-header">
+                            <h3 class="card-title">Tỷ lệ sản phẩm</h3>
+                        </div>
+                        <div class="card-body"><canvas id="donutChart"></canvas></div>
+                    </div>
+                </section>
+
+                <section class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header border-transparent">
+                            <h3 class="card-title">Thành viên mới</h3>
+                        </div>
+
+                        <div class="card-body p-0">
+                            <ul class="users-list clearfix p-3">
+                                <% User.order(created_at: :desc).limit(8).each do |u| %>
+                                <li class="text-center">
+                                    <img src="https://ui-avatars.com/api/?name=<%= u.name || 'User' %>" class="img-circle" width="70">
+                                    <a class="users-list-name" href="#"><%= u.name || "No name" %></a>
+                                    <span class="users-list-date"><%= u.created_at.strftime("%d/%m") %></span>
+                                </li>
+                                <% end %>
+                            </ul>
+                        </div>
+
+                    </div>
+                </section>
+            </div>
+
+            <!-- ===== RECENT ORDERS ===== -->
+            <div class="card bg-dark text-white">
+                <div class="card-header border-0 bg-dark">
+                    <h3 class="card-title text-white">Đơn hàng gần đây</h3>
+                </div>
+
+                <div class="card-body p-0">
+                    <table class="table table-dark table-striped m-0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Mã</th>
+                                <th>Khách hàng</th>
+                                <th>Tổng</th>
+                                <th>Ngày</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <% Order.order(created_at: :desc).limit(10).each do |o| %>
+                            <tr>
+                                <td><%= o.id %></td>
+                                <td><%= o.user&.name || "N/A" %></td>
+                                <td><%= number_to_currency(o.total_price, unit: "₫") %></td>
+                                <td><%= o.created_at.strftime("%d/%m/%Y") %></td>
+                                <td>
+                                    <% badge_class = case o.status
+                            when "pending" then "badge-warning"
+                            when "processing" then "badge-info"
+                            when "completed" then "badge-success"
+                            when "cancelled" then "badge-danger"
+                            when "delivering" then "badge-primary"
+                            when "confirmed" then "badge-secondary"
+                            else "badge-light"
+                        end %>
+
+                                    <span class="badge <%= badge_class %>">
+                                        <%= case o.status
+                                when "pending" then "Đang chờ"
+                                when "processing" then "Đang xử lý"
+                                when "completed" then "Hoàn thành"
+                                when "cancelled" then "Đã hủy"
+                                when "delivering" then "Đang giao"
+                                when "confirmed" then "Đã xác nhận"
+                                else o.status
+                            end %>
+                                    </span>
+                                </td>
+                            </tr>
+                            <% end %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <!-- ===== GOOGLE MAPS ===== -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-map-marker-alt"></i> Bản đồ</h3>
+                </div>
+
+                <div class="card-body p-0">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.1234567890!2d105.843423!3d21.028511!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab123456789%3A0xabcdef123456789!2sHanoi%2C%20Vietnam!5e0!3m2!1sen!2s!4v1234567890" width="100%" height="350" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+
+            <!-- ===== TO-DO LIST ===== -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">To-Do List</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="todo-list" data-widget="todo-list">
+                        <li><span class="text">Kiểm tra đơn hàng mới</span><small class="badge badge-danger"><i class="far fa-clock"></i> 1 giờ</small>
+                            <div class="tools"><i class="fas fa-edit"></i><i class="fas fa-trash"></i></div>
+                        </li>
+                        <li><span class="text">Duyệt món mới</span><small class="badge badge-warning"><i class="far fa-clock"></i> Hôm nay</small>
+                            <div class="tools"><i class="fas fa-edit"></i><i class="fas fa-trash"></i></div>
+                        </li>
+                        <li><span class="text">Phản hồi góp ý</span><small class="badge badge-success"><i class="far fa-clock"></i> 3 ngày</small>
+                            <div class="tools"><i class="fas fa-edit"></i><i class="fas fa-trash"></i></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
         </div>
-    </div>
-    <% end %>
+    </section>
 </div>
+
+<!-- CHART.JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    document.addEventListener("turbo:load", () => {
+        new Chart(document.getElementById("lineChart"), {
+            type: "line",
+            data: {
+                labels: ["T1", "T2", "T3", "T4", "T5", "T6"],
+                datasets: [{
+                    data: [12, 19, 3, 5, 8, 13],
+                    borderWidth: 2
+                }]
+            }
+        });
+
+        new Chart(document.getElementById("barChart"), {
+            type: "bar",
+            data: {
+                labels: ["T1", "T2", "T3", "T4", "T5", "T6"],
+                datasets: [{
+                    data: [20, 30, 40, 25, 35, 50]
+                }]
+            }
+        });
+
+        new Chart(document.getElementById("donutChart"), {
+            type: "doughnut",
+            data: {
+                labels: ["Đồ ăn", "Đồ uống", "Combo"],
+                datasets: [{
+                    data: [55, 30, 15]
+                }]
+            }
+        });
+    });
+</script>

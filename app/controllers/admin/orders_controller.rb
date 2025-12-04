@@ -1,4 +1,4 @@
-class Admin::OrdersController < ApplicationController
+class Admin::OrdersController < Admin::BaseController
   before_action :authenticate_user!
   before_action :require_admin
   before_action :set_order, only: [:show, :update, :destroy]

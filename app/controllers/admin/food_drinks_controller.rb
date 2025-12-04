@@ -1,4 +1,4 @@
-class Admin::FoodDrinksController < ApplicationController
+class Admin::FoodDrinksController < Admin::BaseController
   before_action :authenticate_user!
   before_action :require_admin
   before_action :set_food_drink, only: [:edit, :update, :destroy]

@@ -104,6 +104,7 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarContent">
+                    <% unless user_signed_in? && current_user.admin? %>
                     <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
                         <li class="nav-item"><%= user_signed_in? ? link_to("Home", root_path, class: "nav-link") : link_to("Home", "#hero", class: "nav-link") %></li>
                         <li class="nav-item"><%= user_signed_in? ? link_to("Menu", food_drinks_path, class: "nav-link") : link_to("Menu", "#menu", class: "nav-link") %></li>
@@ -113,6 +114,8 @@
                         <li class="nav-item"><%= user_signed_in? ? link_to("Gallery", gallerys_path, class: "nav-link") : link_to("Gallery", "#gallery", class: "nav-link") %></li>
                         <li class="nav-item"><%= user_signed_in? ? link_to("Contact", contacts_path, class: "nav-link") : link_to("Contact", "#contact", class: "nav-link") %></li>
                     </ul>
+                    <% end %>
+
 
                     <ul class="navbar-nav ms-auto align-items-center">
                         <% if user_signed_in? %>

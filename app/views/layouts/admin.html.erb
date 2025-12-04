@@ -1,76 +1,148 @@
-<h1 class="mb-4">Trang quản trị</h1>
+<!DOCTYPE html>
+<html lang="vi">
 
-<p>Chào <%= current_user.name || current_user.email %>!</p>
-<p>Bạn đang đăng nhập với quyền: <strong><%= current_user.admin? ? "Admin" : "User" %></strong></p>
+<head>
+    <meta charset="utf-8">
+    <title>Admin Panel</title>
 
-<hr>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
 
-<div class="row">
+    <!-- Bootstrap -->
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
 
-    <!-- Quản lý người dùng -->
-    <div class="col-md-3 mb-3">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Người dùng</h5>
-                <p class="card-text">Quản lý tất cả người dùng của hệ thống</p>
-                <%= link_to "Quản lý người dùng", admin_users_path, class: "btn btn-outline-primary" %>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- AdminLTE CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+
+    <!-- Google Font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700">
+</head>
+
+<body class="hold-transition sidebar-mini dark-mode">
+    <div class="wrapper">
+
+        <!-- ================= NAVBAR ================= -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+
+            <!-- Toggle Sidebar -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
+                </li>
+            </ul>
+
+            <!-- Right -->
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <%= link_to destroy_user_session_path, 
+              class: "nav-link", 
+              data: { turbo_method: :delete, turbo_confirm: "Bạn chắc chắn muốn đăng xuất?" } do %>
+                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                    <% end %>
+                </li>
+
+            </ul>
+
+        </nav>
+
+        <!-- ================= SIDEBAR ================= -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+
+            <!-- Logo -->
+            <a href="/" class="brand-link">
+                <span class="brand-text font-weight-light">Admin Panel</span>
+            </a>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+
+                <!-- User Panel -->
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        <img src="https://ui-avatars.com/api/?name=<%= current_user.name %>" class="img-circle elevation-2" alt="User Image">
+                    </div>
+                    <div class="info text-white">
+                        <%= current_user.name %>
+                    </div>
+                </div>
+
+                <!-- Sidebar Menu -->
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" role="menu">
+
+                        <li class="nav-item">
+                            <%= link_to admin_dashboard_path, class: "nav-link #{'active' if current_page?(admin_dashboard_path)}" do %>
+                            <i class="nav-icon fas fa-tachometer-alt"></i>
+                            <p>Dashboard</p>
+                            <% end %>
+                        </li>
+
+                        <li class="nav-item">
+                            <%= link_to admin_users_path, class: "nav-link #{'active' if current_page?(admin_users_path)}" do %>
+                            <i class="nav-icon fas fa-users"></i>
+                            <p>Người dùng</p>
+                            <% end %>
+                        </li>
+
+                        <li class="nav-item">
+                            <%= link_to admin_categories_path, class: "nav-link #{'active' if current_page?(admin_categories_path)}" do %>
+                            <i class="nav-icon fas fa-list"></i>
+                            <p>Danh mục</p>
+                            <% end %>
+                        </li>
+
+                        <li class="nav-item">
+                            <%= link_to admin_food_drinks_path, class: "nav-link #{'active' if current_page?(admin_food_drinks_path)}" do %>
+                            <i class="nav-icon fas fa-utensils"></i>
+                            <p>Sản phẩm</p>
+                            <% end %>
+                        </li>
+
+                        <li class="nav-item">
+                            <%= link_to admin_orders_path, class: "nav-link #{'active' if current_page?(admin_orders_path)}" do %>
+                            <i class="nav-icon fas fa-shopping-cart"></i>
+                            <p>Đơn hàng</p>
+                            <% end %>
+                        </li>
+
+                        <li class="nav-item">
+                            <%= link_to admin_suggestions_path, class: "nav-link #{'active' if current_page?(admin_suggestions_path)}" do %>
+                            <i class="nav-icon fas fa-comment-dots"></i>
+                            <p>Góp ý</p>
+                            <% end %>
+                        </li>
+
+                        <li class="nav-item">
+                            <%= link_to admin_order_statistics_path, class: "nav-link #{'active' if current_page?(admin_order_statistics_path)}" do %>
+                            <i class="nav-icon fas fa-chart-line"></i>
+                            <p>Thống kê</p>
+                            <% end %>
+                        </li>
+
+                    </ul>
+                </nav>
+
             </div>
+        </aside>
+
+        <!-- ================= CONTENT ================= -->
+        <div class="content-wrapper p-3">
+            <%= yield %>
         </div>
+
+        <!-- ================= FOOTER ================= -->
+        <footer class="main-footer text-center">
+            <strong>Admin Panel &copy; <%= Time.now.year %></strong>
+        </footer>
     </div>
 
-    <!-- Quản lý danh mục -->
-    <div class="col-md-3 mb-3">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Danh mục</h5>
-                <p class="card-text">Quản lý tất cả danh mục sản phẩm</p>
-                <%= link_to "Quản lý danh mục", admin_categories_path, class: "btn btn-outline-primary" %>
-            </div>
-        </div>
-    </div>
+    <!-- AdminLTE JS -->
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 
-    <!-- Quản lý sản phẩm -->
-    <div class="col-md-3 mb-3">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Sản phẩm</h5>
-                <p class="card-text">Quản lý tất cả món ăn & thức uống, kèm hình ảnh</p>
-                <%= link_to "Quản lý sản phẩm", admin_food_drinks_path, class: "btn btn-outline-primary" %>
-            </div>
-        </div>
-    </div>
+</body>
 
-    <!-- Quản lý đơn hàng -->
-    <div class="col-md-3 mb-3">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Đơn hàng</h5>
-                <p class="card-text">Xem và quản lý tất cả đơn hàng của khách</p>
-                <%= link_to "Quản lý đơn hàng", admin_orders_path, class: "btn btn-outline-primary" %>
-            </div>
-        </div>
-    </div>
-
-    <!-- Quản lý góp ý -->
-    <div class="col-md-3 mb-3">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Góp ý</h5>
-                <p class="card-text">Xem, duyệt và quản lý các góp ý từ người dùng</p>
-                <%= link_to "Quản lý góp ý", admin_suggestions_path, class: "btn btn-outline-primary" %>
-            </div>
-        </div>
-    </div>
-
-    <!-- Thống kê đơn hàng -->
-    <div class="col-md-3 mb-3">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Thống kê đơn hàng</h5>
-                <p class="card-text">Xem thống kê đơn hàng tính đến hôm nay</p>
-                <%= link_to "Xem thống kê đơn hàng", admin_order_statistics_path, class: "btn btn-outline-primary" %>
-            </div>
-        </div>
-    </div>
-
-</div>
+</html>

@@ -55,25 +55,37 @@
             <div class="col-12">
                 <div class="contact-form p-4 shadow-lg rounded-4 h-100" style="background: #fff;">
                     <%= form_with url: contacts_path, method: :post, local: true do |f| %>
-                    <div class="mb-3">
-                        <%= f.label :name, "Your Name", class: "form-label" %>
-                        <%= f.text_field :name, class: "form-control form-control-lg", required: true %>
+
+                    <!-- Name + Email cùng hàng -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <%= f.label :name, "Your Name", class: "form-label" %>
+                            <%= f.text_field :name, class: "form-control form-control-lg", required: true %>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <%= f.label :email, "Your Email", class: "form-label" %>
+                            <%= f.email_field :email, class: "form-control form-control-lg", required: true %>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <%= f.label :email, "Your Email", class: "form-label" %>
-                        <%= f.email_field :email, class: "form-control form-control-lg", required: true %>
-                    </div>
+
+                    <!-- Subject -->
                     <div class="mb-3">
                         <%= f.label :subject, "Subject", class: "form-label" %>
                         <%= f.text_field :subject, class: "form-control form-control-lg", required: true %>
                     </div>
+
+                    <!-- Message -->
                     <div class="mb-3">
                         <%= f.label :message, "Message", class: "form-label" %>
                         <%= f.text_area :message, class: "form-control form-control-lg", rows: 5, required: true %>
                     </div>
-                    <div class="mt-4 text-end">
+
+                    <!-- Nút gửi nằm giữa -->
+                    <div class="mt-4 text-center">
                         <%= f.submit "Send Message", class: "btn btn-danger btn-lg px-4" %>
                     </div>
+
                     <% end %>
                 </div>
             </div>

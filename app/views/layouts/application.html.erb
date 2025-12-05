@@ -176,14 +176,21 @@
     </header>
 
     <!-- Main content -->
+    <!-- Main content -->
     <main class="flex-grow-1">
+
+        <!-- Flash messages vẫn nằm trong container -->
         <div class="container mt-4">
             <%= turbo_frame_tag "flash_messages" do %>
             <%= render "shared/flash" %>
             <% end %>
-            <%= yield %>
         </div>
+
+        <!-- Nội dung trang: KHÔNG container để hero được full width -->
+        <%= yield %>
+
     </main>
+
 
     <!-- Footer -->
     <footer class="bg-dark text-light py-3 mt-auto">

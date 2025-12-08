@@ -1,149 +1,63 @@
-<div class="container mt-3 px-4" style="top: 65px; z-index: 1020; background-color: white; padding-top: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #ddd">
-    <!-- Header + Filter cố định -->
-    <div class="position-sticky" style="top: 65px; z-index: 1020; background-color: white; padding-top: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #ddd">
+<div class="container mt-3 px-4">
 
-        <!-- Tiêu đề -->
-        <h1 class="text-center mb-2">Danh sách Món ăn & Thức uống</h1>
+    <!-- Tiêu đề -->
+    <h1 class="text-center mb-2">Danh sách Món ăn & Thức uống</h1>
 
-        <!-- Category buttons ngay dưới tiêu đề -->
-        <div class="d-flex justify-content-center flex-wrap gap-2">
-            <%= link_to "Tất cả", food_drinks_path, class: "btn btn-secondary mb-2" %>
-            <% Category.all.each do |category| %>
-            <%= link_to category.name, food_drinks_path(category_id: category.id), class: "btn btn-primary mb-2" %>
-            <% end %>
-        </div>
-
-
-        <!-- Hàng 2: Form tìm kiếm / lọc -->
-        <div class="mb-3" data-controller="search">
-            <%= form_with url: food_drinks_path,
-        method: :get,
-        data: { search_target: "form", turbo_frame: "food_drinks_list" },
-        class: "d-flex gap-2 align-items-center w-100",
-        local: true do |f| %>
-
-            <%= f.text_field :query,
-          value: params[:query],
-          placeholder: "Tìm món ăn / thức uống...",
-          class: "form-control form-control-sm flex-grow-1",
-          style: "min-width: 200px;",
-          data: { action: "input->search#update" } %>
-
-            <%= f.number_field :min_price,
-          value: params[:min_price],
-          placeholder: "Giá min",
-          class: "form-control form-control-sm",
-          data: { action: "input->search#update" } %>
-
-            <%= f.number_field :max_price,
-          value: params[:max_price],
-          placeholder: "Giá max",
-          class: "form-control form-control-sm",
-          data: { action: "input->search#update" } %>
-
-            <%= f.number_field :min_rating,
-          value: params[:min_rating],
-          placeholder: "Đánh giá min",
-          step: 0.1,
-          class: "form-control form-control-sm",
-          data: { action: "input->search#update" } %>
-
-            <%= f.select :sort_by,
-          options_for_select([["Mặc định (A-Z)", ""], ["Giá tăng dần", "price_asc"], ["Giá giảm dần", "price_desc"]], params[:sort_by]),
-          class: "form-select form-select-sm" %>
-
-            <%= f.submit "Lọc", class: "btn btn-sm btn-primary" %>
-
-            <% end %>
-        </div>
-
-
-    </div>
-
-    <!-- Danh sách món ăn -->
-    <div class="row mt-3">
-        <% @food_drinks.each do |fd| %>
-        <div class="col-md-4 mb-3">
-            <div class="card shadow-sm h-100">
-                <!-- Ảnh -->
-                <% if fd.image.attached? %>
-                <%= image_tag fd.image, class: "card-img-top", style: "height: 200px; object-fit: cover;" %>
-                <% else %>
-                <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 200px;">
-                    Không có ảnh
-                </div>
-                <% end %>
-
-                <div class="card-body d-flex flex-column">
-                    <!-- Tên món -->
-                    <h5 class="card-title">
-                        <%= link_to fd.name, food_drink_path(fd) %>
-                    </h5>
-
-                    <!-- Rating -->
-                    <% avg_score = fd.ratings.average(:score)&.round(1) || 0 %>
-                    <% total_ratings = fd.ratings.count %>
-                    <% full_stars = avg_score.floor %>
-                    <% half_star = ((avg_score - full_stars) >= 0.5) %>
-                    <% empty_stars = 5 - full_stars - (half_star ? 1 : 0) %>
-
-                    <div class="d-flex align-items-center mb-2">
-                        <% full_stars.times do %>
-                        <i class="bi bi-star-fill text-warning"></i>
-                        <% end %>
-                        <% if half_star %>
-                        <i class="bi bi-star-half text-warning"></i>
-                        <% end %>
-                        <% empty_stars.times do %>
-                        <i class="bi bi-star text-warning"></i>
-                        <% end %>
-                        <span class="ms-2 text-muted" style="font-size: 0.9rem;">
-                            <%= avg_score %>/5 - (<%= total_ratings %> đánh giá)
-                        </span>
-                    </div>
-
-                    <!-- Giá -->
-                    <p class="card-text"><strong>Giá:</strong> <%= number_to_currency(fd.price, unit: "₫") %></p>
-
-                    <!-- Danh mục -->
-                    <p class="card-text"><strong>Danh mục:</strong> <%= fd.category&.name || "Không có" %></p>
-
-                    <!-- Số lượng còn -->
-                    <p class="card-text">
-                        <strong>Số lượng còn:</strong>
-                        <%= turbo_frame_tag "food_drink_#{fd.id}_stock" do %>
-                        <%= fd.stock > 0 ? fd.stock : "Hết hàng" %>
-                        <% end %>
-                    </p>
-
-                    <!-- Nút hành động -->
-                    <div class="mt-auto d-flex gap-1">
-                        <%= link_to "Xem chi tiết", food_drink_path(fd), class: "btn btn-sm btn-outline-primary", data: { turbo_frame: "_top" } %>
-
-
-                        <%= turbo_frame_tag "food_drink_#{fd.id}_button" do %>
-                        <% if fd.stock > 0 %>
-                        <%= button_to "Thêm vào giỏ",
-                      cart_items_path,
-                      method: :post,
-                      params: { food_drink_id: fd.id },
-                      form: { data: { turbo_stream: true, turbo_frame: "_top" } },
-                      class: "btn btn-sm btn-outline-success" %>
-                        <% else %>
-                        <button class="btn btn-sm btn-outline-secondary" disabled>Hết hàng</button>
-                        <% end %>
-                        <% end %>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- Category buttons -->
+    <div class="d-flex justify-content-center flex-wrap gap-2 mb-3">
+        <%= link_to "Tất cả", food_drinks_path, class: "btn btn-secondary" %>
+        <% Category.all.each do |category| %>
+        <%= link_to category.name, food_drinks_path(category_id: category.id), class: "btn btn-primary" %>
         <% end %>
     </div>
 
-    <% if @food_drinks.empty? %>
-    <p class="text-center text-muted mt-4">Không tìm thấy món nào phù hợp.</p>
+    <!-- Form tìm kiếm / lọc (bên ngoài frame) -->
+    <div class="mb-3" data-controller="search">
+        <%= form_with url: food_drinks_path,
+          method: :get,
+          data: { search_target: "form" },
+          class: "d-flex gap-2 align-items-center w-100",
+          local: true do |f| %>
+
+        <%= f.text_field :query,
+            value: params[:query],
+            placeholder: "Tìm món ăn / thức uống...",
+            class: "form-control form-control-sm flex-grow-1",
+            style: "min-width: 200px;",
+            data: { action: "input->search#update" } %>
+
+        <%= f.number_field :min_price,
+            value: params[:min_price],
+            placeholder: "Giá min",
+            class: "form-control form-control-sm",
+            data: { action: "input->search#update" } %>
+
+        <%= f.number_field :max_price,
+            value: params[:max_price],
+            placeholder: "Giá max",
+            class: "form-control form-control-sm",
+            data: { action: "input->search#update" } %>
+
+        <%= f.number_field :min_rating,
+            value: params[:min_rating],
+            placeholder: "Đánh giá min",
+            step: 0.1,
+            class: "form-control form-control-sm",
+            data: { action: "input->search#update" } %>
+
+        <%= f.select :sort_by,
+            options_for_select([["Mặc định (A-Z)", ""], ["Giá tăng dần", "price_asc"], ["Giá giảm dần", "price_desc"]], params[:sort_by]),
+            class: "form-select form-select-sm",
+            data: { action: "change->search#update" } %>
+
+        <%= f.submit "Lọc", class: "btn btn-sm btn-primary" %>
+
+        <% end %>
+    </div>
+
+    <!-- Frame chứa danh sách món -->
+    <%= turbo_frame_tag "food_drinks_list" do %>
+    <%= render "list", food_drinks: @food_drinks %>
     <% end %>
 
-
-    <!-- ✅ kết thúc turbo_frame_tag -->
 </div>

@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 
-// Controller để tìm kiếm tự động (không cần Enter)
+// Controller tìm kiếm tự động, giữ input focus
 export default class extends Controller {
   static targets = ["form"]
 
@@ -11,8 +11,12 @@ export default class extends Controller {
   update() {
     clearTimeout(this.timeout)
     this.timeout = setTimeout(() => {
-      // Turbo xử lý submit form này
-      this.formTarget.requestSubmit()
-    }, 300) // 400ms sau khi dừng gõ
+      const form = this.formTarget
+      const url = new URL(form.action, window.location.origin)
+      const params = new URLSearchParams(new FormData(form)).toString()
+
+      // Turbo visit để chỉ replace frame danh sách
+      Turbo.visit(`${url}?${params}`, { frame: "food_drinks_list", action: "replace" })
+    }, 300) // 300ms sau khi dừng gõ
   }
 }

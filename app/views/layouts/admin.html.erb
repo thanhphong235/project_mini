@@ -66,14 +66,15 @@
             <div class="sidebar">
 
                 <!-- User Panel -->
-                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                    <div class="image">
-                        <img src="https://ui-avatars.com/api/?name=<%= current_user.name %>" class="img-circle elevation-2" alt="User Image">
-                    </div>
-                    <div class="info text-white">
-                        <%= current_user.name %>
-                    </div>
+                <%= link_to edit_user_registration_path, class: "user-panel mt-3 pb-3 mb-3 d-flex", style: "text-decoration:none;" do %>
+                <div class="image">
+                    <img src="https://ui-avatars.com/api/?name=<%= current_user.name %>" class="img-circle elevation-2" alt="User Image">
                 </div>
+                <div class="info text-white ml-2">
+                    <%= current_user.name %>
+                </div>
+                <% end %>
+
 
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">

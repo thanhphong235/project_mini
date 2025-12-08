@@ -1,15 +1,15 @@
 <!-- Header -->
-<div class="mb-4 d-flex flex-column flex-md-row justify-content-between align-items-center">
-    <%= link_to "Quay lại", food_drinks_path, class: "btn btn-outline-secondary mb-2 mb-md-0" %>
+<div class="mb-4 d-flex flex-column flex-md-row justify-content-between align-items-center text-light">
+    <%= link_to "Quay lại", food_drinks_path, class: "btn btn-outline-light mb-2 mb-md-0" %>
     <h1 class="text-center flex-grow-1 mb-0">Danh sách góp ý</h1>
 </div>
 
 <!-- Card chứa table -->
-<div class="card shadow-sm suggestions-card">
+<div class="card shadow suggestions-card bg-dark text-light">
     <div class="card-body p-0">
         <div class="table-responsive">
-            <table class="table table-hover table-striped suggestions-table mb-0 align-middle">
-                <thead class="table-dark">
+            <table class="table table-dark table-hover table-bordered mb-0 align-middle text-center">
+                <thead>
                     <tr>
                         <th class="col-index">#</th>
                         <th class="col-title">Tên món / thức uống</th>
@@ -24,20 +24,20 @@
                     <% @suggestions.each_with_index do |s, index| %>
                     <tr>
                         <th scope="row"><%= index + 1 %></th>
-                        <td><%= s.title %></td>
-                        <td><%= truncate(s.content, length: 50) %></td>
+                        <td class="text-start"><%= s.title %></td>
+                        <td class="text-start"><%= truncate(s.content, length: 80) %></td>
                         <td>
                             <% status_class, status_text = case s.status
-                    when "pending" then ["badge bg-warning text-dark", "Đang chờ"]
-                    when "approved" then ["badge bg-success", "Đã xác nhận"]
-                    when "rejected" then ["badge bg-secondary", "Đã từ chối"]
-                    else ["badge bg-secondary", "Không xác định"]
-                  end %>
+                        when "pending" then ["badge bg-warning text-dark", "Đang chờ"]
+                        when "approved" then ["badge bg-success", "Đã xác nhận"]
+                        when "rejected" then ["badge bg-secondary", "Đã từ chối"]
+                        else ["badge bg-secondary", "Không xác định"]
+                    end %>
                             <span class="<%= status_class %>"><%= status_text %></span>
                         </td>
                         <td><%= s.created_at.strftime("%d/%m/%Y %H:%M") %></td>
                         <td class="col-actions">
-                            <div class="action-buttons d-flex justify-content-center flex-wrap gap-2">
+                            <div class="d-flex justify-content-center flex-wrap gap-1">
                                 <%= link_to suggestion_path(s), class: "btn btn-sm btn-outline-info" do %>
                                 <i class="bi bi-eye"></i> Xem
                                 <% end %>
@@ -55,7 +55,7 @@
                     <% end %>
                     <% else %>
                     <tr>
-                        <td colspan="6" class="text-center">Bạn chưa gửi góp ý nào.</td>
+                        <td colspan="6" class="text-center py-3">Bạn chưa gửi góp ý nào.</td>
                     </tr>
                     <% end %>
                 </tbody>
@@ -63,3 +63,108 @@
         </div>
     </div>
 </div>
+
+<!-- Custom CSS Dark Mode -->
+<style>
+    /* Card */
+    .suggestions-card {
+        border: none;
+        border-radius: 0.75rem;
+        background-color: #121212 !important;
+        /* Nền card tối */
+    }
+
+    /* Table */
+    .suggestions-table {
+        margin: 0;
+        background-color: #121212 !important;
+        /* Nền table tối */
+        color: #eee !important;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    /* Header table */
+    .suggestions-table thead {
+        background-color: #1f1f1f !important;
+        color: #fff !important;
+    }
+
+    /* Body table */
+    .suggestions-table tbody tr {
+        background-color: #181818 !important;
+        color: #eee;
+    }
+
+    /* Stripe hàng */
+    .suggestions-table tbody tr:nth-child(odd) {
+        background-color: #1f1f1f !important;
+    }
+
+    /* Hover */
+    .suggestions-table tbody tr:hover {
+        background-color: #333 !important;
+    }
+
+    /* Border giữa các ô */
+    .suggestions-table th,
+    .suggestions-table td {
+        border: 1px solid #444 !important;
+        padding: 0.75rem 0.5rem;
+        vertical-align: middle;
+    }
+
+    /* Badge */
+    .badge {
+        font-weight: 500;
+        padding: 0.4em 0.6em;
+    }
+
+    /* Button outline */
+    .btn-outline-info,
+    .btn-outline-warning,
+    .btn-outline-danger {
+        border-width: 1px;
+        font-size: 0.85rem;
+    }
+
+    /* Text align */
+    .text-start {
+        text-align: left;
+    }
+
+    .col-actions {
+        min-width: 130px;
+    }
+
+    /* ============================================
+   📌 FIX VIỀN TRẮNG QUANH BẢNG (đoạn cần thêm)
+   ============================================ */
+    .table,
+    .table-bordered,
+    .table-bordered> :not(caption)>*>* {
+        border-color: #333 !important;
+    }
+
+    .table {
+        background: #1a1a1a !important;
+        border: 2px solid #222 !important;
+        /* XOÁ viền trắng */
+    }
+
+    .table td,
+    .table th {
+        background: #1a1a1a !important;
+        color: #e6e6e6 !important;
+    }
+
+    /* Phần bao bảng (table-responsive) */
+    .table-responsive {
+        background: transparent !important;
+        border: none !important;
+    }
+
+    .table-responsive .table {
+        border-radius: 0 !important;
+    }
+</style>

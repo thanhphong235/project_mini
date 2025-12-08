@@ -1,5 +1,7 @@
-<section id="events" class="events-section py-5 bg-light">
+<section id="events" class="events-section py-5">
     <div class="container-fluid px-5">
+
+        <!-- Header -->
         <div class="text-center mb-5">
             <h2 class="display-5 fw-bold">Our Events</h2>
             <p class="lead text-muted">Stay updated with our latest food & drink events</p>
@@ -8,6 +10,7 @@
         <!-- Swiper Carousel -->
         <div class="swiper mySwiper">
             <div class="swiper-wrapper">
+
                 <% events = [
           {img: "yummy/events-1.jpg", title: "Wine Tasting", date: "12 Dec", desc: "Enjoy premium wines from around the world."},
           {img: "yummy/events-2.jpg", title: "Cooking Class", date: "18 Dec", desc: "Learn to cook delicious dishes."},
@@ -22,6 +25,7 @@
                 <% events.each do |e| %>
                 <div class="swiper-slide">
                     <div class="card rounded-4 overflow-hidden shadow-sm event-card position-relative text-white">
+
                         <%= image_tag e[:img], class: "card-img-top", alt: e[:title] %>
 
                         <!-- Overlay gradient -->
@@ -34,9 +38,11 @@
                             <p class="mb-2"><%= e[:desc] %></p>
                             <%= link_to "Learn More", "#", class: "btn btn-outline-light btn-sm rounded-pill" %>
                         </div>
+
                     </div>
                 </div>
                 <% end %>
+
             </div>
 
             <!-- Pagination + Navigation -->
@@ -44,14 +50,17 @@
             <div class="swiper-button-prev text-white"></div>
             <div class="swiper-pagination mt-4"></div>
         </div>
+
     </div>
 </section>
 
 <style>
+    /* Section Events */
     #events {
         scroll-margin-top: 70px;
     }
 
+    /* Card hover effect */
     .event-card {
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         cursor: pointer;
@@ -63,17 +72,18 @@
     }
 
     .card-img-top {
-        display: block;
         width: 100%;
         height: 500px;
         object-fit: cover;
         transition: transform 0.3s ease;
+        display: block;
     }
 
     .event-card:hover .card-img-top {
         transform: scale(1.05);
     }
 
+    /* Overlay gradient */
     .overlay {
         background: linear-gradient(180deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.7) 100%);
         bottom: 0;

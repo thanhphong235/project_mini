@@ -1,61 +1,62 @@
-<div class="container mt-3 px-4">
+<div class="container-fluid px-3">
 
-    <div class="position-sticky" style="top: 65px; z-index: 1020; background-color: white; padding-top: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #ddd;">
+    <div class="position-sticky" style="top: 0; z-index: 1020; background-color: #212529; padding: 1rem; border-bottom: 1px solid #444;">
 
         <!-- Tiêu đề -->
-        <h1 class="text-center mb-2">Danh sách Món ăn & Thức uống</h1>
+        <h1 class="text-center mb-2 text-light">Danh sách Món ăn & Thức uống</h1>
 
         <!-- Category buttons -->
         <div class="d-flex justify-content-center flex-wrap gap-2 mb-3">
-            <%= link_to "Tất cả", food_drinks_path, class: "btn btn-secondary" %>
+            <%= link_to "Tất cả", food_drinks_path, class: "btn btn-outline-light" %>
             <% Category.all.each do |category| %>
-            <%= link_to category.name, food_drinks_path(category_id: category.id), class: "btn btn-primary" %>
+            <%= link_to category.name, food_drinks_path(category_id: category.id), class: "btn btn-outline-primary" %>
             <% end %>
         </div>
+
 
         <!-- Form tìm kiếm / lọc -->
         <div class="mb-3" data-controller="search">
             <%= form_with url: food_drinks_path,
-        method: :get,
-        data: { search_target: "form" },
-        class: "d-flex gap-2 align-items-center w-100",
-        local: true do |f| %>
+      method: :get,
+      data: { search_target: "form" },
+      class: "d-flex gap-2 align-items-center w-100",
+      local: true do |f| %>
 
             <%= f.text_field :query,
-            value: params[:query],
-            placeholder: "Tìm món ăn / thức uống...",
-            class: "form-control form-control-sm flex-grow-1",
-            style: "min-width: 200px;",
-            data: { action: "input->search#update" } %>
+        value: params[:query],
+        placeholder: "Tìm món ăn / thức uống...",
+        class: "form-control form-control-sm flex-grow-1",
+        style: "min-width: 200px;",
+        data: { action: "input->search#update" } %>
 
             <%= f.number_field :min_price,
-            value: params[:min_price],
-            placeholder: "Giá min",
-            class: "form-control form-control-sm",
-            data: { action: "input->search#update" } %>
+        value: params[:min_price],
+        placeholder: "Giá min",
+        class: "form-control form-control-sm",
+        data: { action: "input->search#update" } %>
 
             <%= f.number_field :max_price,
-            value: params[:max_price],
-            placeholder: "Giá max",
-            class: "form-control form-control-sm",
-            data: { action: "input->search#update" } %>
+        value: params[:max_price],
+        placeholder: "Giá max",
+        class: "form-control form-control-sm",
+        data: { action: "input->search#update" } %>
 
             <%= f.number_field :min_rating,
-            value: params[:min_rating],
-            placeholder: "Đánh giá min",
-            step: 0.1,
-            class: "form-control form-control-sm",
-            data: { action: "input->search#update" } %>
+        value: params[:min_rating],
+        placeholder: "Đánh giá min",
+        step: 0.1,
+        class: "form-control form-control-sm",
+        data: { action: "input->search#update" } %>
 
             <%= f.select :sort_by,
-            options_for_select([["Mặc định (A-Z)", ""], ["Giá tăng dần", "price_asc"], ["Giá giảm dần", "price_desc"]], params[:sort_by]),
-            class: "form-select form-select-sm",
-            data: { action: "change->search#update" } %>
+        options_for_select([["Mặc định (A-Z)", ""], ["Giá tăng dần", "price_asc"], ["Giá giảm dần", "price_desc"]], params[:sort_by]),
+        class: "form-select form-select-sm",
+        data: { action: "change->search#update" } %>
 
             <%= f.submit "Lọc", class: "btn btn-sm btn-primary" %>
-
             <% end %>
         </div>
+
 
     </div> <!-- kết thúc sticky -->
 

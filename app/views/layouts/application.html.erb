@@ -16,67 +16,11 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 
     <style>
-        /* Navbar */
-        .navbar-custom {
-            background-color: #000 !important;
-        }
-
-        .navbar-custom .nav-link,
-        .navbar-custom .navbar-brand {
-            color: #fff !important;
-            position: relative;
-            transition: color 0.3s;
-        }
-
-        .navbar-custom .nav-link::after {
-            content: "";
-            display: block;
-            width: 0;
-            height: 3px;
-            background: #dc3545;
-            transition: width 0.3s;
-            position: absolute;
-            bottom: 0;
-            left: 0;
-        }
-
-        .navbar-custom .nav-link:hover::after {
-            width: 100%;
-        }
-
-        .navbar-custom .nav-link:hover {
-            color: #fff !important;
-        }
-
-        .navbar-custom .dropdown-menu {
-            background-color: #111;
-            z-index: 3000;
-        }
-
-        .navbar-custom .dropdown-item {
-            color: #fff;
-        }
-
-        .navbar-custom .dropdown-item:hover {
-            background-color: #dc3545;
-            color: #fff;
-        }
-
-        .navbar-custom .btn-primary {
-            background-color: #dc3545;
-            border-color: #dc3545;
-            color: #fff;
-        }
-
-        .navbar-custom .btn-primary:hover {
-            background-color: #b71c1c;
-            border-color: #b71c1c;
-            color: #fff;
-        }
-
         header {
-            position: sticky;
+            position: fixed;
             top: 0;
+            left: 0;
+            right: 0;
             z-index: 2000;
         }
 
@@ -84,51 +28,184 @@
             padding-top: 80px;
         }
 
-        #suggestion-button {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 2500;
+        body {
+            background-color: #fff;
+            color: #212529;
+        }
+
+        body.dark-mode {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode a {
+            color: #f8f9fa;
+        }
+
+        .navbar-custom {
+            background-color: #1a1a1a;
+        }
+
+        body:not(.dark-mode) .navbar-custom {
+            background-color: #fff;
+        }
+
+        .navbar-custom .navbar-brand,
+        .navbar-custom .nav-link {
+            color: #f8f9fa !important;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        body:not(.dark-mode) .navbar-custom .navbar-brand,
+        body:not(.dark-mode) .navbar-custom .nav-link {
+            color: #212529 !important;
+        }
+
+        .navbar-custom .nav-link::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 0;
+            height: 3px;
+            background-color: #dc3545;
+            transition: width 0.3s ease;
+        }
+
+        .navbar-custom .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .navbar-custom .nav-link:hover {
+            color: inherit;
+        }
+
+        .navbar-custom .dropdown-menu {
+            background-color: #222;
+            z-index: 3000;
+        }
+
+        body:not(.dark-mode) .navbar-custom .dropdown-menu {
+            background-color: #fff;
+        }
+
+        .navbar-custom .dropdown-item {
+            color: #f8f9fa;
+        }
+
+        body:not(.dark-mode) .navbar-custom .dropdown-item {
+            color: #212529;
+        }
+
+        .navbar-custom .dropdown-item:hover {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        footer {
+            padding: 1.5rem 0;
+        }
+
+        body.dark-mode footer {
+            background-color: #1a1a1a;
+            color: #ccc;
+        }
+
+        body:not(.dark-mode) footer {
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+
+        footer a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: #dc3545;
+        }
+
+        .card {
+            margin-bottom: 1rem;
+        }
+
+        body.dark-mode .card {
+            background-color: #1e1e1e;
+            color: #e0e0e0;
+        }
+
+        body:not(.dark-mode) .card {
+            background-color: #fff;
+            color: #212529;
+        }
+
+        .card a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .card a:hover {
+            color: #dc3545;
+        }
+
+        #suggestion-button .btn-primary {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        #suggestion-button .btn-primary:hover {
+            background-color: #b71c1c;
+            border-color: #b71c1c;
+        }
+
+        .modal-content {
+            background-color: inherit;
+            color: inherit;
         }
     </style>
 </head>
 
-<body class="d-flex flex-column min-vh-100">
+<body class="<%= 'dark-mode' if user_signed_in? && !current_user.admin? %> d-flex flex-column min-vh-100">
 
     <!-- Navbar -->
     <header>
         <nav class="navbar navbar-expand-lg navbar-custom shadow-sm">
-            <div class="container">
+            <div class="container-fluid">
                 <%= link_to "Foods & Drinks App", root_path, class: "navbar-brand fw-bold" %>
+
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
                 <div class="collapse navbar-collapse" id="navbarContent">
-
                     <% unless user_signed_in? && current_user.admin? %>
-                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-
-                        <!-- Home: chỉ hiện khi CHƯA đăng nhập -->
+                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0 text-center">
                         <% if !user_signed_in? %>
-                        <li class="nav-item">
-                            <%= link_to "Home", "#hero", class: "nav-link" %>
-                        </li>
+                        <li class="nav-item"><%= link_to "Home", "#hero", class: "nav-link" %></li>
                         <% end %>
-
-                        <li class="nav-item"><%= user_signed_in? ? link_to("Menu", food_drinks_path, class: "nav-link") : link_to("Menu", "#menu", class: "nav-link") %></li>
-                        <li class="nav-item"><%= user_signed_in? ? link_to("About", abouts_path, class: "nav-link") : link_to("About", "#about", class: "nav-link") %></li>
-                        <li class="nav-item"><%= user_signed_in? ? link_to("Events", events_path, class: "nav-link") : link_to("Events", "#events", class: "nav-link") %></li>
-                        <li class="nav-item"><%= user_signed_in? ? link_to("Chefs", chefs_path, class: "nav-link") : link_to("Chefs", "#chefs", class: "nav-link") %></li>
-                        <li class="nav-item"><%= user_signed_in? ? link_to("Gallery", gallerys_path, class: "nav-link") : link_to("Gallery", "#gallery", class: "nav-link") %></li>
-                        <li class="nav-item"><%= user_signed_in? ? link_to("Contact", contacts_path, class: "nav-link") : link_to("Contact", "#contact", class: "nav-link") %></li>
+                        <li class="nav-item">
+                            <%= user_signed_in? ? link_to("Menu", food_drinks_path, class: "nav-link") : link_to("Menu", "#menu", class: "nav-link") %>
+                        </li>
+                        <li class="nav-item">
+                            <%= user_signed_in? ? link_to("About", abouts_path, class: "nav-link") : link_to("About", "#about", class: "nav-link") %>
+                        </li>
+                        <li class="nav-item">
+                            <%= user_signed_in? ? link_to("Chefs", chefs_path, class: "nav-link") : link_to("Chefs", "#chefs", class: "nav-link") %>
+                        </li>
+                        <li class="nav-item">
+                            <%= user_signed_in? ? link_to("Gallery", gallerys_path, class: "nav-link") : link_to("Gallery", "#gallery", class: "nav-link") %>
+                        </li>
+                        <li class="nav-item">
+                            <%= user_signed_in? ? link_to("Contact", contacts_path, class: "nav-link") : link_to("Contact", "#contact", class: "nav-link") %>
+                        </li>
                     </ul>
                     <% end %>
 
+                    <!-- User/Admin dropdown -->
                     <ul class="navbar-nav ms-auto align-items-center">
                         <% if user_signed_in? %>
-
                         <% if current_user.admin? %>
-                        <!-- Admin menu -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" data-bs-toggle="dropdown">
                                 <i class="bi bi-person-circle me-1"></i> <%= current_user.name || "Admin" %>
@@ -142,19 +219,21 @@
                                 <li><%= link_to "Đăng xuất", destroy_user_session_path, data: { turbo_method: :delete, turbo_confirm: "Bạn chắc chắn muốn đăng xuất?" }, class: "dropdown-item text-danger" %></li>
                             </ul>
                         </li>
-
                         <% else %>
-                        <!-- Normal User -->
+                        <!-- Giỏ hàng -->
                         <li class="nav-item me-3">
                             <%= turbo_frame_tag "cart-count" do %>
                             <%= render "shared/cart_icon" %>
                             <% end %>
                         </li>
+                        <!-- Dropdown user -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" data-bs-toggle="dropdown">
                                 <i class="bi bi-person-circle me-1"></i> <%= current_user.name || "Tài khoản" %>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
+                                <li><%= link_to "Orders", orders_path, class: "dropdown-item" %></li>
+                                <li><%= link_to "Suggestions", suggestions_path, class: "dropdown-item" %></li>
                                 <li><%= link_to "Profile", edit_user_registration_path, class: "dropdown-item" %></li>
                                 <li>
                                     <hr class="dropdown-divider">
@@ -163,63 +242,56 @@
                             </ul>
                         </li>
                         <% end %>
-
                         <% else %>
-                        <!-- Guest -->
                         <li class="nav-item"><%= link_to "Log in", new_user_session_path, class: "nav-link" %></li>
                         <li class="nav-item"><%= link_to "Sign up", new_user_registration_path, class: "nav-link" %></li>
                         <% end %>
                     </ul>
+
                 </div>
             </div>
         </nav>
     </header>
 
     <!-- Main content -->
-    <!-- Main content -->
     <main class="flex-grow-1">
-
-        <!-- Flash messages vẫn nằm trong container -->
         <div class="container mt-4">
             <%= turbo_frame_tag "flash_messages" do %>
             <%= render "shared/flash" %>
             <% end %>
         </div>
 
-        <!-- Nội dung trang: KHÔNG container để hero được full width -->
         <%= yield %>
-
     </main>
 
-
     <!-- Footer -->
-    <footer class="bg-dark text-light py-3 mt-auto">
-        <div class="container">
-            <div class="row text-center text-md-start">
-                <div class="col-md-4 mb-4">
-                    <h5 class="fw-bold mb-3">🍴 Foods & Drinks App</h5>
-                    <p class="text-secondary">Ứng dụng giúp bạn khám phá, đặt món ăn và đồ uống yêu thích mọi lúc, mọi nơi.</p>
+    <footer class="mt-auto">
+        <div class="container text-center text-md-start">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <h5 class="fw-bold">🍴 Foods & Drinks App</h5>
+                    <p class="text-secondary">Khám phá và đặt món ăn yêu thích mọi lúc, mọi nơi.</p>
                 </div>
-                <div class="col-md-4 mb-4">
-                    <h6 class="fw-bold mb-3 text-uppercase">Liên kết nhanh</h6>
+                <div class="col-md-4 mb-3">
+                    <h6 class="fw-bold text-uppercase mb-2">Liên kết nhanh</h6>
                     <ul class="list-unstyled">
-                        <li><a href="#" class="text-secondary text-decoration-none d-block mb-2">Trang chủ</a></li>
-                        <li><a href="#" class="text-secondary text-decoration-none d-block mb-2">Về chúng tôi</a></li>
-                        <li><a href="#" class="text-secondary text-decoration-none d-block mb-2">Chính sách bảo mật</a></li>
-                        <li><a href="#" class="text-secondary text-decoration-none d-block mb-2">Điều khoản sử dụng</a></li>
+                        <li><a href="#" class="text-secondary d-block mb-1">Trang chủ</a></li>
+                        <li><a href="#" class="text-secondary d-block mb-1">Về chúng tôi</a></li>
+                        <li><a href="#" class="text-secondary d-block mb-1">Chính sách bảo mật</a></li>
+                        <li><a href="#" class="text-secondary d-block mb-1">Điều khoản sử dụng</a></li>
                     </ul>
                 </div>
-                <div class="col-md-4 mb-4 text-center text-md-start">
-                    <h6 class="fw-bold mb-3 text-uppercase">Theo dõi chúng tôi</h6>
-                    <div class="mb-3">
-                        <a href="#" class="text-light fs-4 me-3"><i class="bi bi-facebook"></i></a>
-                        <a href="#" class="text-light fs-4 me-3"><i class="bi bi-instagram"></i></a>
-                        <a href="#" class="text-light fs-4 me-3"><i class="bi bi-twitter"></i></a>
+                <div class="col-md-4 mb-3 text-center text-md-start">
+                    <h6 class="fw-bold text-uppercase mb-2">Theo dõi chúng tôi</h6>
+                    <div class="mb-2">
+                        <a href="#" class="fs-4 me-2"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="fs-4 me-2"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="fs-4 me-2"><i class="bi bi-twitter"></i></a>
                     </div>
                     <p class="text-secondary small mb-0">Email: support@foodsdrinksapp.com</p>
                 </div>
             </div>
-            <hr class="border-secondary my-4">
+            <hr class="border-secondary my-3">
             <div class="text-center text-secondary small">
                 © <%= Time.current.year %> Foods & Drinks App — Thiết kế bởi <strong>Nguyen Phong</strong>.<br>
                 © Công ty TNHH MMT.
@@ -228,19 +300,18 @@
     </footer>
 
     <% if user_signed_in? && !current_user.admin? %>
-    <!-- Floating Suggestion Button -->
+    <!-- Suggestion button & modal -->
     <div id="suggestion-button">
-        <button type="button" class="btn btn-primary rounded-circle" data-bs-toggle="modal" data-bs-target="#suggestionModal" title="Góp ý món ăn / thức uống">
+        <button type="button" class="btn btn-primary rounded-circle" data-bs-toggle="modal" data-bs-target="#suggestionModal">
             <i class="bi bi-envelope-fill"></i>
         </button>
     </div>
 
-    <!-- Suggestion Modal -->
     <div class="modal fade" id="suggestionModal" tabindex="-1" aria-labelledby="suggestionModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content rounded-4 shadow-lg border-0">
-                <div class="modal-header bg-primary text-white border-0">
-                    <h5 class="modal-title" id="suggestionModalLabel">
+                <div class="modal-header">
+                    <h5 class="modal-title text-white" id="suggestionModalLabel">
                         <i class="bi bi-envelope-fill me-2"></i> Góp ý món ăn / thức uống
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
@@ -249,14 +320,14 @@
                     <%= form_with(model: Suggestion.new, url: suggestions_path, local: true) do |f| %>
                     <div class="mb-3">
                         <%= f.label :title, "Tên món / thức uống", class: "form-label fw-semibold" %>
-                        <%= f.text_field :title, class: "form-control form-control-lg rounded-3", placeholder: "Nhập tên món ăn hoặc thức uống", required: true %>
+                        <%= f.text_field :title, class: "form-control form-control-lg rounded-3 bg-dark text-light border-secondary", placeholder: "Nhập tên món ăn hoặc thức uống", required: true %>
                     </div>
                     <div class="mb-3">
                         <%= f.label :content, "Mô tả / lý do đề xuất", class: "form-label fw-semibold" %>
-                        <%= f.text_area :content, class: "form-control form-control-lg rounded-3", rows: 4, placeholder: "Nhập mô tả hoặc lý do đề xuất", required: true %>
+                        <%= f.text_area :content, class: "form-control form-control-lg rounded-3 bg-dark text-light border-secondary", rows: 4, placeholder: "Nhập mô tả hoặc lý do đề xuất", required: true %>
                     </div>
                     <div class="text-end">
-                        <%= f.submit "Gửi góp ý", class: "btn btn-gradient-success btn-lg px-4" %>
+                        <%= f.submit "Gửi góp ý", class: "btn btn-success btn-lg px-4" %>
                     </div>
                     <% end %>
                 </div>
@@ -265,12 +336,10 @@
     </div>
     <% end %>
 
-    <!-- Fix collapse menu auto-close on mobile -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const navLinks = document.querySelectorAll(".navbar-collapse .nav-link");
             const navbarCollapse = document.querySelector(".navbar-collapse");
-
             navLinks.forEach(link => {
                 link.addEventListener("click", function() {
                     if (navbarCollapse.classList.contains("show")) {

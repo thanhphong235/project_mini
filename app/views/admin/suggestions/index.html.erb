@@ -2,15 +2,15 @@
 
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <%= link_to "Quay lại", admin_dashboard_path, class: "btn btn-outline-secondary btn-anim" %>
-        <h2 class="fw-bold text-center flex-grow-1 mb-0">Danh sách góp ý</h2>
-        <div style="width: 120px;"></div> <!-- placeholder cân layout -->
+        <%= link_to "Quay lại", admin_dashboard_path, class: "btn btn-outline-light btn-anim" %>
+        <h2 class="fw-bold text-center flex-grow-1 mb-0 text-white">Danh sách góp ý</h2>
+        <div style="width: 120px;"></div>
     </div>
 
     <!-- Table -->
     <div class="table-responsive mt-3">
-        <table class="table table-hover table-bordered align-middle mb-0 text-center">
-            <thead class="table-dark">
+        <table class="table table-hover table-bordered align-middle mb-0 text-center table-dark-custom">
+            <thead>
                 <tr>
                     <th style="width:5%;">#</th>
                     <th style="width:15%;">Người gửi</th>
@@ -21,33 +21,37 @@
                     <th style="width:15%;">Hành động</th>
                 </tr>
             </thead>
+
             <tbody>
                 <% @suggestions.each_with_index do |s, i| %>
                 <tr class="animate-row">
-                    <td><%= i + 1 %></td>
-                    <td class="text-start"><%= s.user.name || s.user.email %></td>
-                    <td class="text-start"><%= s.title %></td>
-                    <td class="text-start"><%= truncate(s.content, length: 50) %></td>
+                    <td class="text-white"><%= i + 1 %></td>
+                    <td class="text-start text-white"><%= s.user.name || s.user.email %></td>
+                    <td class="text-start text-white"><%= s.title %></td>
+                    <td class="text-start text-white"><%= truncate(s.content, length: 50) %></td>
                     <td>
                         <span class="badge 
-              <%= case s.status
-                  when 'approved' then 'bg-success'
-                  when 'rejected' then 'bg-danger'
-                  else 'bg-secondary'
-              end %>">
                             <%= case s.status
-                  when 'approved' then 'Đã duyệt'
-                  when 'rejected' then 'Từ chối'
-                  else 'Đang chờ'
-              end %>
+                                when 'approved' then 'bg-success'
+                                when 'rejected' then 'bg-danger'
+                                else 'bg-secondary'
+                            end %>">
+                            <%= case s.status
+                                when 'approved' then 'Đã duyệt'
+                                when 'rejected' then 'Từ chối'
+                                else 'Đang chờ'
+                            end %>
                         </span>
                     </td>
-                    <td><%= s.created_at.strftime("%d/%m/%Y %H:%M") %></td>
+                    <td class="text-white"><%= s.created_at.strftime("%d/%m/%Y %H:%M") %></td>
+
                     <td>
                         <div class="d-flex justify-content-center gap-1 flex-wrap">
                             <%= link_to "Xem", admin_suggestion_path(s), class: "btn btn-sm btn-info btn-anim" %>
                             <%= link_to "Sửa", edit_admin_suggestion_path(s), class: "btn btn-sm btn-warning btn-anim" %>
-                            <%= link_to "Xóa", admin_suggestion_path(s), data: { turbo_method: :delete, turbo_confirm: "Xóa góp ý này?" }, class: "btn btn-sm btn-danger btn-anim" %>
+                            <%= link_to "Xóa", admin_suggestion_path(s),
+                                data: { turbo_method: :delete, turbo_confirm: "Xóa góp ý này?" },
+                                class: "btn btn-sm btn-danger btn-anim" %>
                         </div>
                     </td>
                 </tr>
@@ -58,52 +62,138 @@
 </div>
 
 <style>
+    /* CARD ĐEN */
     .suggestions-card {
+        background-color: #1a1a1a !important;
+        border: 1px solid #333 !important;
         border-radius: 18px;
-        border: 1px solid #e0e0e0;
-        background-color: #fff;
         padding: 1.5rem;
         transition: 0.3s ease;
     }
 
     .suggestions-card:hover {
         transform: translateY(-2px);
-        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
     }
 
+    /* BUTTON DARK */
     .btn-anim {
         transition: 0.25s ease;
     }
 
     .btn-anim:hover:not([disabled]) {
         transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 4px 14px rgba(255, 255, 255, 0.15);
     }
 
+    /* TABLE DARK FIX — KHÔNG nền trắng */
+    .table-dark-custom {
+        background-color: #121212 !important;
+        color: #e6e6e6 !important;
+        border-color: #333 !important;
+    }
+
+    .table-dark-custom thead tr {
+        background: #0d0d0d !important;
+        color: #fff !important;
+        border-bottom: 2px solid #444;
+    }
+
+    .table-dark-custom tbody tr {
+        background: #1a1a1a !important;
+        color: #e6e6e6 !important;
+    }
+
+    .table-dark-custom tbody tr:hover {
+        background-color: #2a2a2a !important;
+    }
+
+    .table-dark-custom th,
+    .table-dark-custom td {
+        border: 1px solid #333 !important;
+    }
+
+    /* ANIMATION */
     .animate-fade-in {
-        animation: fadeIn 0.6s ease forwards;
+        animation: fadeIn 0.5s ease forwards;
         opacity: 0;
     }
 
     .animate-row {
-        transition: 0.25s ease, background-color 0.25s ease;
+        transition: 0.25s ease;
     }
 
     .animate-row:hover {
-        background-color: #f1f6ff !important;
+        background-color: #2a2a2a !important;
     }
 
-    .price-cell {
-        font-variant-numeric: tabular-nums;
+    /* GHI ĐÈ BOOTSTRAP TABLE HOÀN TOÀN */
+    .table,
+    .table tbody tr,
+    .table td,
+    .table th {
+        background-color: #1a1a1a !important;
+        color: #e6e6e6 !important;
+    }
+
+    /* Bootstrap selector mạnh — PHẢI override cái này */
+    .table> :not(caption)>*>* {
+        background-color: #1a1a1a !important;
+        color: #e6e6e6 !important;
+        border-color: #333 !important;
+    }
+
+    /* Header */
+    .table thead th {
+        background-color: #0d0d0d !important;
+        color: #fff !important;
+    }
+
+    /* Hover */
+    .table-hover tbody tr:hover {
+        background-color: #2a2a2a !important;
+    }
+
+    /* ============================================
+   📌 FIX VIỀN TRẮNG QUANH BẢNG (đoạn cần thêm)
+   ============================================ */
+    .table,
+    .table-bordered,
+    .table-bordered> :not(caption)>*>* {
+        border-color: #333 !important;
+    }
+
+    .table {
+        background: #1a1a1a !important;
+        border: 2px solid #222 !important;
+        /* XOÁ viền trắng */
+    }
+
+    .table td,
+    .table th {
+        background: #1a1a1a !important;
+        color: #e6e6e6 !important;
+    }
+
+    /* Phần bao bảng (table-responsive) */
+    .table-responsive {
+        background: transparent !important;
+        border: none !important;
+    }
+
+    .table-responsive .table {
+        border-radius: 0 !important;
     }
 
     @keyframes fadeIn {
         from {
             opacity: 0;
+            transform: translateY(8px);
         }
 
         to {
             opacity: 1;
+            transform: translateY(0);
         }
     }
 </style>

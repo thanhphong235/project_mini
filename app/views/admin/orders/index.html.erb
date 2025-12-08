@@ -1,10 +1,10 @@
-<div class="orders-card shadow-lg rounded-4 p-4 animate-fade-in">
+<div class="orders-card shadow-lg rounded-4 p-4 animate-fade-in dark-panel">
 
     <!-- Header + nút quay lại -->
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <%= link_to "Quay lại", admin_dashboard_path, class: "btn btn-outline-secondary btn-anim" %>
-        <h2 class="fw-bold mb-0 text-center flex-grow-1">Danh sách Đơn hàng</h2>
-        <div style="width: 120px;"></div> <!-- placeholder cân layout -->
+        <%= link_to "Quay lại", admin_dashboard_path, class: "btn btn-outline-light btn-anim" %>
+        <h2 class="fw-bold mb-0 text-center flex-grow-1 title-text">Danh sách Đơn hàng</h2>
+        <div style="width: 120px;"></div>
     </div>
 
     <!-- Flash messages -->
@@ -12,11 +12,11 @@
     <%= render "shared/flash_messages" %>
     <% end %>
 
-    <!-- Table danh sách đơn hàng -->
+    <!-- Bảng đơn hàng -->
     <div class="table-responsive mt-3">
         <%= turbo_frame_tag "orders_table" do %>
-        <table class="table table-hover table-bordered align-middle mb-0 text-center">
-            <thead class="table-dark">
+        <table class="table table-hover table-bordered align-middle mb-0 text-center table-dark-force">
+            <thead>
                 <tr>
                     <th style="width:5%;">#</th>
                     <th style="width:25%;">Người đặt</th>
@@ -26,23 +26,36 @@
                     <th style="width:20%;">Hành động</th>
                 </tr>
             </thead>
+
             <tbody>
                 <% @orders.each_with_index do |order, index| %>
                 <tr class="animate-row">
                     <td><%= index + 1 %></td>
                     <td class="text-start"><%= order.user&.name || order.user&.email || "N/A" %></td>
-                    <td class="price-cell text-end"><%= number_with_delimiter(order.total_price) %> ₫</td>
+
+                    <td class="price-cell text-end">
+                        <%= number_with_delimiter(order.total_price) %> ₫
+                    </td>
+
                     <td>
                         <%= turbo_frame_tag "order_status_#{order.id}" do %>
                         <%= render "status_badge", order: order %>
                         <% end %>
                     </td>
+
                     <td><%= order.created_at.strftime("%d/%m/%Y %H:%M") %></td>
+
                     <td>
                         <div class="d-flex justify-content-center gap-2 flex-wrap">
-                            <%= link_to "Xem", admin_order_path(order), class: "btn btn-sm btn-outline-primary btn-anim", data: { turbo: false } %>
+                            <%= link_to "Xem", admin_order_path(order),
+                                class: "btn btn-sm btn-outline-primary btn-anim",
+                                data: { turbo: false } %>
+
                             <% if order.status == "pending" %>
-                            <%= button_to "Xóa", admin_order_path(order), method: :delete, data: { turbo_confirm: "Bạn có chắc chắn muốn xóa đơn hàng này?" }, class: "btn btn-sm btn-outline-danger btn-anim" %>
+                            <%= button_to "Xóa", admin_order_path(order),
+                                    method: :delete,
+                                    data: { turbo_confirm: "Bạn có chắc chắn muốn xóa đơn hàng này?" },
+                                    class: "btn btn-sm btn-outline-danger btn-anim" %>
                             <% else %>
                             <button class="btn btn-sm btn-outline-secondary btn-anim" disabled>Không thể xoá</button>
                             <% end %>
@@ -54,58 +67,97 @@
         </table>
         <% end %>
     </div>
-
 </div>
 
 <style>
-    .orders-card {
+    /* ===================== GLOBAL DARK ===================== */
+    body {
+        background: #0d0d0d !important;
+        color: #e6e6e6 !important;
+    }
+
+    /* ===================== CARD ===================== */
+    .dark-panel {
+        background: #1a1a1a !important;
+        border: 1px solid #2d2d2d !important;
         border-radius: 18px;
-        border: 1px solid #e0e0e0;
-        background-color: #fff;
-        padding: 1.5rem;
         transition: 0.3s ease;
     }
 
-    .orders-card:hover {
+    .dark-panel:hover {
         transform: translateY(-2px);
-        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
     }
 
+    .title-text {
+        color: #fff !important;
+    }
+
+    /* ===================== BUTTONS ===================== */
+    .btn-anim {
+        transition: 0.25s ease-in-out;
+    }
+
+    .btn-anim:hover:not([disabled]) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(255, 255, 255, 0.1);
+    }
+
+    /* ===================== PRICE ===================== */
     .price-cell {
         font-variant-numeric: tabular-nums;
         white-space: nowrap;
         font-weight: 600;
     }
 
-    .btn-anim {
-        transition: 0.25s ease;
+    /* ===================== TABLE DARK FORCE ===================== */
+    .table-dark-force {
+        background: #1a1a1a !important;
+        color: #e6e6e6 !important;
+        border: 1px solid #333 !important;
     }
 
-    .btn-anim:hover:not([disabled]) {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    .table-dark-force thead {
+        background: #111 !important;
+        color: #fff !important;
     }
 
+    .table-dark-force th,
+    .table-dark-force td {
+        background: #1a1a1a !important;
+        border-color: #333 !important;
+        color: #e6e6e6 !important;
+    }
+
+    .table-dark-force tbody tr:hover {
+        background: #262626 !important;
+    }
+
+    /* remove table-responsive white bg */
+    .table-responsive {
+        background: transparent !important;
+        border: none !important;
+    }
+
+    /* ===================== ANIMATIONS ===================== */
     .animate-fade-in {
-        animation: fadeIn 0.6s ease forwards;
+        animation: fadeIn 0.5s ease forwards;
         opacity: 0;
     }
 
     .animate-row {
-        transition: 0.25s ease, background-color 0.25s ease;
-    }
-
-    .animate-row:hover {
-        background-color: #f1f6ff !important;
+        transition: 0.25s ease;
     }
 
     @keyframes fadeIn {
         from {
             opacity: 0;
+            transform: translateY(10px);
         }
 
         to {
             opacity: 1;
+            transform: translateY(0);
         }
     }
 </style>

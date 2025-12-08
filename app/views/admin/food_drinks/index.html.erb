@@ -1,57 +1,75 @@
-<div class="fooddinks-card shadow-lg rounded-4 p-4 animate-fade-in">
+<div class="fooddinks-card shadow-lg rounded-4 p-4 animate-fade-in dark-panel">
 
-    <!-- Header: nút quay lại + title -->
+    <!-- Header -->
     <div class="food-drinks-header mb-3 d-flex align-items-center">
-        <div class="back-button">
-            <%= link_to "Quay lại", admin_dashboard_path, class: "btn btn-outline-secondary btn-anim" %>
-        </div>
-        <h1 class="flex-grow-1 text-center mb-0">Quản lý Món ăn & Thức uống</h1>
+        <%= link_to "Quay lại", admin_dashboard_path, class: "btn btn-outline-light btn-anim" %>
+
+        <h1 class="flex-grow-1 text-center mb-0 title-text">Quản lý Món ăn & Thức uống</h1>
+
+        <div style="width:120px;"></div>
     </div>
 
-    <!-- Nút category -->
-    <div class="category-buttons mb-3">
-        <%= link_to "Tất cả", admin_food_drinks_path, class: "btn btn-secondary btn-cat-anim me-2 mb-2" %>
+    <!-- Category buttons -->
+    <div class="category-buttons mb-3 d-flex flex-wrap gap-2">
+        <%= link_to "Tất cả", admin_food_drinks_path, class: "btn btn-dark btn-cat" %>
+
         <% Category.all.each do |category| %>
-        <%= link_to category.name, admin_food_drinks_path(category_id: category.id), class: "btn btn-primary btn-cat-anim me-2 mb-2" %>
+        <%= link_to category.name,
+                admin_food_drinks_path(category_id: category.id),
+                class: "btn btn-outline-primary btn-cat" %>
         <% end %>
     </div>
 
-    <!-- Toolbar chính -->
+    <!-- Toolbar -->
     <div class="toolbar-wrapper mb-3 d-flex justify-content-between flex-wrap align-items-center gap-2">
-        <!-- Left actions -->
-        <div class="left-actions d-flex gap-2 flex-wrap">
-            <button type="button" id="select_all_btn" class="btn btn-warning btn-anim">Chọn tất cả món ăn</button>
+
+        <!-- Left group -->
+        <div class="d-flex flex-wrap gap-2">
+            <button type="button" id="select_all_btn" class="btn btn-warning btn-anim">Chọn tất cả món</button>
+
             <%= link_to "Thêm mới", new_admin_food_drink_path, class: "btn btn-success btn-anim" %>
-            <%= link_to "Làm mới", admin_food_drinks_path, class: "btn btn-outline-secondary btn-anim" %>
+
+            <%= link_to "Làm mới", admin_food_drinks_path, class: "btn btn-outline-light btn-anim" %>
         </div>
 
-        <!-- Filter form -->
+        <!-- Filter -->
         <div class="filter-form">
-            <%= form_with url: admin_food_drinks_path, method: :get, local: false, data: { turbo_frame: "food_drinks_list" }, class: "d-flex align-items-center gap-2" do |f| %>
-            <%= f.text_field :query, value: params[:query], placeholder: "🔍 Tìm kiếm...", class: "form-control search-input" %>
-            <%= f.select :sort, options_for_select([
-            ['Mới nhất', 'newest'],
-            ['Tên A → Z', 'name_asc'],
-            ['Tên Z → A', 'name_desc'],
-            ['Giá tăng dần', 'price_asc'],
-            ['Giá giảm dần', 'price_desc']
-          ], params[:sort]), {}, class: "form-select" %>
+            <%= form_with url: admin_food_drinks_path, method: :get, local: false,
+                          data: { turbo_frame: "food_drinks_list" },
+                          class: "d-flex align-items-center gap-2" do |f| %>
+
+            <%= f.text_field :query,
+                                 value: params[:query],
+                                 placeholder: "🔍 Tìm kiếm...",
+                                 class: "form-control search-input dark-input" %>
+
+            <%= f.select :sort,
+                    options_for_select([
+                        ['Mới nhất', 'newest'],
+                        ['Tên A → Z', 'name_asc'],
+                        ['Tên Z → A', 'name_desc'],
+                        ['Giá tăng dần', 'price_asc'],
+                        ['Giá giảm dần', 'price_desc']
+                    ], params[:sort]),
+                    {}, class: "form-select dark-input" %>
+
             <%= f.submit "Lọc", class: "btn btn-primary btn-anim" %>
             <% end %>
         </div>
     </div>
 
-    <!-- Turbo Frame chứa bảng món ăn -->
+    <!-- Turbo Frame List -->
     <%= turbo_frame_tag "food_drinks_list" do %>
-    <%= form_with url: bulk_delete_admin_food_drinks_path, method: :delete, local: false, data: { turbo_confirm: "Bạn có chắc chắn muốn xóa các món đã chọn?" } do %>
+    <%= form_with url: bulk_delete_admin_food_drinks_path,
+                  method: :delete,
+                  local: false,
+                  data: { turbo_confirm: "Bạn có chắc chắn muốn xóa các món đã chọn?" } do %>
 
     <div class="food-drinks-table table-responsive mb-3">
         <%= render partial: "list", locals: { food_drinks: @food_drinks } %>
     </div>
 
-    <div class="mb-3">
-        <%= submit_tag "Xóa các món đã chọn", class: "btn btn-danger btn-anim" %>
-    </div>
+    <%= submit_tag "Xóa các món đã chọn", class: "btn btn-danger btn-anim" %>
 
     <% end %>
 
@@ -59,73 +77,152 @@
     <p class="text-center text-muted mt-3">Không tìm thấy món ăn/thức uống nào phù hợp.</p>
     <% end %>
     <% end %>
+
 </div>
 
+
 <style>
-    /* Card + fade-in */
-    .fooddinks-card {
+    /* ===============================
+   GLOBAL DARK MODE
+=============================== */
+    body {
+        background: #0d0d0d !important;
+        color: #e6e6e6 !important;
+    }
+
+    /* ===============================
+   CARD
+=============================== */
+    .dark-panel {
+        background: #1a1a1a !important;
+        border: 1px solid #2d2d2d !important;
         border-radius: 18px;
-        border: 1px solid #e0e0e0;
-        background-color: #fff;
-        padding: 1.5rem;
-        transition: 0.3s ease;
+        transition: 0.3s;
     }
 
-    .fooddinks-card:hover {
+    .dark-panel:hover {
         transform: translateY(-2px);
-        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
     }
 
-    .animate-fade-in {
-        animation: fadeIn 0.6s ease forwards;
-        opacity: 0;
+    /* TITLE */
+    .title-text {
+        color: #ffffff !important;
     }
 
-    /* Category button hover */
-    .btn-cat-anim {
+    /* ===============================
+   BUTTON
+=============================== */
+    .btn-anim,
+    .btn-cat {
         transition: 0.25s ease;
     }
 
-    .btn-cat-anim:hover {
+    .btn-anim:hover,
+    .btn-cat:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
     }
 
-    /* Nút hover */
-    .btn-anim {
-        transition: 0.25s ease;
+    .btn-cat {
+        border-radius: 8px !important;
     }
 
-    .btn-anim:hover:not([disabled]) {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    /* ===============================
+   INPUT DARK
+=============================== */
+    .dark-input {
+        background: #222 !important;
+        color: #fff !important;
+        border: 1px solid #333 !important;
     }
 
-    /* Table row hover */
-    .food-drinks-table tbody tr {
-        transition: 0.25s ease, background-color 0.25s ease;
+    .dark-input:focus {
+        background: #222 !important;
+        box-shadow: 0 0 6px rgba(0, 140, 255, 0.6);
+        border-color: #0d6efd !important;
+    }
+
+    /* ===============================
+   TABLE DARK
+=============================== */
+    .food-drinks-table table {
+        background: #1a1a1a !important;
+        color: #e6e6e6 !important;
+    }
+
+    .food-drinks-table table thead {
+        background: #111 !important;
+    }
+
+    .food-drinks-table table td,
+    .food-drinks-table table th {
+        border-color: #333 !important;
     }
 
     .food-drinks-table tbody tr:hover {
-        background-color: #f1f6ff !important;
+        background: #262626 !important;
         transform: translateX(2px);
     }
 
-    /* Input focus */
-    .search-input:focus {
-        box-shadow: 0 0 6px rgba(0, 123, 255, 0.5);
-        border-color: #80bdff;
-        outline: none;
+    /* ===============================
+   FADE-IN ANIMATION
+=============================== */
+    .animate-fade-in {
+        animation: fadeIn 0.5s ease forwards;
+        opacity: 0;
     }
 
-    /* Animations keyframes */
+    /* ===============================
+   FORCE DARK TABLE — FIX CUỐI
+=============================== */
+
+    /* buộc mọi table trong card thành màu đen */
+    .fooddinks-card table,
+    .fooddinks-card .table {
+        background-color: #1a1a1a !important;
+        color: #e6e6e6 !important;
+        border-color: #333 !important;
+    }
+
+    /* header đen */
+    .fooddinks-card table thead,
+    .fooddinks-card table thead th {
+        background-color: #111 !important;
+        color: #fff !important;
+        border-color: #333 !important;
+    }
+
+    /* từng ô */
+    .fooddinks-card table td,
+    .fooddinks-card table th {
+        background-color: #1a1a1a !important;
+        color: #e6e6e6 !important;
+        border-color: #333 !important;
+    }
+
+    /* hover */
+    .fooddinks-card table tbody tr:hover {
+        background-color: #262626 !important;
+    }
+
+    /* xóa viền trắng table-responsive */
+    .fooddinks-card .table-responsive {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+
     @keyframes fadeIn {
         from {
             opacity: 0;
+            transform: translateY(10px);
         }
 
         to {
             opacity: 1;
+            transform: translateY(0);
         }
     }
 </style>

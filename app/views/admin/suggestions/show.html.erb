@@ -1,38 +1,38 @@
-<div class="suggestion-detail premium-container">
+<div class="suggestion-detail premium-container-dark">
 
     <!-- Header -->
     <div class="header-wrapper">
-        <%= link_to "Quay lại", admin_suggestions_path, class: "btn-back-secondary-glass" %>
+        <%= link_to "← Quay lại", admin_suggestions_path, class: "btn-back-dark-glass" %>
 
-        <h1 class="page-title">Chi tiết Góp ý</h1>
+        <h1 class="page-title-dark">Chi tiết Góp ý</h1>
 
         <div class="header-placeholder"></div>
     </div>
 
     <!-- Body -->
-    <div class="detail-box">
+    <div class="detail-box-dark">
 
-        <div class="detail-row">
-            <div class="detail-label">Người gửi</div>
-            <div class="detail-value"><%= @suggestion.user.name || @suggestion.user.email %></div>
+        <div class="detail-row-dark">
+            <div class="detail-label-dark">Người gửi</div>
+            <div class="detail-value-dark"><%= @suggestion.user.name || @suggestion.user.email %></div>
         </div>
 
-        <div class="detail-row">
-            <div class="detail-label">Tiêu đề</div>
-            <div class="detail-value"><%= @suggestion.title %></div>
+        <div class="detail-row-dark">
+            <div class="detail-label-dark">Tiêu đề</div>
+            <div class="detail-value-dark"><%= @suggestion.title %></div>
         </div>
 
-        <div class="detail-row">
-            <div class="detail-label">Nội dung</div>
-            <div class="detail-value long-text">
+        <div class="detail-row-dark">
+            <div class="detail-label-dark">Nội dung</div>
+            <div class="detail-value-dark long-text-dark">
                 <%= simple_format(@suggestion.content) %>
             </div>
         </div>
 
-        <div class="detail-row">
-            <div class="detail-label">Trạng thái</div>
-            <div class="detail-value">
-                <span class="status-chip <%= @suggestion.status %>">
+        <div class="detail-row-dark">
+            <div class="detail-label-dark">Trạng thái</div>
+            <div class="detail-value-dark">
+                <span class="status-chip-dark <%= @suggestion.status %>">
                     <%= {
                         "pending"  => "Đang chờ xử lý",
                         "approved" => "Đã duyệt",
@@ -45,7 +45,7 @@
     </div>
 
     <div class="bottom-actions">
-        <%= link_to "Sửa", edit_admin_suggestion_path(@suggestion), class: "btn-primary-premium" %>
+        <%= link_to "Sửa", edit_admin_suggestion_path(@suggestion), class: "btn-primary-dark" %>
     </div>
 
 </div>
@@ -53,19 +53,20 @@
 
 <style>
     /* ===========================
-   PREMIUM ADMIN UI (ULTRA)
+   PREMIUM ADMIN DARK MODE
    =========================== */
 
-    .premium-container {
-        background: rgba(255, 255, 255, 0.35);
+    .premium-container-dark {
+        background: rgba(30, 30, 30, 0.55);
         border-radius: 28px;
         padding: 48px 50px;
-        backdrop-filter: blur(14px) saturate(180%);
-        -webkit-backdrop-filter: blur(14px) saturate(180%);
-        border: 1px solid rgba(255, 255, 255, 0.25);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
-        max-width: 840px;
+        backdrop-filter: blur(12px) saturate(140%);
+        -webkit-backdrop-filter: blur(12px) saturate(140%);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+        max-width: 880px;
         margin: 50px auto;
+        color: #f1f1f1;
     }
 
     /* Header */
@@ -74,31 +75,30 @@
         align-items: center;
         justify-content: space-between;
         margin-bottom: 32px;
-        position: relative;
     }
 
-    .page-title {
+    .page-title-dark {
         flex-grow: 1;
         text-align: center;
         font-size: 2.1rem;
         font-weight: 800;
-        color: #1b1d1f;
         letter-spacing: -0.6px;
+        color: #ffffff;
     }
 
-    .btn-back-secondary-glass {
+    .btn-back-dark-glass {
         padding: 10px 22px;
         border-radius: 12px;
         font-weight: 500;
-        background: rgba(245, 245, 245, 0.7);
-        color: #333;
-        border: 1px solid rgba(0, 0, 0, 0.1);
+        background: rgba(255, 255, 255, 0.1);
+        color: #f1f1f1;
+        border: 1px solid rgba(255, 255, 255, 0.15);
         transition: 0.25s;
     }
 
-    .btn-back-secondary-glass:hover {
-        background: rgba(245, 245, 245, 0.85);
-        transform: translateY(-1px);
+    .btn-back-dark-glass:hover {
+        background: rgba(255, 255, 255, 0.18);
+        transform: translateY(-2px);
     }
 
     .header-placeholder {
@@ -106,86 +106,79 @@
     }
 
     /* Detail box */
-    .detail-box {
+    .detail-box-dark {
         display: flex;
         flex-direction: column;
         gap: 1.9rem;
     }
 
-    .detail-row {
+    .detail-row-dark {
         display: grid;
         grid-template-columns: 180px 1fr;
         padding-bottom: 1rem;
-        border-bottom: 1px solid rgba(230, 230, 230, 0.6);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
     }
 
-    .detail-label {
+    .detail-label-dark {
         font-size: 0.92rem;
-        color: #909090;
+        color: #c5c5c5;
         font-weight: 600;
-        letter-spacing: 0.4px;
         text-transform: uppercase;
+        letter-spacing: 0.4px;
     }
 
-    .detail-value {
+    .detail-value-dark {
         font-size: 1.1rem;
         font-weight: 600;
-        color: #232323;
+        color: #ffffff;
     }
 
-    /* Long text */
-    .long-text p {
+    .long-text-dark p {
         margin: 0;
         line-height: 1.65;
-        font-weight: 500;
     }
 
-    /* Status chip */
-    .status-chip {
-        padding: 8px 20px;
-        border-radius: 14px;
+    /* Status chip dark mode */
+    .status-chip-dark {
+        padding: 8px 18px;
+        border-radius: 16px;
         font-weight: 700;
         font-size: 0.9rem;
         display: inline-block;
-        letter-spacing: 0.2px;
-        border: 1px solid transparent;
     }
 
-    /* Premium gradient chips */
-    .status-chip.pending {
-        background: linear-gradient(135deg, #fff7dd, #ffe9ba);
-        color: #b46a00;
-        border-color: #f3d8a6;
+    /* Dark gradients */
+    .status-chip-dark.pending {
+        background: linear-gradient(135deg, #5c4a1a, #a8842f);
+        color: #ffe8a3;
     }
 
-    .status-chip.approved {
-        background: linear-gradient(135deg, #e6fff0, #cbf5db);
-        color: #087a3e;
-        border-color: #b6ebcb;
+    .status-chip-dark.approved {
+        background: linear-gradient(135deg, #1f4d2d, #2c7c49);
+        color: #a7ffd2;
     }
 
-    .status-chip.rejected {
-        background: linear-gradient(135deg, #ffe8e8, #ffd4d4);
-        color: #b30d0d;
-        border-color: #efb3b3;
+    .status-chip-dark.rejected {
+        background: linear-gradient(135deg, #5a1a1a, #8b2424);
+        color: #ffb8b8;
     }
 
-    /* Action button */
-    .btn-primary-premium {
+    /* Button primary */
+    .btn-primary-dark {
         display: inline-block;
-        padding: 12px 28px;
-        background: linear-gradient(135deg, #4f7cff, #3462f8);
-        border-radius: 14px;
-        font-weight: 70;
+        padding: 12px 30px;
+        background: linear-gradient(135deg, #4f7cff, #2e56d6);
+        border-radius: 16px;
+        font-weight: 700;
         color: white !important;
         text-decoration: none;
-        box-shadow: 0 4px 14px rgba(52, 98, 248, 0.3);
+        box-shadow: 0 6px 20px rgba(60, 100, 255, 0.35);
         transition: 0.25s;
     }
 
-    .btn-primary-premium:hover {
+    .btn-primary-dark:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 18px rgba(52, 98, 248, 0.35);
+        box-shadow: 0 8px 24px rgba(60, 100, 255, 0.45);
     }
 
     .bottom-actions {

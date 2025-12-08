@@ -1,10 +1,10 @@
-<div class="categories-card shadow-lg rounded-4 p-4 animate-fade-in">
+<div class="categories-card shadow-lg rounded-4 p-4 animate-fade-in dark-panel">
 
     <!-- Header + Nút quay lại -->
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <%= link_to "Quay lại", admin_dashboard_path, class: "btn btn-outline-secondary btn-anim" %>
-        <h2 class="fw-bold mb-0 text-center flex-grow-1">Quản lý Danh mục</h2>
-        <div style="width: 120px;"></div> <!-- placeholder cân layout -->
+        <%= link_to "Quay lại", admin_dashboard_path, class: "btn btn-outline-light btn-anim" %>
+        <h2 class="fw-bold mb-0 text-center flex-grow-1 title-text">Quản lý Danh mục</h2>
+        <div style="width: 120px;"></div>
     </div>
 
     <!-- Nút thêm mới -->
@@ -16,8 +16,8 @@
 
     <!-- Table danh mục -->
     <div class="table-responsive">
-        <table class="table table-hover table-bordered align-middle mb-0 text-center">
-            <thead class="table-dark">
+        <table class="table table-hover table-bordered align-middle mb-0 text-center table-dark">
+            <thead>
                 <tr>
                     <th style="width:10%;">#</th>
                     <th style="width:40%;" class="text-start">Tên danh mục</th>
@@ -25,23 +25,27 @@
                     <th style="width:25%;">Actions</th>
                 </tr>
             </thead>
+
             <tbody>
                 <% @categories.each_with_index do |category, index| %>
                 <tr class="align-middle animate-row">
-                    <td><%= index + 1 %></td>
-                    <td class="text-start"><%= category.name %></td>
-                    <td><%= category.created_at.strftime("%d/%m/%Y") %></td>
+                    <td class="text-light"><%= index + 1 %></td>
+                    <td class="text-start text-light"><%= category.name %></td>
+                    <td class="text-light"><%= category.created_at.strftime("%d/%m/%Y") %></td>
+
                     <td>
                         <div class="d-flex justify-content-center flex-wrap gap-1">
-                            <%= link_to admin_category_path(category), class: "btn btn-sm btn-outline-primary btn-anim", title: "Xem chi tiết" do %>
+                            <%= link_to admin_category_path(category), class: "btn btn-sm btn-outline-primary btn-anim" do %>
                             <i class="bi bi-eye"></i> Xem
                             <% end %>
 
-                            <%= link_to edit_admin_category_path(category), class: "btn btn-sm btn-outline-warning btn-anim", title: "Chỉnh sửa danh mục" do %>
+                            <%= link_to edit_admin_category_path(category), class: "btn btn-sm btn-outline-warning btn-anim" do %>
                             <i class="bi bi-pencil"></i> Sửa
                             <% end %>
 
-                            <%= link_to admin_category_path(category), data: { turbo_method: :delete, turbo_confirm: "Bạn có chắc chắn muốn xóa danh mục này?" }, class: "btn btn-sm btn-outline-danger btn-anim", title: "Xóa danh mục" do %>
+                            <%= link_to admin_category_path(category),
+                                data: { turbo_method: :delete, turbo_confirm: "Bạn có chắc chắn muốn xóa danh mục này?" },
+                                class: "btn btn-sm btn-outline-danger btn-anim" do %>
                             <i class="bi bi-trash"></i> Xóa
                             <% end %>
                         </div>
@@ -55,26 +59,96 @@
 </div>
 
 <style>
-    .categories-card {
-        border-radius: 18px;
-        border: 1px solid #e0e0e0;
-        padding: 1.5rem;
+    /* ===========================
+   DARK MODE GLOBAL
+=========================== */
+    body {
+        background-color: #0d0d0d !important;
+        color: #e6e6e6 !important;
+    }
+
+    /* ===========================
+   CARD
+=========================== */
+    .dark-panel {
+        background: #1a1a1a !important;
+        border: 1px solid #2d2d2d !important;
+        border-radius: 16px;
         transition: 0.3s ease;
-        background-color: #fff;
     }
 
-    .categories-card:hover {
+    .dark-panel:hover {
         transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
     }
 
+    /* ===========================
+   TITLE
+=========================== */
+    .title-text {
+        color: #ffffff !important;
+        letter-spacing: 0.5px;
+    }
+
+    /* ===========================
+   BUTTON
+=========================== */
     .btn-anim {
         transition: 0.25s ease;
     }
 
-    .btn-anim:hover:not([disabled]) {
+    .btn-anim:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 6px 15px rgba(255, 255, 255, 0.15);
+    }
+
+    /* ===========================
+   TABLE
+=========================== */
+    .table-dark {
+        background: #1a1a1a !important;
+        color: #e6e6e6 !important;
+        border-color: #333 !important;
+    }
+
+    .table-dark thead th {
+        background: #111 !important;
+        color: #fff !important;
+        border-color: #333 !important;
+    }
+
+    .table-dark td,
+    .table-dark th {
+        background: #1a1a1a !important;
+        color: #e6e6e6 !important;
+        border-color: #333 !important;
+    }
+
+    .table-hover tbody tr:hover {
+        background: #262626 !important;
+    }
+
+    /* ===========================
+   REMOVE WHITE BORDER 100%
+=========================== */
+    .table-bordered {
+        border: 1px solid #333 !important;
+    }
+
+    .table-responsive {
+        background: transparent !important;
+        border: none !important;
+    }
+
+    /* ===========================
+   ANIMATION
+=========================== */
+    .animate-row {
+        transition: 0.25s ease;
+    }
+
+    .animate-row:hover {
+        background-color: #262626 !important;
     }
 
     .animate-fade-in {
@@ -82,21 +156,15 @@
         opacity: 0;
     }
 
-    .animate-row {
-        transition: 0.2s ease;
-    }
-
-    .animate-row:hover {
-        background-color: #f1f6ff;
-    }
-
     @keyframes fadeIn {
         from {
             opacity: 0;
+            transform: translateY(10px);
         }
 
         to {
             opacity: 1;
+            transform: translateY(0);
         }
     }
 </style>

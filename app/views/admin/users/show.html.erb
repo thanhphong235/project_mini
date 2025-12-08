@@ -1,45 +1,115 @@
-<h1 class="text-center text-primary mb-4">🧑‍💼 Chi tiết Người dùng</h1>
+<h1 class="text-center text-light mb-4">🧑‍💼 Chi tiết Người dùng</h1>
 
 <div class="row justify-content-center mt-3">
     <div class="col-sm-10 col-md-8 col-lg-6">
-        <div class="card shadow border-0 rounded">
-            <div class="card-body">
-                <!-- Tên user + badge admin nếu có -->
-                <h3 class="card-title text-center mb-3">
-                    <%= @user.name.present? ? @user.name : @user.email %>
-                    <% if @user.admin? %>
-                    <% end %>
-                </h3>
+        <div class="card user-card shadow-lg rounded-4 p-4 animate-fade-in">
 
-                <!-- Thông tin chi tiết -->
-                <ul class="list-group list-group-flush mb-4">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span><strong>Email:</strong></span>
-                        <span class="text-truncate" style="max-width: 250px;"><%= @user.email %></span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span><strong>Role:</strong></span>
-                        <span class="badge bg-info text-dark"><%= @user.role %></span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between">
-                        <span><strong>Ngày tạo:</strong></span>
-                        <span><%= @user.created_at.strftime("%d/%m/%Y %H:%M") %></span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between">
-                        <span><strong>Ngày cập nhật:</strong></span>
-                        <span><%= @user.updated_at.strftime("%d/%m/%Y %H:%M") %></span>
-                    </li>
-                </ul>
+            <!-- User name -->
+            <h3 class="text-center fw-bold mb-4 text-white">
+                <%= @user.name.presence || @user.email %>
+            </h3>
 
-                <!-- Buttons -->
-                <div class="d-flex justify-content-between">
-                    <%= link_to "← Quay lại", admin_users_path, class: "btn btn-outline-secondary w-45" %>
-                    <%= link_to "Xóa người dùng", admin_user_path(@user),
+            <!-- User info list -->
+            <ul class="list-group user-info-list mb-4">
+                <li class="list-group-item d-flex justify-content-between">
+                    <strong class="text-white">Email:</strong>
+                    <span class="text-truncate text-light" style="max-width: 250px;"><%= @user.email %></span>
+                </li>
+
+                <li class="list-group-item d-flex justify-content-between">
+                    <strong class="text-white">Role:</strong>
+                    <span class="badge bg-info text-dark px-3 py-2"><%= @user.role %></span>
+                </li>
+
+                <li class="list-group-item d-flex justify-content-between">
+                    <strong class="text-white">Ngày tạo:</strong>
+                    <span class="text-light"><%= @user.created_at.strftime("%d/%m/%Y %H:%M") %></span>
+                </li>
+
+                <li class="list-group-item d-flex justify-content-between">
+                    <strong class="text-white">Ngày cập nhật:</strong>
+                    <span class="text-light"><%= @user.updated_at.strftime("%d/%m/%Y %H:%M") %></span>
+                </li>
+            </ul>
+
+            <!-- Buttons -->
+            <div class="d-flex justify-content-between gap-3">
+                <%= link_to "Quay lại", admin_users_path,
+              class: "btn btn-outline-light w-50 btn-anim" %>
+
+                <%= link_to "Xóa người dùng", admin_user_path(@user),
               method: :delete,
               data: { turbo_confirm: "Bạn có chắc chắn muốn xóa người dùng này?" },
-              class: "btn btn-outline-danger w-45" %>
-                </div>
+              class: "btn btn-danger w-50 btn-anim" %>
             </div>
+
         </div>
     </div>
 </div>
+
+<style>
+    /* CARD DARK */
+    .user-card {
+        background: #121212;
+        border: 1px solid #2a2a2a;
+        border-radius: 18px;
+        transition: 0.2s ease;
+    }
+
+    .user-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    }
+
+    /* LIST GROUP DARK */
+    .user-info-list .list-group-item {
+        background: #1b1b1b;
+        color: white;
+        border: 1px solid #2d2d2d;
+        padding: 14px 18px;
+    }
+
+    .user-info-list .list-group-item strong {
+        color: #ffffff;
+    }
+
+    .user-info-list .list-group-item span {
+        color: #e6e6e6 !important;
+    }
+
+    /* BUTTON ANIMATION */
+    .btn-anim {
+        transition: 0.25s ease;
+    }
+
+    .btn-anim:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+    }
+
+    /* TITLE */
+    h1,
+    h2,
+    h3,
+    strong {
+        color: #fff !important;
+    }
+
+    /* Fade in */
+    .animate-fade-in {
+        animation: fadein 0.6s ease forwards;
+        opacity: 0;
+    }
+
+    @keyframes fadein {
+        from {
+            opacity: 0;
+            transform: translateY(5px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>

@@ -10,12 +10,11 @@ class Admin::DashboardController < Admin::BaseController
     @order_count      = Order.count
     @suggestion_count = Suggestion.count
 
-    # Donut chart: số lượng sản phẩm theo category
+    # Donut chart
     @fooddrink_counts = FoodDrink.joins(:category)
                                  .group('categories.name')
                                  .count || {}
 
-    # Nếu chưa có dữ liệu, tạo test dữ liệu
     if @fooddrink_counts.empty?
       c = Category.first || Category.create(name: "Đồ ăn")
       FoodDrink.create(name: "Phở", category: c)
@@ -24,49 +23,39 @@ class Admin::DashboardController < Admin::BaseController
                                    .count
     end
 
-    # Thành viên mới
-    @new_users = User.order(created_at: :desc).limit(8)
-
-    # Đơn hàng gần đây
-    @recent_orders = Order.order(created_at: :desc).limit(10)
+    @new_users       = User.order(created_at: :desc).limit(8)
+    @recent_orders   = Order.order(created_at: :desc).limit(10)
   end
-end
-
 
   # =========================
   # 📊 Thống kê đơn hàng
   # =========================
-def order_statistics
-  @month = params[:month]&.to_i || Time.current.month
-  @year  = params[:year]&.to_i  || Time.current.year
+  def order_statistics
+    @month = params[:month]&.to_i || Time.current.month
+    @year  = params[:year]&.to_i  || Time.current.year
 
-  # Lấy tất cả đơn theo tháng/năm, preload user
-  @orders = Order.includes(:user)
-                 .where("extract(month from created_at) = ? AND extract(year from created_at) = ?", @month, @year)
-                 .order(created_at: :desc)
+    @orders = Order.includes(:user)
+                   .where("extract(month from created_at) = ? AND extract(year from created_at) = ?", @month, @year)
+                   .order(created_at: :desc)
 
-  # Tổng số đơn
-  @total_orders = @orders.size
-
-  # Tổng doanh thu: chỉ tính đơn completed
-  @total_revenue = @orders.select { |o| o.completed? }.sum(&:total_price)
-end
+    @total_orders = @orders.size
+    @total_revenue = @orders.select { |o| o.completed? }.sum(&:total_price)
+  end
 
   # =========================
   # 📧 Gửi thống kê qua email
   # =========================
   def send_statistics
     @month = (params[:month] || Date.current.month).to_i
-    @year = (params[:year] || Date.current.year).to_i
+    @year  = (params[:year]  || Date.current.year).to_i
 
     start_date = Date.new(@year, @month, 1).beginning_of_day
-    end_date = start_date.end_of_month.end_of_day
+    end_date   = start_date.end_of_month.end_of_day
 
-    orders = Order.where(created_at: start_date..end_date)
-    total_orders = orders.count
+    orders        = Order.where(created_at: start_date..end_date)
+    total_orders  = orders.count
     total_revenue = orders.sum(:total_price)
 
-    # Gửi mail cho admin hiện tại
     AdminMailer.monthly_statistics(current_user, @month, @year, total_orders, total_revenue).deliver_later
 
     redirect_to admin_order_statistics_path(month: @month, year: @year),
@@ -75,10 +64,10 @@ end
 
   def send_monthly_report
     @month = params[:month].to_i
-    @year = params[:year].to_i
+    @year  = params[:year].to_i
 
     start_date = Date.new(@year, @month, 1).beginning_of_day
-    end_date = start_date.end_of_month.end_of_day
+    end_date   = start_date.end_of_month.end_of_day
 
     @orders = Order.includes(:user).where(created_at: start_date..end_date)
 
@@ -92,8 +81,6 @@ end
     redirect_to admin_order_statistics_path(month: @month, year: @year)
   end
 
-
-
   private
 
   def require_admin
@@ -101,4 +88,4 @@ end
       redirect_to root_path, alert: "🚫 Bạn không có quyền truy cập trang này!"
     end
   end
-
+end

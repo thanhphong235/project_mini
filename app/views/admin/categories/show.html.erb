@@ -1,33 +1,94 @@
-<h2 class="text-center text-primary mb-4">📂 Chi tiết Danh mục</h2>
+<h2 class="text-center text-light mb-4">📂 Chi tiết Danh mục</h2>
 
 <div class="row justify-content-center mt-3">
     <div class="col-sm-10 col-md-7 col-lg-5">
-        <div class="card shadow border-0 rounded p-4">
+        <div class="card category-card shadow-lg rounded-4 p-4 animate-fade-in">
 
             <!-- Thông tin danh mục -->
-            <ul class="list-group list-group-flush mb-4">
+            <ul class="list-group category-info-list mb-4">
                 <li class="list-group-item d-flex justify-content-between">
-                    <strong>Tên danh mục:</strong>
-                    <span><%= @category.name %></span>
+                    <strong class="text-white">Tên danh mục:</strong>
+                    <span class="text-light"><%= @category.name %></span>
                 </li>
+
                 <li class="list-group-item d-flex justify-content-between">
-                    <strong>Ngày tạo:</strong>
-                    <span><%= @category.created_at.strftime("%d/%m/%Y %H:%M") %></span>
+                    <strong class="text-white">Ngày tạo:</strong>
+                    <span class="text-light"><%= @category.created_at.strftime("%d/%m/%Y %H:%M") %></span>
                 </li>
+
                 <li class="list-group-item d-flex justify-content-between">
-                    <strong>Ngày cập nhật:</strong>
-                    <span><%= @category.updated_at.strftime("%d/%m/%Y %H:%M") %></span>
+                    <strong class="text-white">Ngày cập nhật:</strong>
+                    <span class="text-light"><%= @category.updated_at.strftime("%d/%m/%Y %H:%M") %></span>
                 </li>
             </ul>
 
             <!-- Buttons -->
-            <div class="d-flex justify-content-between flex-wrap gap-2">
-                <%= link_to "← Quay lại", admin_categories_path, class: "btn btn-outline-secondary w-45" %>
-                <%= link_to "Xóa danh mục", admin_category_path(@category), method: :delete,
-            data: { turbo_confirm: "Bạn có chắc chắn muốn xóa danh mục này?" },
-            class: "btn btn-outline-danger w-45" %>
+            <div class="d-flex justify-content-between gap-3 flex-nowrap">
+                <%= link_to "Quay lại", admin_categories_path,
+                    class: "btn btn-outline-light flex-fill btn-anim" %>
+
+                <%= link_to "Xóa danh mục", admin_category_path(@category),
+                    method: :delete,
+                    data: { turbo_confirm: "Bạn có chắc chắn muốn xóa danh mục này?" },
+                    class: "btn btn-danger flex-fill btn-anim" %>
             </div>
+
 
         </div>
     </div>
 </div>
+
+<style>
+    /* Dark card */
+    .category-card {
+        background: #121212;
+        border: 1px solid #2a2a2a;
+        border-radius: 18px;
+        transition: 0.25s ease;
+    }
+
+    .category-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.08);
+    }
+
+    /* List-group dark */
+    .category-info-list .list-group-item {
+        background: #1b1b1b;
+        border-color: #2d2d2d;
+        color: #e6e6e6;
+        padding: 14px 18px;
+    }
+
+    .category-info-list strong {
+        color: #ffffff !important;
+    }
+
+    /* Button animation */
+    .btn-anim {
+        transition: 0.25s ease;
+    }
+
+    .btn-anim:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
+    }
+
+    /* Fade-in animation */
+    .animate-fade-in {
+        animation: fadein 0.6s ease forwards;
+        opacity: 0;
+    }
+
+    @keyframes fadein {
+        from {
+            opacity: 0;
+            transform: translateY(5px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>

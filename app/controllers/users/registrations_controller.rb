@@ -3,16 +3,16 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   protected
 
-  # Chọn layout theo vai trò user
+  # -------- Layout ----------
   def choose_layout
     if user_signed_in? && current_user.admin?
-      "admin"      # layout dành cho admin
+      "admin"
     else
-      "application" # layout mặc định cho user
+      "application"
     end
   end
 
-  # Cho phép cập nhật mà không cần mật khẩu
+  # -------- Cập nhật không cần mật khẩu ----------
   def update_resource(resource, params)
     if params[:password].present?
       resource.update_with_password(params)
@@ -24,5 +24,16 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def after_update_path_for(resource)
     edit_user_registration_path
+  end
+
+  # -------- Ngăn auto login khi đăng ký ----------
+  def sign_up(resource_name, resource)
+    # Do nothing để ngăn tự đăng nhập
+  end
+
+  # -------- Thêm flash thông báo sau đăng ký ----------
+  def after_sign_up_path_for(resource)
+    flash[:notice] = "Đăng ký thành công, vui lòng đăng nhập"
+    new_user_session_path
   end
 end

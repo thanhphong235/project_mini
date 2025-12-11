@@ -37,7 +37,7 @@
                           <h3 class="card-title"><i class="fas fa-chart-line"></i> Doanh thu</h3>
                       </div>
                       <div class="card-body">
-                          <canvas id="lineChart" style="width:100%; height:300px;"></canvas>
+                          <canvas id="lineChart" data-labels="<%= @months.to_json %>" data-values="<%= @revenue_by_month.to_json %>" style="width:100%; height:300px;"></canvas>
                       </div>
                   </div>
               </section>
@@ -48,7 +48,7 @@
                           <h3 class="card-title"><i class="fas fa-chart-bar"></i> Số đơn hàng</h3>
                       </div>
                       <div class="card-body">
-                          <canvas id="barChart" style="width:100%; height:300px;"></canvas>
+                          <canvas id="barChart" data-labels="<%= @months.to_json %>" data-values="<%= @orders_by_month.to_json %>" style="width:100%; height:300px;"></canvas>
                       </div>
                   </div>
               </section>

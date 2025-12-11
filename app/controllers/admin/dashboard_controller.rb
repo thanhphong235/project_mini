@@ -3,26 +3,54 @@ class Admin::DashboardController < Admin::BaseController
   before_action :require_admin
 
   def index
-    # Small boxes
+    # ===============================
+    # 📌 Small boxes
+    # ===============================
     @user_count       = User.count
     @category_count   = Category.count
     @food_count       = FoodDrink.count
     @order_count      = Order.count
     @suggestion_count = Suggestion.count
 
-    # Donut chart
+    # ===============================
+    # 🍩 Donut Chart – Số món theo danh mục
+    # ===============================
     @fooddrink_counts = FoodDrink.joins(:category)
-                                 .group('categories.name')
-                                 .count || {}
+                                 .group("categories.name")
+                                 .count
 
+    # Nếu rỗng → tạo dữ liệu mẫu
     if @fooddrink_counts.empty?
       c = Category.first || Category.create(name: "Đồ ăn")
       FoodDrink.create(name: "Phở", category: c)
+
       @fooddrink_counts = FoodDrink.joins(:category)
-                                   .group('categories.name')
+                                   .group("categories.name")
                                    .count
     end
 
+    # ===============================
+    # 📈 Line Chart – Doanh thu theo 12 tháng
+    # ===============================
+    months = (1..12).to_a
+    @months = months.map { |m| "T#{m}" }
+
+    @revenue_by_month = months.map do |m|
+      Order.where("EXTRACT(MONTH FROM created_at) = ?", m)
+           .sum(:total_price)
+           .to_f
+    end
+
+    # ===============================
+    # 📊 Bar Chart – Số đơn hàng theo tháng
+    # ===============================
+    @orders_by_month = months.map do |m|
+      Order.where("EXTRACT(MONTH FROM created_at) = ?", m).count
+    end
+
+    # ===============================
+    # 👥 Dữ liệu khác
+    # ===============================
     @new_users       = User.order(created_at: :desc).limit(8)
     @recent_orders   = Order.order(created_at: :desc).limit(10)
   end
@@ -62,6 +90,9 @@ class Admin::DashboardController < Admin::BaseController
                 notice: "📧 Báo cáo thống kê tháng #{@month}/#{@year} đã được gửi qua email!"
   end
 
+  # =========================
+  # 📧 Gửi báo cáo đơn hàng
+  # =========================
   def send_monthly_report
     @month = params[:month].to_i
     @year  = params[:year].to_i

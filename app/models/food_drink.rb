@@ -13,7 +13,7 @@ class FoodDrink < ApplicationRecord
   has_many :orders, through: :order_items
 
   def average_rating
-  ratings.average(:score)&.round(1) || 0
-end
+    ratings.average(:score)&.round(1) || 0
+  end
 
 end

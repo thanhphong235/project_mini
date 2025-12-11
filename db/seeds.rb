@@ -1,161 +1,101 @@
 # db/seeds.rb
-# frozen_string_literal: true
-
 puts "🚀 Seed database bắt đầu..."
 
 begin
-# Admin test
-# ----------------------------
-  if ActiveRecord::Base.connection.data_source_exists?('users')
-    admin_email = "admin_test@example.com"
-    admin_password = "123456"
+  # ----------------------------
+  # Admin test
+  # ----------------------------
+  admin_email = "admin_test@example.com"
+  admin_password = "123456"
 
-    admin_test = User.find_or_initialize_by(email: admin_email)
-    if admin_test.new_record?
-      admin_test.name = "Admin Test"
-      admin_test.role = "admin"  # enum hoặc string role
-      admin_test.password = admin_password
-      admin_test.password_confirmation = admin_password
-      admin_test.confirmed_at = Time.current if admin_test.respond_to?(:confirmed_at)
-      admin_test.save!
-      puts "✅ Admin test mới tạo thành công!"
-    else
-      puts "⚠️ Admin test đã tồn tại, không thay đổi password"
-    end
+  admin_test = User.find_or_initialize_by(email: admin_email)
+  if admin_test.new_record?
+    admin_test.name = "Admin Test"
+    admin_test.role = "admin"
+    admin_test.password = admin_password
+    admin_test.password_confirmation = admin_password
+    admin_test.save!
+    puts "✅ Admin test mới tạo thành công!"
   else
-    puts "⚠️ Table users chưa tồn tại, bỏ qua seed admin."
+    puts "⚠️ Admin test đã tồn tại"
   end
-
 
   # ----------------------------
   # Categories
   # ----------------------------
-  if ActiveRecord::Base.connection.data_source_exists?('categories')
-    cat_food  = Category.find_or_create_by!(name: "Food")
-    cat_drink = Category.find_or_create_by!(name: "Drink")
-  else
-    puts "⚠️ Table categories chưa tồn tại, bỏ qua seed categories."
-  end
+  cat_food  = Category.find_or_create_by!(name: "Food")
+  cat_drink = Category.find_or_create_by!(name: "Drink")
 
   # ----------------------------
   # Món ăn & đồ uống
   # ----------------------------
-  if ActiveRecord::Base.connection.data_source_exists?('food_drinks')
-    default_foods_drinks = [
-      { name: "Pizza",  price: 100_000, category: cat_food,  stock: 10 },
-      { name: "Burger", price: 80_000,  category: cat_food,  stock: 15 },
-      { name: "Coffee", price: 30_000,  category: cat_drink, stock: 20 },
-      { name: "Tea",    price: 20_000,  category: cat_drink, stock: 25 }
-    ]
+  foods_drinks_data = [
+    { name: "Pizza",  price: 100_000, category: cat_food },
+    { name: "Burger", price: 80_000,  category: cat_food },
+    { name: "Coffee", price: 30_000,  category: cat_drink },
+    { name: "Tea",    price: 20_000,  category: cat_drink },
+    { name: "Sushi",  price: 120_000, category: cat_food },
+    { name: "Latte",  price: 35_000,  category: cat_drink }
+  ]
 
-    extra_foods_drinks = [
-      { name: "Sushi",  price: 120_000, category: cat_food,  stock: 12 },
-      { name: "Pasta",  price: 90_000,  category: cat_food,  stock: 10 },
-      { name: "Salad",  price: 70_000,  category: cat_food,  stock: 15 },
-      { name: "Steak",  price: 200_000, category: cat_food,  stock: 8 },
-      { name: "French Fries", price: 40_000, category: cat_food,  stock: 20 },
-      { name: "Sandwich",     price: 60_000, category: cat_food,  stock: 12 },
-      { name: "Latte",  price: 35_000,  category: cat_drink, stock: 15 },
-      { name: "Smoothie", price: 40_000, category: cat_drink, stock: 10 },
-      { name: "Cappuccino", price: 38_000, category: cat_drink, stock: 12 },
-      { name: "Hot Chocolate", price: 45_000, category: cat_drink, stock: 10 },
-      { name: "Orange Juice",  price: 25_000, category: cat_drink, stock: 20 },
-      { name: "Milkshake",     price: 50_000, category: cat_drink, stock: 8 }
-    ]
-
-    all_foods_drinks = default_foods_drinks + extra_foods_drinks
-
-    all_foods_drinks.each do |fd_data|
-      fd = FoodDrink.find_or_initialize_by(name: fd_data[:name])
-      fd.update!(
-        price: fd_data[:price],
-        category: fd_data[:category],
-        stock: fd_data[:stock],
-        description: "Món #{fd_data[:name]} – hương vị hấp dẫn, phù hợp mọi khẩu vị."
-      )
+  foods_drinks_data.each do |fd|
+    FoodDrink.find_or_create_by!(name: fd[:name]) do |f|
+      f.price = fd[:price]
+      f.category = fd[:category]
+      f.stock = 10
+      f.description = "Món #{fd[:name]} – hương vị hấp dẫn."
     end
-  else
-    puts "⚠️ Table food_drinks chưa tồn tại, bỏ qua seed món ăn/đồ uống."
   end
 
   # ----------------------------
-  # Orders & OrderItems
+  # User bình thường
   # ----------------------------
-  if ActiveRecord::Base.connection.data_source_exists?('orders') && ActiveRecord::Base.connection.data_source_exists?('order_items')
-    user = User.where.not(id: admin_test.id).first || User.create!(
-      name: "Normal User",
-      email: ENV.fetch("USER_EMAIL", "user_for_seed@example.com"),
-      password: ENV.fetch("USER_PASSWORD", "123456"),
-      password_confirmation: ENV.fetch("USER_PASSWORD", "123456"),
-      role: "user",
-      confirmed_at: Time.current
-    )
+  user = User.where.not(id: admin_test.id).first
+  unless user
+    attrs = { name: "Normal User", email: "normal_user@example.com", password: "123456", password_confirmation: "123456", role: "user" }
+    attrs[:confirmed_at] = Time.current if User.new.respond_to?(:confirmed_at=)
+    user = User.create!(attrs)
+  end
 
-    fd_pizza  = FoodDrink.find_by(name: "Pizza")
-    fd_burger = FoodDrink.find_by(name: "Burger")
-    fd_coffee = FoodDrink.find_by(name: "Coffee")
-    fd_tea    = FoodDrink.find_by(name: "Tea")
-    fd_sushi  = FoodDrink.find_by(name: "Sushi")
-    fd_latte  = FoodDrink.find_by(name: "Latte")
+  # ----------------------------
+  # Orders
+  # ----------------------------
+  pizza  = FoodDrink.find_by(name: "Pizza")
+  coffee = FoodDrink.find_by(name: "Coffee")
+  latte  = FoodDrink.find_by(name: "Latte")
 
-    order1 = Order.find_or_initialize_by(user: user, status: :pending)
-    order2 = Order.find_or_initialize_by(user: user, status: :completed)
+  order = Order.find_or_create_by!(user: user, status: :completed) do |o|
+    o.total_price = pizza.price + coffee.price + latte.price
+  end
 
-    order1.update!(total_price: fd_pizza.price + fd_coffee.price + fd_latte.price)
-    order2.update!(total_price: fd_burger.price + fd_tea.price + fd_sushi.price)
-
-    [
-      { order: order1, food_drink: fd_pizza,  quantity: 1 },
-      { order: order1, food_drink: fd_coffee, quantity: 1 },
-      { order: order1, food_drink: fd_latte,  quantity: 1 },
-      { order: order2, food_drink: fd_burger, quantity: 1 },
-      { order: order2, food_drink: fd_tea,    quantity: 1 },
-      { order: order2, food_drink: fd_sushi,  quantity: 1 }
-    ].each do |oi_data|
-      next unless oi_data[:food_drink]
-
-      oi = OrderItem.find_or_initialize_by(order: oi_data[:order], food_drink: oi_data[:food_drink])
-      oi.update!(quantity: oi_data[:quantity], price: oi_data[:food_drink].price)
+  [
+    { food_drink: pizza,  quantity: 1 },
+    { food_drink: coffee, quantity: 1 },
+    { food_drink: latte,  quantity: 1 }
+  ].each do |item|
+    OrderItem.find_or_create_by!(order: order, food_drink: item[:food_drink]) do |oi|
+      oi.quantity = item[:quantity]
+      oi.price = item[:food_drink].price
     end
-  else
-    puts "⚠️ Table orders hoặc order_items chưa tồn tại, bỏ qua seed orders."
   end
 
   # ----------------------------
   # Ratings
   # ----------------------------
-  if ActiveRecord::Base.connection.data_source_exists?('ratings')
-    ratings_data = [
-      { food_drink: fd_pizza,  user: user,  score: 5, comment: "Pizza ngon tuyệt vời!" },
-      { food_drink: fd_pizza,  user: admin_test, score: 4, comment: "Pizza ổn, có thể thêm phô mai." },
-      { food_drink: fd_coffee, user: user,  score: 4, comment: "Cà phê thơm, ngon." },
-      { food_drink: fd_coffee, user: admin_test, score: 3, comment: "Cà phê hơi đắng." },
-      { food_drink: fd_burger, user: user,  score: 5, comment: "Burger mềm, thịt ngon." },
-      { food_drink: fd_burger, user: admin_test, score: 4, comment: "Burger ngon, hơi ít sốt." },
-      { food_drink: fd_tea,    user: user,  score: 3, comment: "Trà bình thường." },
-      { food_drink: fd_tea,    user: admin_test, score: 4, comment: "Trà ngon, vị thanh nhẹ." },
-      { food_drink: fd_sushi,  user: user,  score: 5, comment: "Sushi tươi ngon, ăn là mê!" },
-      { food_drink: fd_sushi,  user: admin_test, score: 4, comment: "Sushi ổn, trang trí đẹp." },
-      { food_drink: fd_latte,  user: user,  score: 4, comment: "Latte thơm, uống rất thích." },
-      { food_drink: fd_latte,  user: admin_test, score: 3, comment: "Latte ngon nhưng hơi ngọt." }
-    ]
-
-    ratings_data.each do |data|
-      next unless data[:food_drink]
-
-      r = Rating.find_or_initialize_by(food_drink: data[:food_drink], user: data[:user])
-      r.update!(score: data[:score], comment: data[:comment])
+  [
+    { food_drink: pizza, user: user, score: 5, comment: "Pizza ngon tuyệt vời!" },
+    { food_drink: coffee, user: user, score: 4, comment: "Cà phê thơm, ngon." },
+    { food_drink: latte, user: user, score: 4, comment: "Latte thơm, uống rất thích." }
+  ].each do |r|
+    next unless r[:food_drink]
+    Rating.find_or_create_by!(food_drink: r[:food_drink], user: r[:user]) do |rate|
+      rate.score = r[:score]
+      rate.comment = r[:comment]
     end
-  else
-    puts "⚠️ Table ratings chưa tồn tại, bỏ qua seed ratings."
   end
 
   puts "✅ Seed database hoàn tất!"
-  puts "--------------------------------------------"
-  puts "👨‍💻 Admin test account:"
-  puts "   Email: #{admin_email}"
-  puts "   Password: #{admin_password}"
-  puts "--------------------------------------------"
+  puts "Admin test: #{admin_email} / #{admin_password}"
 
 rescue => e
   puts "❌ Seed thất bại: #{e.message}"

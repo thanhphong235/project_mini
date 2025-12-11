@@ -1,1 +1,5 @@
-<span class="status-badge <%= order.status %>"><%= order.status_human %></span>
+<%= turbo_frame_tag "order_status_#{order.id}" do %>
+<span class="status-badge <%= order.status %>">
+    <%= order.status_human %>
+</span>
+<% end %>

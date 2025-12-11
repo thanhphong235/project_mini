@@ -1,19 +1,19 @@
 <%= turbo_frame_tag "order_show_#{@order.id}" do %>
 
+<!-- Flash messages -->
+<div id="flash_messages"></div>
+
 <div class="order-glass-card">
 
-    <!-- Header -->
+    <!-- HEADER -->
     <div class="order-glass-header">
-        <%= link_to "Quay lại", admin_orders_path, class: "btn-back-glass", data: {turbo: false} %>
-
+        <%= link_to "Quay lại", admin_orders_path, class: "btn-back-glass", data: { turbo: false } %>
         <h1 class="order-glass-title">Chi tiết đơn hàng #<%= @order.id %></h1>
-
         <div class="header-placeholder-glass"></div>
     </div>
 
     <!-- INFO SECTION -->
     <div class="glass-info-box">
-
         <div class="glass-info-row">
             <div class="label-glass">Người đặt</div>
             <div class="value-glass"><%= @order.user&.name || @order.user&.email %></div>
@@ -41,7 +41,6 @@
 
     <!-- DANH SÁCH SẢN PHẨM -->
     <h3 class="glass-section-title">Danh sách sản phẩm</h3>
-
     <div class="glass-table-wrapper">
         <table class="table glass-table">
             <thead>
@@ -69,40 +68,42 @@
 
     <!-- UPDATE FORM -->
     <h3 class="glass-section-title">Cập nhật trạng thái</h3>
-
     <%= form_with(model: [:admin, @order], method: :patch, local: false, class: "glass-form") do |f| %>
-
     <div class="glass-info-row mb-4">
         <div class="label-glass">Trạng thái</div>
         <div class="value-glass">
             <%= f.select :status,
-                    Order.statuses.keys.map { |key| [Order.new(status: key).status_human, key] },
-                    { selected: @order.status },
-                    class: "select-glass"
-                %>
+                Order.statuses.keys.map { |key| [Order.new(status: key).status_human, key] },
+                { selected: @order.status },
+                class: "select-glass" %>
         </div>
     </div>
 
     <div class="form-actions-glass">
         <%= f.submit "Cập nhật", class: "btn-save-glass" %>
-
         <%= button_to "Xóa đơn hàng", admin_order_path(@order),
-                method: :delete,
-                data: { turbo_confirm: "Bạn có chắc muốn xóa đơn?" },
-                class: "btn-delete-glass"
-            %>
+              method: :delete,
+              data: { turbo_confirm: "Bạn có chắc muốn xóa đơn?" },
+              class: "btn-delete-glass" %>
     </div>
-
     <% end %>
 
 </div>
 
 <% end %>
 
+<!-- AUTO-HIDE FLASH -->
+<script>
+    document.addEventListener("turbo:load", () => {
+        const flashes = document.querySelectorAll("#flash_messages .alert");
+        flashes.forEach(flash => {
+            setTimeout(() => flash.remove(), 4000);
+        });
+    });
+</script>
+
 <style>
-    /* ================================================
-   CARD GLASS - DARK MODE
-================================================ */
+    /* CARD GLASS */
     .order-glass-card {
         background: rgba(15, 15, 15, 0.55);
         border-radius: 28px;
@@ -116,9 +117,6 @@
         color: #fff;
     }
 
-    /* ================================================
-   HEADER
-================================================ */
     .order-glass-header {
         display: flex;
         align-items: center;
@@ -131,30 +129,26 @@
         text-align: center;
         font-size: 2rem;
         font-weight: 800;
-        color: #ffffff;
+        color: #fff;
     }
 
     .header-placeholder-glass {
         width: 120px;
     }
 
-    /* Back button */
     .btn-back-glass {
         padding: 10px 22px;
         border-radius: 12px;
         background: rgba(255, 255, 255, 0.15);
         border: 1px solid rgba(255, 255, 255, 0.2);
         color: #f5f5f5;
-        transition: 0.25s;
+        transition: .25s;
     }
 
     .btn-back-glass:hover {
         background: rgba(255, 255, 255, 0.25);
     }
 
-    /* ================================================
-   INFO ROWS
-================================================ */
     .glass-info-box {
         display: flex;
         flex-direction: column;
@@ -172,41 +166,33 @@
     .label-glass {
         font-size: 0.9rem;
         font-weight: 600;
-        color: #bbbbbb;
+        color: #bbb;
         text-transform: uppercase;
     }
 
     .value-glass {
         font-size: 1.05rem;
         font-weight: 500;
-        color: #ffffff;
+        color: #fff;
     }
 
-    /* ================================================
-   SECTION TITLES
-================================================ */
     .glass-section-title {
-        color: #ffffff;
+        color: #fff;
         font-weight: 700;
         margin: 30px 0 15px;
         font-size: 1.3rem;
     }
 
-    /* ================================================
-   TABLE - DARK GLASS
-================================================ */
     .glass-table-wrapper {
         margin-bottom: 30px;
         border-radius: 18px;
         overflow: hidden;
     }
 
-    /* Ghi đè toàn bộ bootstrap table variables */
     .glass-table {
         --bs-table-bg: transparent !important;
         --bs-table-striped-bg: transparent !important;
         --bs-table-hover-bg: rgba(255, 255, 255, 0.06) !important;
-
         background: rgba(30, 30, 30, 0.35) !important;
         backdrop-filter: blur(12px);
         color: #fff !important;
@@ -236,9 +222,6 @@
         color: #fff !important;
     }
 
-    /* ================================================
-   FORM + SELECT
-================================================ */
     .select-glass {
         padding: 10px 14px;
         border-radius: 12px;
@@ -246,7 +229,7 @@
         background: rgba(40, 40, 40, 0.6);
         color: white;
         width: 100%;
-        transition: 0.25s;
+        transition: .25s;
     }
 
     .select-glass:focus {
@@ -254,9 +237,6 @@
         box-shadow: 0 0 0 0.2rem rgba(79, 124, 255, 0.35);
     }
 
-    /* ================================================
-   BUTTONS - DARK MODE
-================================================ */
     .form-actions-glass {
         display: flex;
         gap: 15px;
@@ -269,9 +249,9 @@
         color: white;
         border-radius: 14px;
         font-weight: 700;
-        transition: 0.25s;
         border: none;
         flex: 1;
+        transition: .25s;
     }
 
     .btn-save-glass:hover {
@@ -286,8 +266,8 @@
         color: #ff6b6b;
         background: rgba(255, 255, 255, 0.1);
         font-weight: 600;
-        transition: 0.25s;
         flex: 1;
+        transition: .25s;
     }
 
     .btn-delete-glass:hover {

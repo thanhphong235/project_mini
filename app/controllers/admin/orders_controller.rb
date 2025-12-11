@@ -6,7 +6,6 @@ class Admin::OrdersController < Admin::BaseController
   # ======================
   # QUẢN LÝ ĐƠN HÀNG
   # ======================
-
   def index
     @orders = Order.includes(:user).order(created_at: :desc)
   end
@@ -14,73 +13,72 @@ class Admin::OrdersController < Admin::BaseController
   def show
   end
 
-def update
-  respond_to do |format|
+  def update
     if @order.update(order_params)
       notice = "Cập nhật trạng thái đơn hàng thành công."
-
-      format.html { redirect_to admin_order_path(@order), notice: notice }
-      format.turbo_stream do
-        render turbo_stream: [
-          # Cập nhật flash
-          turbo_stream.update(
-            "flash_messages",
-            "<div class='alert alert-success alert-dismissible fade show mt-2' role='alert'>
-              #{notice}
-              <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Đóng'></button>
-            </div>".html_safe
-          ),
-          # Cập nhật status badge
-          turbo_stream.replace(
-            "order_status_#{@order.id}",
-            partial: "admin/orders/status_badge",
-            locals: { order: @order }
-          )
-        ]
+      respond_to do |format|
+        format.html { redirect_to admin_order_path(@order), notice: notice }
+        format.turbo_stream do
+          render turbo_stream: [
+            # Cập nhật flash
+            turbo_stream.prepend(
+              "flash_messages",
+              partial: "shared/flash",
+              locals: { notice: notice }
+            ),
+            # Cập nhật status badge
+            turbo_stream.replace(
+              "order_status_#{@order.id}",
+              partial: "admin/orders/status_badge",
+              locals: { order: @order }
+            )
+          ]
+        end
       end
     else
       alert = "Không thể cập nhật đơn hàng."
-      format.html { redirect_to admin_order_path(@order), alert: alert }
-      format.turbo_stream do
-        render turbo_stream: turbo_stream.update(
-          "flash_messages",
-          "<div class='alert alert-danger alert-dismissible fade show mt-2' role='alert'>
-            #{alert}
-            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Đóng'></button>
-          </div>".html_safe
-        )
+      respond_to do |format|
+        format.html { redirect_to admin_order_path(@order), alert: alert }
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.prepend(
+            "flash_messages",
+            partial: "shared/flash",
+            locals: { alert: alert }
+          )
+        end
       end
     end
   end
-end
 
-def destroy
-  if @order.status != "pending"
+  def destroy
+    if @order.status != "pending"
+      alert = "Đơn hàng đã xử lý, không thể xóa."
+      respond_to do |format|
+        format.html { redirect_to admin_orders_path, alert: alert }
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.prepend(
+            "flash_messages",
+            partial: "shared/flash",
+            locals: { alert: alert }
+          )
+        end
+      end
+      return
+    end
+
+    @order.destroy
+    notice = "Đã xóa đơn hàng thành công."
     respond_to do |format|
-      format.html { redirect_to admin_orders_path, alert: "Đơn hàng đã xử lý, không thể xóa." }
-
+      format.html { redirect_to admin_orders_path, notice: notice }
       format.turbo_stream do
-        render turbo_stream: turbo_stream.update(
+        render turbo_stream: turbo_stream.prepend(
           "flash_messages",
-          partial: "shared/flash_messages",
-          locals: { notice: nil, alert: " không thể xóa." }
+          partial: "shared/flash",
+          locals: { notice: notice }
         )
       end
     end
-    return
   end
-
-  # Xóa nếu pending
-  @order.destroy
-
-  respond_to do |format|
-    format.html { redirect_to admin_orders_path, notice: "Đã xóa đơn hàng thành công." }
-    format.turbo_stream
-  end
-end
-
-
-
 
   # ======================
   # THỐNG KÊ ĐƠN HÀNG THEO THÁNG/NĂM
@@ -89,7 +87,6 @@ end
     @month = (params[:month] || Time.current.month).to_i
     @year  = (params[:year] || Time.current.year).to_i
 
-    # Lọc đơn hàng theo tháng và năm
     if ActiveRecord::Base.connection.adapter_name.downcase.include?("mysql")
       @orders = Order.where("MONTH(created_at) = ? AND YEAR(created_at) = ?", @month, @year)
     else

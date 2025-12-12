@@ -28,9 +28,12 @@
                     class: "btn btn-outline-light flex-fill btn-anim" %>
 
                 <%= link_to "Xóa danh mục", admin_category_path(@category),
-                    method: :delete,
-                    data: { turbo_confirm: "Bạn có chắc chắn muốn xóa danh mục này?" },
+                    data: {
+                    turbo_method: "delete",
+                    turbo_confirm: "Bạn có chắc chắn muốn xóa danh mục này?"
+                    },
                     class: "btn btn-danger flex-fill btn-anim" %>
+
             </div>
 
 

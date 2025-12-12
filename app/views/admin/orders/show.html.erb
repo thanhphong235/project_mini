@@ -73,24 +73,24 @@
         <div class="label-glass">Trạng thái</div>
         <div class="value-glass">
             <%= f.select :status,
-                Order.statuses.keys.map { |key| [Order.new(status: key).status_human, key] },
-                { selected: @order.status },
-                class: "select-glass" %>
+              Order.statuses.keys.map { |key| [Order.new(status: key).status_human, key] },
+              { selected: @order.status },
+              class: "select-glass",
+              disabled: @order.cancelled? %>
         </div>
     </div>
 
     <div class="form-actions-glass">
-        <%= f.submit "Cập nhật", class: "btn-save-glass" %>
-        <%= button_to "Xóa đơn hàng", admin_order_path(@order),
-              method: :delete,
-              data: { turbo_confirm: "Bạn có chắc muốn xóa đơn?" },
-              class: "btn-delete-glass" %>
+        <%= f.submit "Cập nhật", class: "btn-save-glass", disabled: @order.cancelled? %>
+
+        <!-- Nút XÓA -->
+        <%= render "delete_button", order: @order %>
     </div>
     <% end %>
 
 </div>
-
 <% end %>
+
 
 <!-- AUTO-HIDE FLASH -->
 <script>
@@ -101,6 +101,7 @@
         });
     });
 </script>
+
 
 <style>
     /* CARD GLASS */
@@ -274,5 +275,11 @@
         background: #ff4d4d;
         color: white !important;
         box-shadow: 0 4px 14px rgba(255, 0, 0, 0.45);
+    }
+
+    .btn-delete-glass.disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        border-style: dashed;
     }
 </style>

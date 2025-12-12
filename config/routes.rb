@@ -29,8 +29,8 @@ Rails.application.routes.draw do
   namespace :admin do
     get "dashboard", to: "dashboard#index", as: :dashboard
 
-    resources :users
-    resources :categories
+    resources :users,  only: [:index, :show, :destroy]
+    resources :categories,  only: [:index, :show, :new, :create, :edit, :update, :destroy]
     resources :food_drinks, except: [:show] do
       collection { delete :bulk_delete }
     end

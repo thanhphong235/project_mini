@@ -37,10 +37,15 @@
                 <%= link_to "Quay lại", admin_users_path,
               class: "btn btn-outline-light w-50 btn-anim" %>
 
-                <%= link_to "Xóa người dùng", admin_user_path(@user),
-              method: :delete,
-              data: { turbo_confirm: "Bạn có chắc chắn muốn xóa người dùng này?" },
-              class: "btn btn-danger w-50 btn-anim" %>
+                <%= link_to "Xóa người dùng",
+    admin_user_path(@user),
+    data: {
+      turbo_method: "delete",
+      turbo_confirm: "Bạn có chắc chắn muốn xóa người dùng này?"
+    },
+    class: "btn btn-danger w-50 btn-anim" %>
+
+
             </div>
 
         </div>

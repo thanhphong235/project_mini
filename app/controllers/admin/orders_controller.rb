@@ -13,72 +13,85 @@ class Admin::OrdersController < Admin::BaseController
   def show
   end
 
-  def update
-    if @order.update(order_params)
-      notice = "Cập nhật trạng thái đơn hàng thành công."
-      respond_to do |format|
-        format.html { redirect_to admin_order_path(@order), notice: notice }
-        format.turbo_stream do
-          render turbo_stream: [
-            # Cập nhật flash
-            turbo_stream.prepend(
-              "flash_messages",
-              partial: "shared/flash",
-              locals: { notice: notice }
-            ),
-            # Cập nhật status badge
-            turbo_stream.replace(
-              "order_status_#{@order.id}",
-              partial: "admin/orders/status_badge",
-              locals: { order: @order }
-            )
-          ]
-        end
-      end
+def update
+  if @order.update(order_params)
+    notice = if @order.cancelled?
+      "Đơn hàng đã hủy. Các món ăn đã trả về kho."
     else
-      alert = "Không thể cập nhật đơn hàng."
-      respond_to do |format|
-        format.html { redirect_to admin_order_path(@order), alert: alert }
-        format.turbo_stream do
-          render turbo_stream: turbo_stream.prepend(
-            "flash_messages",
-            partial: "shared/flash",
-            locals: { alert: alert }
-          )
-        end
-      end
-    end
-  end
-
-  def destroy
-    if @order.status != "pending"
-      alert = "Đơn hàng đã xử lý, không thể xóa."
-      respond_to do |format|
-        format.html { redirect_to admin_orders_path, alert: alert }
-        format.turbo_stream do
-          render turbo_stream: turbo_stream.prepend(
-            "flash_messages",
-            partial: "shared/flash",
-            locals: { alert: alert }
-          )
-        end
-      end
-      return
+      "Cập nhật trạng thái đơn hàng thành công."
     end
 
-    @order.destroy
-    notice = "Đã xóa đơn hàng thành công."
     respond_to do |format|
-      format.html { redirect_to admin_orders_path, notice: notice }
+      format.html { redirect_to admin_order_path(@order), notice: notice }
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.prepend(
+            "flash_messages",
+            partial: "shared/flash",
+            locals: { notice: notice }
+          ),
+          turbo_stream.replace(
+            "order_status_#{@order.id}",
+            partial: "admin/orders/status_badge",
+            locals: { order: @order }
+          ),
+          turbo_stream.replace(
+            "order_delete_button_#{@order.id}",
+            partial: "admin/orders/delete_button",
+            locals: { order: @order }  # partial sẽ disable nếu order.cancelled?
+          )
+        ]
+      end
+    end
+  else
+    alert = "Không thể cập nhật đơn hàng."
+    respond_to do |format|
+      format.html { redirect_to admin_order_path(@order), alert: alert }
       format.turbo_stream do
         render turbo_stream: turbo_stream.prepend(
           "flash_messages",
           partial: "shared/flash",
-          locals: { notice: notice }
+          locals: { alert: alert }
         )
       end
     end
   end
+end
+
+def destroy
+  if @order.status != "pending"
+    alert = "Đơn hàng đã xử lý, không thể xóa."
+    respond_to do |format|
+      format.html { redirect_to admin_orders_path, alert: alert }
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.prepend(
+          "flash_messages",
+          partial: "shared/flash",
+          locals: { alert: alert }
+        )
+      end
+    end
+    return
+  end
+
+  @order.destroy
+  notice = "Đã xóa đơn hàng thành công."
+
+  respond_to do |format|
+    format.html { redirect_to admin_orders_path, notice: notice }
+    format.turbo_stream do
+      render turbo_stream: [
+        turbo_stream.remove("order_#{@order.id}"),
+        turbo_stream.prepend(
+          "flash_messages",
+          partial: "shared/flash",
+          locals: { notice: notice }
+        )
+      ]
+    end
+  end
+end
+
 
   # ======================
   # THỐNG KÊ ĐƠN HÀNG THEO THÁNG/NĂM

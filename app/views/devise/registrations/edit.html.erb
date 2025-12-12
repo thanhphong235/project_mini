@@ -1,12 +1,14 @@
 <% provide(:title, "Edit Profile") %>
 
-<div class="row justify-content-center mt-5">
-    <div class="col-md-6 col-lg-5">
+<h2 class="text-center text-primary mb-4">✏️ Chỉnh sửa thông tin cá nhân</h2>
 
-        <div class="login-card">
-            <h2 class="card-title text-center mb-4">Edit Profile</h2>
+<div class="row justify-content-center mt-3">
+    <div class="col-sm-10 col-md-7 col-lg-5">
+
+        <div class="card shadow rounded-4 border-0 p-4 bg-dark text-light">
 
             <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+
             <% if resource.errors.any? %>
             <div class="alert alert-danger">
                 <ul class="mb-0">
@@ -20,45 +22,62 @@
             <!-- Name -->
             <div class="mb-3">
                 <%= f.label :name %>
-                <%= f.text_field :name, class: "form-control", placeholder: "Enter your name" %>
+                <%= f.text_field :name, class: "form-control dark-input", placeholder: "Enter your name" %>
             </div>
 
             <!-- Email -->
             <div class="mb-3">
                 <%= f.label :email %>
-                <%= f.email_field :email, class: "form-control", placeholder: "Enter your email" %>
+                <%= f.email_field :email, class: "form-control dark-input", placeholder: "Enter your email" %>
             </div>
 
-            <!-- Current password (required to save changes) -->
+            <!-- Current password -->
             <div class="mb-3">
                 <%= f.label :current_password, "Current password" %>
-                <%= f.password_field :current_password, class: "form-control", placeholder: "Enter current password" %>
+                <%= f.password_field :current_password, class: "form-control dark-input", placeholder: "Enter current password" %>
             </div>
 
             <!-- New password -->
             <div class="mb-3">
                 <%= f.label :password, "New password" %>
-                <%= f.password_field :password, class: "form-control", placeholder: "Enter new password" %>
+                <%= f.password_field :password, class: "form-control dark-input", placeholder: "Enter new password" %>
             </div>
 
             <!-- Password confirmation -->
             <div class="mb-3">
                 <%= f.label :password_confirmation, "Confirm new password" %>
-                <%= f.password_field :password_confirmation, class: "form-control", placeholder: "Confirm new password" %>
+                <%= f.password_field :password_confirmation, class: "form-control dark-input", placeholder: "Confirm new password" %>
             </div>
 
             <!-- Submit button -->
-            <div class="d-grid">
-                <%= f.submit "Update Profile", class: "btn btn-primary btn-lg", data: { turbo_confirm: "Bạn có chắc chắn muốn đổi không?" } %>
+            <div class="d-flex gap-3">
+                <%= link_to "Back to Home", root_path, class: "btn btn-outline-light flex-grow-1" %>
+                <%= f.submit "Update Profile", class: "btn btn-success flex-grow-1", data: { turbo_confirm: "Bạn có chắc chắn muốn đổi không?" } %>
             </div>
+
             <% end %>
 
-            <hr>
-
-            <p class="text-center mb-0">
-                <%= link_to "Back to Home", root_path %>
-            </p>
         </div>
 
     </div>
 </div>
+
+<style>
+    /* Input dark mode đẹp và dễ nhìn */
+    .dark-input {
+        background: #2a2a2a !important;
+        border: 1px solid #444 !important;
+        color: #fff !important;
+    }
+
+    .dark-input::placeholder {
+        color: #bfbfbf !important;
+    }
+
+    .dark-input:focus {
+        border-color: #6ea8fe !important;
+        box-shadow: 0 0 5px rgba(110, 168, 254, 0.6) !important;
+        background: #333 !important;
+        color: #fff !important;
+    }
+</style>

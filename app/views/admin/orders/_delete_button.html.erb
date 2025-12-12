@@ -1,0 +1,17 @@
+<%= turbo_frame_tag "order_delete_button_#{order.id}" do %>
+<% if order.pending? %>
+<%= button_to "Xóa đơn hàng",
+          admin_order_path(order),
+          method: :delete,
+          data: { confirm: "⚠️ Bạn có chắc chắn muốn xóa đơn này?", turbo: false },
+          class: "btn-delete-glass" %>
+<% else %>
+<button class="btn-delete-glass disabled" disabled>
+    <% if order.cancelled? %>
+    Đơn hàng đã hủy
+    <% else %>
+    Không thể xóa
+    <% end %>
+</button>
+<% end %>
+<% end %>

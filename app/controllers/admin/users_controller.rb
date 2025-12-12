@@ -14,33 +14,13 @@ module Admin
 
 def destroy
   if @user.admin?
-    respond_to do |format|
-      format.html { redirect_to admin_users_path, alert: "Không thể xóa admin." }
-      format.turbo_stream do
-        render turbo_stream: turbo_stream.update(
-          "flash_messages",
-          partial: "shared/flash_messages",
-          locals: { notice: nil, alert: "Không thể xóa admin." }
-        )
-      end
-    end
-    return
+    redirect_to admin_users_path, alert: "Không thể xóa admin." and return
   end
 
   @user.destroy
-
-  respond_to do |format|
-    format.html { redirect_to admin_users_path, notice: "Người dùng đã bị xóa." }
-    format.turbo_stream do
-      render turbo_stream: turbo_stream.remove(@user) +
-                            turbo_stream.update(
-                              "flash_messages",
-                              partial: "shared/flash_messages",
-                              locals: { notice: "Người dùng đã bị xóa.", alert: nil }
-                            )
-    end
-  end
+  redirect_to admin_users_path, notice: "Người dùng đã bị xóa."
 end
+
 
 
 

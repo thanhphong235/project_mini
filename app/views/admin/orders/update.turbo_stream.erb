@@ -1,0 +1,21 @@
+<%= turbo_stream.replace "order_delete_button_#{@order.id}" do %>
+  <div class="form-actions-glass">
+
+      <%= form_with(model: [:admin, @order], method: :patch, local: false, class: "glass-form") do |f| %>
+          <%= f.submit "Cập nhật", class: "btn-save-glass" %>
+
+          <% if @order.pending? %>
+            <%= button_to "Xóa đơn hàng",
+                admin_order_path(@order),
+                method: :delete,
+                data: { confirm: "⚠️ Bạn có chắc chắn muốn xóa đơn này?", turbo: false },
+                class: "btn-delete-glass" %>
+          <% else %>
+            <button class="btn-delete-glass disabled" disabled>
+                Không thể xóa
+            </button>
+          <% end %>
+      <% end %>
+
+  </div>
+<% end %>

@@ -11,18 +11,20 @@
             <ul class="list-group list-group-flush mb-4">
                 <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center">
                     <strong>Tên danh mục:</strong>
-                    <%= f.text_field :name, class: "form-control w-75", placeholder: "Nhập tên danh mục" %>
+                    <%= f.text_field :name,
+                        class: "form-control w-75 dark-input",
+                        placeholder: "Nhập tên danh mục" %>
                 </li>
             </ul>
 
             <!-- Buttons -->
             <div class="d-flex gap-3">
                 <%= link_to "Quay lại",
-                admin_categories_path,
-                class: "btn btn-outline-light flex-grow-1" %>
+                    admin_categories_path,
+                    class: "btn btn-outline-light flex-grow-1" %>
 
                 <%= f.submit "Thêm mới",
-                class: "btn btn-success flex-grow-1" %>
+                    class: "btn btn-success flex-grow-1" %>
             </div>
 
             <% end %>
@@ -31,3 +33,23 @@
 
     </div>
 </div>
+
+<style>
+    /* Input dark mode đẹp và dễ nhìn */
+    .dark-input {
+        background: #2a2a2a !important;
+        border: 1px solid #444 !important;
+        color: #fff !important;
+    }
+
+    .dark-input::placeholder {
+        color: #bfbfbf !important;
+    }
+
+    .dark-input:focus {
+        border-color: #6ea8fe !important;
+        box-shadow: 0 0 5px rgba(110, 168, 254, 0.6) !important;
+        background: #333 !important;
+        color: #fff !important;
+    }
+</style>

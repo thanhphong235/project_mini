@@ -68,7 +68,11 @@
         <%= render partial: "list", locals: { food_drinks: @food_drinks } %>
     </div>
 
-    <%= submit_tag "Xóa các món đã chọn", class: "btn btn-danger btn-anim" %>
+    <%= submit_tag "Xóa các món đã chọn", 
+      class: "btn btn-danger btn-anim", 
+      id: "bulk_delete_btn",
+      disabled: true %>
+
 
     <% end %>
 
@@ -225,3 +229,41 @@
         }
     }
 </style>
+
+<script>
+    document.addEventListener("turbo:load", initBulkActions);
+    document.addEventListener("turbo:frame-load", initBulkActions);
+
+    function initBulkActions() {
+        const deleteBtn = document.getElementById("bulk_delete_btn");
+        const checkboxes = document.querySelectorAll(".food-drink-checkbox");
+        const selectAllBtn = document.getElementById("select_all_btn");
+
+        if (!deleteBtn || checkboxes.length === 0) return;
+
+        // Update trạng thái nút xóa
+        function updateDeleteButton() {
+            const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+            deleteBtn.disabled = !anyChecked;
+        }
+
+        // Khi tick checkbox đơn lẻ
+        checkboxes.forEach(cb => {
+            cb.addEventListener("change", updateDeleteButton);
+        });
+
+        // Function xử lý “Chọn tất cả”
+        if (selectAllBtn) {
+            selectAllBtn.addEventListener("click", () => {
+                const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+                checkboxes.forEach(cb => cb.checked = !allChecked);
+
+                selectAllBtn.textContent = allChecked ? "Chọn tất cả món" : "Bỏ chọn tất cả";
+                updateDeleteButton();
+            });
+        }
+
+        // Khởi tạo trạng thái
+        updateDeleteButton();
+    }
+</script>

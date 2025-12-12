@@ -20,35 +20,37 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700">
 
     <style>
-        /* Navbar cố định */
+        /* Navbar */
         .main-header {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 1040;
-            /* cao hơn sidebar */
+            height: 56px;
+            /* nếu dùng AdminLTE mặc định */
         }
 
-        /* Sidebar cố định */
+        /* Sidebar */
         .main-sidebar {
             position: fixed !important;
-            /* bắt buộc cố định */
-            top: 0;
+            top: 56px;
+            /* cách navbar */
             left: 0;
-            height: 100vh;
+            height: calc(100vh - 56px);
             width: 250px;
-            /* bằng với content-wrapper margin */
             overflow-y: auto;
             z-index: 1030;
         }
 
         /* Nội dung bên phải sidebar */
         .content-wrapper {
+            margin-top: 56px;
+            /* cách navbar */
             margin-left: 250px;
-            /* bằng width sidebar */
+            /* cách sidebar */
             padding: 20px;
-            min-height: 100vh;
+            min-height: calc(100vh - 56px);
         }
 
         /* Footer cũng cần margin-left */

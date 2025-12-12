@@ -167,6 +167,28 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+    <script>
+        function initPushMenu() {
+            // Khởi tạo lại PushMenu của AdminLTE
+            if (typeof AdminLTE !== 'undefined' && AdminLTE.PushMenu) {
+                // Dừng các instance cũ nếu có
+                $('[data-widget="pushmenu"]').each(function() {
+                    $(this).off('click');
+                });
+
+                // Bind lại event pushmenu chuẩn AdminLTE
+                AdminLTE.PushMenu.activate('[data-widget="pushmenu"]');
+            }
+        }
+
+        // Khi page load đầy đủ
+        document.addEventListener('DOMContentLoaded', initPushMenu);
+
+        // Khi Turbo load nội dung mới
+        document.addEventListener('turbo:load', initPushMenu);
+    </script>
+
+
 </body>
 
 </html>
